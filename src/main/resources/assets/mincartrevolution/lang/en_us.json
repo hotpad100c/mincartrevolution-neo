@@ -1,0 +1,13 @@
+{
+  "itemGroup.mincartrevolution": "Example Mod Tab",
+  "block.mincartrevolution.example_block": "Example Block",
+  "item.mincartrevolution.example_item": "Example Item",
+
+  "mincartrevolution.configuration.title": "MincartRevolution Configs",
+  "mincartrevolution.configuration.section.mincartrevolution.common.toml": "MincartRevolution Configs",
+  "mincartrevolution.configuration.section.mincartrevolution.common.toml.title": "MincartRevolution Configs",
+  "mincartrevolution.configuration.items": "Item List",
+  "mincartrevolution.configuration.logDirtBlock": "Log Dirt Block",
+  "mincartrevolution.configuration.magicNumberIntroduction": "Magic Number Text",
+  "mincartrevolution.configuration.magicNumber": "Magic Number"
+}
