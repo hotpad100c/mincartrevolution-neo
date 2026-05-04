@@ -22,8 +22,9 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import java.util.List;
 
+import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
+import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ITEMS;
 import static ml.mypals.minecartrevolution.registeries.MRModCriteria.TRIGGERS;
-import static ml.mypals.minecartrevolution.registeries.MRModEntities.ENTITIES;
 import static ml.mypals.minecartrevolution.registeries.MRModItems.*;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file

@@ -3,8 +3,7 @@ package ml.mypals.minecartrevolution.datagen;
 import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
-import ml.mypals.minecartrevolution.registeries.MRModEntities;
-import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -44,7 +43,7 @@ public class MRAdvancementProvider {
                 .addCriterion("craft_block_minecart",
                         MRModCriteria.BLOCK_CART_CRAFTED.get().createCriterion(
                                 new BlockCartCraftedCriterion.Conditions(Optional.empty(),
-                                        MRModEntities.BLOCK_MINECART.get().getDescriptionId(),
+                                        MRMinecarts.BLOCK_MINECART.get().getDescriptionId(),
                                         true
                                 ))
                 )
@@ -53,7 +52,7 @@ public class MRAdvancementProvider {
         AdvancementHolder getJukeboxMinecart = Advancement.Builder.advancement()
                 .parent(getBlockMinecart)
                 .display(
-                        MRModItems.JUKEBOX_MINECART.get(),
+                        MRMinecarts.JUKEBOX_MINECART.item().get(),
                         Component.literal("音轨"),
                         Component.literal("获得唱片机矿车"),
                         null,
@@ -65,7 +64,7 @@ public class MRAdvancementProvider {
                 .addCriterion("craft_jukebox_minecart",
                         MRModCriteria.BLOCK_CART_CRAFTED.get().createCriterion(
                                 new BlockCartCraftedCriterion.Conditions(Optional.empty(),
-                                        MRModEntities.JUKEBOX_MINECART.get().getDescriptionId(),
+                                        MRMinecarts.JUKEBOX_MINECART.entity().get().getDescriptionId(),
                                         false
                                 ))
                 )
@@ -86,7 +85,7 @@ public class MRAdvancementProvider {
                 .addCriterion("craft_dragon_egg_minecart",
                         MRModCriteria.BLOCK_CART_CRAFTED.get().createCriterion(
                                 new BlockCartCraftedCriterion.Conditions(Optional.empty(),
-                                        MRModEntities.DRAGON_EGG_MINECART.get().getDescriptionId(),
+                                        MRMinecarts.DRAGON_EGG_MINECART.entity().get().getDescriptionId(),
                                         false
                                 ))
                 )
@@ -107,7 +106,7 @@ public class MRAdvancementProvider {
                 .addCriterion("got_dangerous_minecart",
                         MRModCriteria.BLOCK_CART_CRAFTED.get().createCriterion(
                                 new BlockCartCraftedCriterion.Conditions(Optional.empty(),
-                                        MRModEntities.DAMAGE_CAUSING_MINECART.get().getDescriptionId(),
+                                        MRMinecarts.DAMAGE_CAUSING_MINECART.get().getDescriptionId(),
                                         false
                                 ))
                 )
@@ -131,7 +130,7 @@ public class MRAdvancementProvider {
                                         Optional.of(EntityPredicate.wrap(
                                                 EntityPredicate.Builder.entity()
                                                 .vehicle(EntityPredicate.Builder.entity().of(entityTypes,
-                                                MRModEntities.DRAGON_EGG_MINECART.get()).
+                                                MRMinecarts.DRAGON_EGG_MINECART.entity().get()).
                                                 passenger(EntityPredicate.Builder.entity().of(entityTypes,
                                                 EntityType.PLAYER)))
                                         ))
@@ -142,7 +141,7 @@ public class MRAdvancementProvider {
         AdvancementHolder jukeboxMinecartMoved = Advancement.Builder.advancement()
                 .parent(getJukeboxMinecart)
                 .display(
-                        MRModItems.JUKEBOX_MINECART.get(),
+                        MRMinecarts.JUKEBOX_MINECART.item().get(),
                         Component.literal("余音绕轨"),
                         Component.literal("坐上移动的唱片机矿车进行巡回演出"),
                         null,
@@ -154,7 +153,7 @@ public class MRAdvancementProvider {
                 .addCriterion("move_on_jukebox_minecart",
                         MRModCriteria.ENTITY_MOVED.get().createCriterion(
                                 new MovingOnJukeboxCartCriterion.Conditions(Optional.empty(),
-                                        MRModEntities.JUKEBOX_MINECART.get().getDescriptionId()
+                                        MRMinecarts.JUKEBOX_MINECART.entity().get().getDescriptionId()
                                 ))
                 )
                 .save(saver, "move_on_jukebox_minecart");

@@ -2,7 +2,6 @@ package ml.mypals.minecartrevolution.item;
 
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import ml.mypals.minecartrevolution.entity.minecarts.DamageCausingMinecartEntity;
-import ml.mypals.minecartrevolution.registeries.MRModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
@@ -97,7 +96,7 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
     public static AbstractMinecart getCart(Level world, double x, double y, double z, Block blockInside, MinecartWithBlockItem correspondingItem) {
 
        DamageCausingMinecartEntity damageCausingMinecartEntity = new DamageCausingMinecartEntity(
-               MRModEntities.DAMAGE_CAUSING_MINECART.get(), world,
+               ml.mypals.minecartrevolution.registeries.MRMinecarts.DAMAGE_CAUSING_MINECART.get(), world,
                 x, y, z,
                 ((DamageCausingMinecartItem)correspondingItem).damageAmount,
                correspondingItem,

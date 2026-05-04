@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
 import ml.mypals.minecartrevolution.registeries.MRModEntities;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.Level;
@@ -18,7 +19,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.STONE_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -29,7 +30,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.OAK_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -40,7 +41,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.SPRUCE_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -51,7 +52,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.BIRCH_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -62,7 +63,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.JUNGLE_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -73,7 +74,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.ACACIA_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -84,7 +85,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.CHERRY_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -95,7 +96,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.DARK_OAK_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -106,7 +107,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.MANGROVE_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -117,7 +118,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.BAMBOO_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -128,7 +129,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -139,7 +140,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.WARPED_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),
@@ -150,7 +151,7 @@ public class PressurePlateEntityMapper {
         PRESSURE_PLATE_ENTITY_MAP.put(
                 Blocks.CRIMSON_PRESSURE_PLATE,
                 (world, pos) -> new PresherPlateMinecartEntity(
-                        MRModEntities.PRESHER_PLATE_MINECART.get(),
+                        MRMinecarts.PRESHER_PLATE_MINECART.get(),
                         world,
                         pos.x(),
                         pos.y(),

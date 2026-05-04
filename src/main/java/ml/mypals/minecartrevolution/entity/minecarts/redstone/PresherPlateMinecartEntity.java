@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution.entity.minecarts.redstone;
 
 import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -28,7 +29,7 @@ public class PresherPlateMinecartEntity extends HasVariantRegularBlockMinecartEn
     }
     @Override
     public @NonNull Item getDropItem() {
-        return MRModItems.PRESHER_PLATE_MINECART.get();
+        return MRMinecarts.PRESHER_PLATE_MINECART_ITEM.item().get();
     }
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {

@@ -1,11 +1,19 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
 import com.mojang.logging.LogUtils;
+import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
+import ml.mypals.minecartrevolution.item.ShulkerMinecartItem;
 import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecartContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
@@ -25,10 +34,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -114,7 +122,7 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer  {
     }*/
     @Override
     public @NonNull ItemStack getPickResult() {
-        ItemStack stack = MRModItems.SHULKER_MINECART.get().getDefaultInstance();
+        ItemStack stack = MRMinecarts.SHULKER_MINECART.item().get().getDefaultInstance();
         CompoundTag nbt = new CompoundTag();
         this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
             nbt.putInt("block_in_minecart", Block.getId(blockState));
@@ -123,7 +131,7 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer  {
         return stack;
     }
     public ItemStack getMinecartStackWithInventory(@Nullable DyeColor dyeColor) {
-        ItemStack itemStack = new ItemStack(MRModItems.SHULKER_MINECART.get());
+        ItemStack itemStack = new ItemStack(MRMinecarts.SHULKER_MINECART.item().get());
 
         CompoundTag nbt = new CompoundTag();
         Block block = get(dyeColor);
@@ -177,16 +185,9 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer  {
             };
         }
     }
-
-    /*
-    @Override
-    public Type getMinecartType() {
-        return Type.CHEST;
-    }
-    */
     @Override
     public @NonNull Item getDropItem() {
-        return MRModItems.BARREL_MINECART.get();
+        return MRMinecarts.BARREL_MINECART.item().get();
     }
 
     @Override
@@ -212,13 +213,6 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer  {
         ContainerHelper.saveAllItems(nbt , getItemStacks(), false);
     }
 
-    /*
-    @Override
-    public void stopOpen(Player player) {
-        this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(player));
-    }
-    */
-
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
         InteractionResult actionResult = this.interactWithContainerVehicle(player);
@@ -227,4 +221,59 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer  {
         }
         return actionResult;
     }
+
+
+    /*
+    public static class ShulkerCartDispenseItemBehavior() extends DefaultDispenseItemBehavior {
+        private final DefaultDispenseItemBehavior defaultBehavior = new DefaultDispenseItemBehavior();
+
+        @Override
+        public @NonNull ItemStack execute(BlockSource pointer, @NonNull ItemStack stack) {
+            Direction direction = pointer.state().getValue(DispenserBlock.FACING);
+            ServerLevel serverWorld = pointer.level();
+            Vec3 vec3d = pointer.center();
+            double d = vec3d.x() + direction.getStepX() * 1.125;
+            double e = Math.floor(vec3d.y()) + direction.getStepY();
+            double f = vec3d.z() + direction.getStepZ() * 1.125;
+            BlockPos blockPos = pointer.pos().relative(direction);
+            BlockState blockState = serverWorld.getBlockState(blockPos);
+            RailShape railShape = blockState.getBlock() instanceof BaseRailBlock
+                    ? blockState.getValue(((BaseRailBlock)blockState.getBlock()).getShapeProperty())
+                    : RailShape.NORTH_SOUTH;
+            double g;
+            if (blockState.is(BlockTags.RAILS)) {
+                if (railShape.isSlope()) {
+                    g = 0.6;
+                } else {
+                    g = 0.1;
+                }
+            } else {
+                if (!blockState.isAir() || !serverWorld.getBlockState(blockPos.below()).is(BlockTags.RAILS)) {
+                    return this.defaultBehavior.dispense(pointer, stack);
+                }
+
+                BlockState blockState2 = serverWorld.getBlockState(blockPos.below());
+                RailShape railShape2 = blockState2.getBlock() instanceof BaseRailBlock
+                        ? blockState2.getValue(((BaseRailBlock)blockState2.getBlock()).getShapeProperty())
+                        : RailShape.NORTH_SOUTH;
+                if (direction != Direction.DOWN && railShape2.isSlope()) {
+                    g = -0.4;
+                } else {
+                    g = -0.9;
+                }
+            }
+
+            ShulkerMinecartItem shulkerMinecartItem = ((ShulkerMinecartItem)stack.getItem());
+
+            ShulkerMinecartEntity shulkerMinecart = shulkerMinecartItem.getCart(serverWorld,d,e + g, f, minecartWithBlockItem.type,minecartWithBlockItem,stack);
+            serverWorld.addFreshEntity(abstractMinecartEntity);
+            stack.shrink(1);
+            return stack;
+        }
+
+        @Override
+        protected void playSound(BlockSource pointer) {
+            pointer.level().levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, pointer.pos(), 0);
+        }
+    };*/
 }

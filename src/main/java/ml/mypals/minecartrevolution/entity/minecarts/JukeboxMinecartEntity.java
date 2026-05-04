@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.manager.MovingJukeboxManager;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
@@ -112,14 +113,14 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
     }
     @Override
     public @NonNull ItemStack getPickResult() {
-        return new ItemStack(MRModItems.JUKEBOX_MINECART.get());
+        return new ItemStack(MRMinecarts.JUKEBOX_MINECART.item().get());
     }
     public ItemStack getDisc() {
         return entityData.get(DISC).isEmpty() ? this.disc : entityData.get(DISC);
     }
     @Override
     public @NonNull Item getDropItem() {
-        return MRModItems.JUKEBOX_MINECART.get();
+        return MRMinecarts.JUKEBOX_MINECART.item().get();
     }
     @Override
     public ItemStack addDataToStack(ItemStack originalStack) {

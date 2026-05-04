@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -141,7 +142,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
     }
     @Override
     public @NonNull Item getDropItem() {
-        return MRModItems.BLOCK_MINECART.get();
+        return MRMinecarts.BLOCK_MINECART_ITEM.item().get();
     }
     @Override
     public @NonNull ItemStack getPickResult(){

@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.mixin;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +48,7 @@ public abstract class MinecartMixin extends AbstractMinecart  {
 
 	@Unique
 	public Item minecartrevolution_neo$asBlockMinecartItem() {
-        return (MinecartWithBlockItem) MRModItems.BLOCK_MINECART.get().getDefaultInstance().getItem();
+        return (MinecartWithBlockItem) MRMinecarts.BLOCK_MINECART_ITEM.item().get().getDefaultInstance().getItem();
 	}
 
 	@Unique
@@ -60,7 +61,7 @@ public abstract class MinecartMixin extends AbstractMinecart  {
 			method= "getPickResult", cancellable = true)
 	public void getPickResult(CallbackInfoReturnable<ItemStack> cir){
 		if(!minecartrevolution_neo$hasBlock()) return;
-		ItemStack stack = MRModItems.BLOCK_MINECART.get().getDefaultInstance();
+		ItemStack stack = MRMinecarts.BLOCK_MINECART_ITEM.item().get().getDefaultInstance();
 		CompoundTag nbt = new CompoundTag();
 		int stateId = Block.getId(this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElseGet(Blocks.AIR::defaultBlockState));
 		nbt.putInt("block_in_minecart", stateId);

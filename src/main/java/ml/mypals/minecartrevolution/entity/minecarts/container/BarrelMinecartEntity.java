@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
 import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -34,7 +35,7 @@ public class BarrelMinecartEntity extends AbstractMinecartContainer implements C
 
     @Override
     public @NonNull ItemStack getPickResult() {
-        return MRModItems.BARREL_MINECART.get().getDefaultInstance();
+        return MRMinecarts.BARREL_MINECART.item().get().getDefaultInstance();
     }
 
 //    @Overrid
@@ -42,7 +43,7 @@ public class BarrelMinecartEntity extends AbstractMinecartContainer implements C
 
     @Override
     public @NonNull Item getDropItem() {
-        return MRModItems.BARREL_MINECART.get();
+        return MRMinecarts.BARREL_MINECART.item().get();
     }
 
     @Override

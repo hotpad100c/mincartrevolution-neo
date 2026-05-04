@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
 import ml.mypals.minecartrevolution.registeries.MRModEntities;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.DyeColor;
@@ -24,7 +25,7 @@ public class ShulkerBoxEntityMapper {
             SHULKER_ENTITY_MAP.put(
                     shulkerBox,
                     (world, pos) -> new ShulkerMinecartEntity(
-                            MRModEntities.SHULKER_MINECART.get(),
+                            MRMinecarts.SHULKER_MINECART.entity().get(),
                             world,
                             pos.x(),
                             pos.y(),

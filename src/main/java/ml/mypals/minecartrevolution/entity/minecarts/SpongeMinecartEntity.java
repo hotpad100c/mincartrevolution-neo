@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -67,14 +68,14 @@ public class SpongeMinecartEntity extends ItemBoundBlockMinecartEntity {
             if (this.absorbWater(world, pos)) {
                 this.setCustomDisplayBlockState(Optional.of(Blocks.WET_SPONGE.defaultBlockState()));
                 world.playSound(this, pos, SoundEvents.SPONGE_ABSORB, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setCorrespondingItem(MRModItems.WET_SPONGE_MINECART.get());
+                this.setCorrespondingItem(MRMinecarts.WET_SPONGE_MINECART.item().get());
             }
         } else if (block instanceof WetSpongeBlock) {
 
             if (level().dimensionType().attributes().contains(EnvironmentAttributes.WATER_EVAPORATES)) {
                 this.setCustomDisplayBlockState(Optional.of(Blocks.SPONGE.defaultBlockState()));
                 world.playSound(this, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setCorrespondingItem(MRModItems.SPONGE_MINECART.get());
+                this.setCorrespondingItem(MRMinecarts.SPONGE_MINECART.item().get());
 
             }else if(level() instanceof ServerLevel serverLevel &&
                     serverLevel.getRandom().nextInt(4096)

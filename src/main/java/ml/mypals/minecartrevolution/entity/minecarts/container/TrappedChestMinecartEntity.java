@@ -1,8 +1,10 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
 import ml.mypals.minecartrevolution.registeries.MRModEntities;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -32,13 +34,13 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
         super(entityType, world);
     }
     public TrappedChestMinecartEntity( Level world, double x, double y, double z) {
-        super(MRModEntities.TRAPPED_CHEST_MINECART.get(), world);
+        super(MRMinecarts.TRAPPED_CHEST_MINECART.entity().get(), world);
         this.setInitialPos(x, y, z);
     }
 
     @Override
     public ItemStack getPickResult() {
-        return MRModItems.TRAPPED_CHEST_MINECART.get().getDefaultInstance();
+        return MRMinecarts.TRAPPED_CHEST_MINECART.item().get().getDefaultInstance();
     }
   /*  @Override
     public Type getMinecartType() {
@@ -47,7 +49,7 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
 */
     @Override
     public Item getDropItem() {
-        return MRModItems.BARREL_MINECART.get();
+        return MRMinecarts.BARREL_MINECART.item().get();
     }
 
     @Override
