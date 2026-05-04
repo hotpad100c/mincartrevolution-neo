@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -31,7 +30,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.JukeboxPlayable;
 import net.minecraft.world.item.JukeboxSong;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,7 +45,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
         implements PowerEmitterMinecartEntity, Clearable {
@@ -186,7 +183,7 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
         }
     }
     @Override
-    public void load(ValueInput nbt) {
+    public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
 
         if (nbt.getInt("RecordItem").isPresent()) {

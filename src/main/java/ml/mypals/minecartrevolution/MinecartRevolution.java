@@ -58,7 +58,7 @@ public class MinecartRevolution {
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    // Creates a creative tab with the id "mincartrevolution:example_tab" for the example item, that is placed after the combat tab
+    // Creates a creative tab with the id "minecartrevolution:example_tab" for the example item, that is placed after the combat tab
 
 
     public static Identifier id(String path) {
@@ -72,6 +72,7 @@ public class MinecartRevolution {
     public MinecartRevolution(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::gatherData);
+        modEventBus.addListener(this::registerPayloads);
         ITEMS.register(modEventBus);
         ENTITIES.register(modEventBus);
         TRIGGERS.register(modEventBus);
@@ -84,6 +85,15 @@ public class MinecartRevolution {
         MRModCriteria.init();
         MRModItems.init();
         MRModEntities.init();*/
+    }
+
+
+    private void registerPayloads(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar(MODID);
+        registrar.playToClient(
+                JukeboxUpdateS2CPacket.TYPE,
+                JukeboxUpdateS2CPacket.STREAM_CODEC
+        );
     }
 
 

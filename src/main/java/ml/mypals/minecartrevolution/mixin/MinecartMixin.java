@@ -42,17 +42,17 @@ public abstract class MinecartMixin extends AbstractMinecart  {
 	}
 
 	@Unique
-	private void mincartrevolution_neo$clear(){
+	private void minecartrevolution_neo$clear(){
 		setCustomDisplayBlockState(Optional.of(Blocks.AIR.defaultBlockState()));
 	}
 
 	@Unique
-	public Item mincartrevolution_neo$asBlockMinecartItem() {
+	public Item minecartrevolution_neo$asBlockMinecartItem() {
         return (MinecartWithBlockItem) MRModItems.BLOCK_MINECART.get().getDefaultInstance().getItem();
 	}
 
 	@Unique
-	private boolean mincartrevolution_neo$hasBlock(){
+	private boolean minecartrevolution_neo$hasBlock(){
 		return !this.getDisplayBlockState().isEmpty() &&
 				this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).isPresent() &&
 				!(this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).get().getBlock() instanceof AirBlock);
@@ -60,7 +60,7 @@ public abstract class MinecartMixin extends AbstractMinecart  {
 	@Inject(at = @At("RETURN"),
 			method= "getPickResult", cancellable = true)
 	public void getPickResult(CallbackInfoReturnable<ItemStack> cir){
-		if(!mincartrevolution_neo$hasBlock()) return;
+		if(!minecartrevolution_neo$hasBlock()) return;
 		ItemStack stack = MRModItems.BLOCK_MINECART.get().getDefaultInstance();
 		CompoundTag nbt = new CompoundTag();
 		int stateId = Block.getId(this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElseGet(Blocks.AIR::defaultBlockState));
@@ -74,13 +74,13 @@ public abstract class MinecartMixin extends AbstractMinecart  {
 			method= "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/InteractionResult;", cancellable = true)
 	public void interact(Player player, @NotNull InteractionHand hand, @NotNull Vec3 location, CallbackInfoReturnable<InteractionResult> cir) {
 		if (player.isSecondaryUseActive()){
-			if (!mincartrevolution_neo$hasBlock()){
+			if (minecartrevolution_neo$hasBlock()){
 				if(player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()){
 					Block block = this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).get().getBlock();
 					playSound(block.defaultBlockState().getSoundType(this.level(),getOnPos(),player).getBreakSound(), 1, 1);
 					player.swing(hand);
 					if(!this.level().isClientSide()){
-						mincartrevolution_neo$clear();
+						minecartrevolution_neo$clear();
 						player.setItemInHand(hand, block.asItem().getDefaultInstance());
 					}
 				}
@@ -104,7 +104,7 @@ public abstract class MinecartMixin extends AbstractMinecart  {
 				cir.cancel();
 			}
 		}
-		if(mincartrevolution_neo$hasBlock()){
+		if(minecartrevolution_neo$hasBlock()){
 			cir.setReturnValue(InteractionResult.PASS);
 			cir.cancel();
 		}

@@ -132,7 +132,7 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
 
 
     @Override
-    public void load(ValueInput nbt) {
+    public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
         if (nbt.getString("correspondingItem").isPresent()) {
 

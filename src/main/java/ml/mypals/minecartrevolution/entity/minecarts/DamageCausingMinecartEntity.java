@@ -1,7 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -12,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.NonNull;
 
 public class DamageCausingMinecartEntity extends ItemBoundBlockMinecartEntity {
 
@@ -51,7 +51,7 @@ public class DamageCausingMinecartEntity extends ItemBoundBlockMinecartEntity {
     }
 
     @Override
-    public void load(ValueInput nbt) {
+    public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
         this.damageAmount = nbt.getFloatOr("damageAmount",1.0f);
         try {

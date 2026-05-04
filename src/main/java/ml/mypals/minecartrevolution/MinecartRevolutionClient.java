@@ -60,7 +60,6 @@ public class MinecartRevolutionClient {
     public static void register(RegisterClientPayloadHandlersEvent event) {
         event.register(
                 JukeboxUpdateS2CPacket.TYPE,
-                HandlerThread.MAIN,
                 MinecartRevolutionClient::jukeboxEntityPlayUpdate
         );
     }

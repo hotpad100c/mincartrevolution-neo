@@ -1,7 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.item.MRModItems;
-import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -129,7 +128,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         }
     }
     @Override
-    public Vec3 getPassengerRidingPosition(Entity passenger) {
+    public @NonNull Vec3 getPassengerRidingPosition(@NonNull Entity passenger) {
         if (this.hasCustomDisplay()) {
             BlockState myBlock = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
             double y = myBlock.getCollisionShape(level(), this.blockPosition()).isEmpty() ?
@@ -140,12 +139,11 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         }
     }
     @Override
-    public Item getDropItem() {
-        MinecartWithBlockItem item = (MinecartWithBlockItem)MRModItems.BLOCK_MINECART;
-        return item;
+    public @NonNull Item getDropItem() {
+        return MRModItems.BLOCK_MINECART.get();
     }
     @Override
-    public ItemStack getPickResult(){
+    public @NonNull ItemStack getPickResult(){
         ItemStack stack = getDropItem().getDefaultInstance();
         CompoundTag nbt = new CompoundTag();
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
@@ -163,7 +161,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
     @Unique
     public boolean hasCustomDisplay() {
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        return blockState.getBlock() instanceof AirBlock;
+        return !(blockState.getBlock() instanceof AirBlock );
     }
 
 }

@@ -27,7 +27,7 @@ public class PresherPlateMinecartEntity extends HasVariantRegularBlockMinecartEn
         super(presherPlateMinecartEntityEntityType, world);
     }
     @Override
-    public Item getDropItem() {
+    public @NonNull Item getDropItem() {
         return MRModItems.PRESHER_PLATE_MINECART.get();
     }
     @Override
