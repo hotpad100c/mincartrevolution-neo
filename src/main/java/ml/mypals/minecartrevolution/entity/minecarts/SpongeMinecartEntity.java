@@ -1,6 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
-import ml.mypals.minecartrevolution.item.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

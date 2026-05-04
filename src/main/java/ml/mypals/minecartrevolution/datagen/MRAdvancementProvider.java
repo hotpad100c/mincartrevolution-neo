@@ -1,11 +1,10 @@
 package ml.mypals.minecartrevolution.datagen;
 
-import ml.mypals.minecartrevolution.MinecartRevolution;
 import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.MRModCriteria;
-import ml.mypals.minecartrevolution.entity.minecarts.MRModEntities;
-import ml.mypals.minecartrevolution.item.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRModCriteria;
+import ml.mypals.minecartrevolution.registeries.MRModEntities;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -15,7 +14,6 @@ import net.minecraft.advancements.criterion.StartRidingTrigger;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;

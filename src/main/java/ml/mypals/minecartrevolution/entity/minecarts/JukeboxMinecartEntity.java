@@ -1,8 +1,8 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
-import ml.mypals.minecartrevolution.advancements.criterion.MRModCriteria;
+import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
-import ml.mypals.minecartrevolution.item.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.manager.MovingJukeboxManager;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;

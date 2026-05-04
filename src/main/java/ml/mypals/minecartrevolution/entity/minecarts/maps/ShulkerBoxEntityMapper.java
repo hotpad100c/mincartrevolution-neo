@@ -1,6 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
-import ml.mypals.minecartrevolution.entity.minecarts.MRModEntities;
+import ml.mypals.minecartrevolution.registeries.MRModEntities;
 import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.DyeColor;

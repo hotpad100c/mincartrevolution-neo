@@ -1,14 +1,4 @@
-package ml.mypals.minecartrevolution.registry;
-
-import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
-import ml.mypals.minecartrevolution.entity.minecarts.DamageCausingMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.MRModEntities;
-import ml.mypals.minecartrevolution.entity.minecarts.SpongeMinecartEntity;
-import ml.mypals.minecartrevolution.item.MRModItems;
-import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
-import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.level.block.Blocks;
-import java.util.List;
+package ml.mypals.minecartrevolution.factory;
 
 public class MinecartRegister {
     /*

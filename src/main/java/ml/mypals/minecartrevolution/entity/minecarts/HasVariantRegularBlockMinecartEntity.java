@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
-import ml.mypals.minecartrevolution.item.MRModItems;
+import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -32,7 +33,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Optional;
 
 public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
-    protected HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
+    public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
     }
     public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Block blockInside) {

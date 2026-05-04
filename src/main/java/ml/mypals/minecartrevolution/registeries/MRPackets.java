@@ -1,4 +1,4 @@
-package ml.mypals.minecartrevolution.packets;
+package ml.mypals.minecartrevolution.registeries;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
 

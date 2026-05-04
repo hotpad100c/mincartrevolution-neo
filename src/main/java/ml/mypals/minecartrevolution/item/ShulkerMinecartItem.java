@@ -1,24 +1,17 @@
 package ml.mypals.minecartrevolution.item;
 
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
-import ml.mypals.minecartrevolution.entity.minecarts.MinecartTransformManager;
+import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.NonNull;
-
-import java.util.function.Consumer;
 
 public class ShulkerMinecartItem extends MultiVariantMinecartWithBlockItem{
     private static final Component UNKNOWN_CONTENTS_TEXT = Component.translatable("container.shulkerBox.unknownContents");

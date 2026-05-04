@@ -1,6 +1,8 @@
-package ml.mypals.minecartrevolution.advancements.criterion;
+package ml.mypals.minecartrevolution.registeries;
 
 import ml.mypals.minecartrevolution.MinecartRevolution;
+import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;

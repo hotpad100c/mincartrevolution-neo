@@ -1,10 +1,9 @@
 package ml.mypals.minecartrevolution;
 
-import ml.mypals.minecartrevolution.client.entity.MRModEntityRenderers;
+import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelEventHandler;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -15,7 +14,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.JukeboxSong;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -27,11 +25,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handlers.ServerPayloadHandler;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.registration.HandlerThread;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;

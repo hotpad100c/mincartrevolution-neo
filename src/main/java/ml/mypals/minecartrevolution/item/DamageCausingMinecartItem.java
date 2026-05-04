@@ -2,7 +2,7 @@ package ml.mypals.minecartrevolution.item;
 
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import ml.mypals.minecartrevolution.entity.minecarts.DamageCausingMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.MRModEntities;
+import ml.mypals.minecartrevolution.registeries.MRModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;

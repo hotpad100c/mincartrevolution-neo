@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
 
 public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
-    protected DragonEggMinecart(EntityType<? extends AbstractMinecart> entityType, Level world) {
+    public DragonEggMinecart(EntityType<DragonEggMinecart> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -28,6 +28,7 @@ public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
     protected DragonEggMinecart(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {
         super(entityType, world, correspondingItem);
     }
+
 
     @Override
     public void activateMinecart(@NonNull ServerLevel level, int x, int y, int z, boolean powered) {

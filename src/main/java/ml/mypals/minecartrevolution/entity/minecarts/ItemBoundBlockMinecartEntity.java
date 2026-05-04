@@ -1,7 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import com.mojang.logging.LogUtils;
-import ml.mypals.minecartrevolution.item.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -102,14 +102,10 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
 
         this.saveWithoutId(valueOutput);
         CompoundTag nbt = valueOutput.buildResult();
+        this.correspondingItem = BuiltInRegistries.ITEM.get(
+                Identifier.parse(String.valueOf(nbt.getString("correspondingItem"))))
+                .orElse(MRModItems.BLOCK_MINECART.get().builtInRegistryHolder()).value();
 
-        if (nbt.contains("correspondingItem")) {
-            this.correspondingItem = BuiltInRegistries.ITEM.get(
-                    Identifier.parse(String.valueOf(nbt.getString("correspondingItem"))))
-                    .orElse(Items.AIR.builtInRegistryHolder()).value();
-        } else {
-            this.correspondingItem = MRModItems.BLOCK_MINECART.get();
-        }
 
         return this.correspondingItem;
     }

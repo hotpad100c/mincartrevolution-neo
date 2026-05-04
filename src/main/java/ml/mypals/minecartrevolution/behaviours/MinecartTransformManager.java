@@ -1,5 +1,6 @@
-package ml.mypals.minecartrevolution.entity.minecarts;
+package ml.mypals.minecartrevolution.behaviours;
 
+import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.BarrelMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.TrappedChestMinecartEntity;
@@ -7,8 +8,9 @@ import ml.mypals.minecartrevolution.entity.minecarts.redstone.HorizontalDirectio
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.WeightPresherPlateMinecartEntity;
-import ml.mypals.minecartrevolution.item.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
+import ml.mypals.minecartrevolution.registeries.MRModEntities;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;

@@ -1,16 +1,12 @@
-package ml.mypals.minecartrevolution.client.entity;
+package ml.mypals.minecartrevolution.registeries;
 
-import ml.mypals.minecartrevolution.MinecartRevolution;
-import ml.mypals.minecartrevolution.entity.minecarts.MRModEntities;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-import javax.swing.text.html.parser.Entity;
-
-import static ml.mypals.minecartrevolution.entity.minecarts.MRModEntities.ENTITIES;
+import static ml.mypals.minecartrevolution.registeries.MRModEntities.ENTITIES;
 
 public class MRModEntityRenderers {
     public static void init(EntityRenderersEvent.RegisterRenderers registerRenderers){

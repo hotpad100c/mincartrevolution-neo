@@ -1,13 +1,12 @@
 package ml.mypals.minecartrevolution.packets;
 
-import static ml.mypals.minecartrevolution.packets.MRPackets.JUKEBOX_MINECART_UPDATE;
+import static ml.mypals.minecartrevolution.registeries.MRPackets.JUKEBOX_MINECART_UPDATE;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import org.jspecify.annotations.NonNull;
 
 public record JukeboxUpdateS2CPacket(int uuid, int dickID, boolean play) implements CustomPacketPayload {
 

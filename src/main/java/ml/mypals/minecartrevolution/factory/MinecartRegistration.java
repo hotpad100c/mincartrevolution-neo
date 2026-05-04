@@ -1,12 +1,8 @@
-package ml.mypals.minecartrevolution.registry;
+package ml.mypals.minecartrevolution.factory;
 
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.state.MinecartRenderState;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
@@ -17,9 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiFunction;
-
-import static ml.mypals.minecartrevolution.entity.minecarts.MinecartTransformManager.factoryMap;
-import static ml.mypals.minecartrevolution.item.MRModItems.MINECART_REVOLUTION_ITEM_GROUP_KEY;
 
 public class MinecartRegistration {
     public static List<MinecartRegistration> registrationsSaved;

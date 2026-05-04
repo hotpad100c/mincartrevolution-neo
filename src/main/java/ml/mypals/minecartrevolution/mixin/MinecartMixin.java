@@ -1,8 +1,8 @@
 package ml.mypals.minecartrevolution.mixin;
 
-import ml.mypals.minecartrevolution.advancements.criterion.MRModCriteria;
-import ml.mypals.minecartrevolution.entity.minecarts.MinecartTransformManager;
-import ml.mypals.minecartrevolution.item.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRModCriteria;
+import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.vehicle.minecart.Minecart;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;

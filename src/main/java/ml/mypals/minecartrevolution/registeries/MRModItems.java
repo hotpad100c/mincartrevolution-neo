@@ -1,8 +1,11 @@
-package ml.mypals.minecartrevolution.item;
+package ml.mypals.minecartrevolution.registeries;
 
 
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
-import net.minecraft.core.Registry;
+import ml.mypals.minecartrevolution.item.DamageCausingMinecartItem;
+import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
+import ml.mypals.minecartrevolution.item.MultiVariantMinecartWithBlockItem;
+import ml.mypals.minecartrevolution.item.ShulkerMinecartItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -13,7 +16,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;

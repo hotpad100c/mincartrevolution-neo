@@ -1,6 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
-import ml.mypals.minecartrevolution.entity.minecarts.MRModEntities;
+import ml.mypals.minecartrevolution.registeries.MRModEntities;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.Level;

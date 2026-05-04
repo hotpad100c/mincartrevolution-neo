@@ -1,7 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.redstone;
 
 import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
-import ml.mypals.minecartrevolution.item.MRModItems;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
