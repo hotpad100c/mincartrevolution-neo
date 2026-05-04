@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "craft_dragon_egg_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.dragon_egg_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "description": "它需要一些刺激",
+    "frame": "challenge",
+    "icon": {
+      "id": "minecraft:dragon_egg"
+    },
+    "title": "这是摇篮吗？"
+  },
+  "requirements": [
+    [
+      "craft_dragon_egg_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

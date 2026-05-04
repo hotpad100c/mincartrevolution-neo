@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "got_dangerous_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.harmful_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "description": "我最好不要靠近它..",
+    "frame": "challenge",
+    "icon": {
+      "id": "minecraft:dragon_egg"
+    },
+    "title": "敌意满满"
+  },
+  "requirements": [
+    [
+      "got_dangerous_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
