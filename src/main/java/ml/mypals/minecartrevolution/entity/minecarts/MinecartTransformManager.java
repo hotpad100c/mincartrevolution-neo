@@ -97,46 +97,46 @@ public class MinecartTransformManager {
                     abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
                     return abstractMinecart;
                 }),
-                Map.entry(Blocks.FURNACE, (w, pos) ->{
-                            AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
-                            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                            return abstractMinecart;
+                Map.entry(Blocks.FURNACE, (w, pos) -> {
+                    AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
+                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+                    return abstractMinecart;
                 }),
-                Map.entry(Blocks.TNT, (w, pos) ->{
+                Map.entry(Blocks.TNT, (w, pos) -> {
                     AbstractMinecart abstractMinecart = new MinecartTNT(EntityType.TNT_MINECART, w);
                     abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
                     return abstractMinecart;
                 }),
-                Map.entry(Blocks.SPAWNER, (w, pos)->{
+                Map.entry(Blocks.SPAWNER, (w, pos) -> {
                     AbstractMinecart abstractMinecart = new MinecartSpawner(EntityType.SPAWNER_MINECART, w);
                     abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
                     return abstractMinecart;
                 }),
                 Map.entry(Blocks.HOPPER, (w, pos) -> {
-                    MinecartHopper hopperMinecartEntity = new MinecartHopper(EntityType.HOPPER_MINECART,w);
+                    MinecartHopper hopperMinecartEntity = new MinecartHopper(EntityType.HOPPER_MINECART, w);
                     hopperMinecartEntity.setInitialPos(pos.x, pos.y, pos.z);
                     hopperMinecartEntity.setDisplayOffset(1);
                     hopperMinecartEntity.setCustomDisplayBlockState(Optional.of(Blocks.HOPPER.defaultBlockState()));
                     return hopperMinecartEntity;
                 }),
-                Map.entry(Blocks.DRAGON_EGG,(w,pos)->new DragonEggMinecart(MRModEntities.DRAGON_EGG_MINECART.get(), w,pos.x,pos.y,pos.z,(MinecartWithBlockItem)MRModItems.DRAGON_EGG_MINECART)),
-                Map.entry(Blocks.COMMAND_BLOCK, (w, pos)->{
+                Map.entry(Blocks.DRAGON_EGG, (w, pos) -> new DragonEggMinecart(MRModEntities.DRAGON_EGG_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem) MRModItems.DRAGON_EGG_MINECART.get())),
+                Map.entry(Blocks.COMMAND_BLOCK, (w, pos) -> {
                     AbstractMinecart abstractMinecart = new MinecartCommandBlock(EntityType.COMMAND_BLOCK_MINECART, w);
                     abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
                     return abstractMinecart;
                 }),
-                Map.entry(Blocks.CACTUS, (w, pos) -> new DamageCausingMinecartEntity(MRModEntities.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, (MinecartWithBlockItem)MRModItems.CACTUS_MINECART, DamageTypes.CACTUS)),
-                Map.entry(Blocks.MAGMA_BLOCK, (w, pos) -> new DamageCausingMinecartEntity(MRModEntities.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, (MinecartWithBlockItem)MRModItems.MAGMA_BLOCK_MINECART, DamageTypes.HOT_FLOOR)),
-                Map.entry(Blocks.CAMPFIRE, (w, pos) -> new DamageCausingMinecartEntity(MRModEntities.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, (MinecartWithBlockItem)MRModItems.CAMPFIRE_MINECART, DamageTypes.CAMPFIRE)),
-                Map.entry(Blocks.SOUL_CAMPFIRE, (w, pos) -> new DamageCausingMinecartEntity(MRModEntities.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 2f, (MinecartWithBlockItem)MRModItems.SOUL_CAMPFIRE_MINECART, DamageTypes.CAMPFIRE)),
-                Map.entry(Blocks.REDSTONE_BLOCK, (w, pos) -> new RedstoneBlockMinecartEntity(MRModEntities.POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem)MRModItems.REDSTONE_MINECART)),
-                Map.entry(Blocks.REPEATER, (w, pos) -> new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRModEntities.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem)MRModItems.REPEATER_MINECART)),
-                Map.entry(Blocks.SPONGE, (w, pos) -> new SpongeMinecartEntity(MRModEntities.SPONGE_MINECART.get(), w, pos.x, pos.y, pos.z,SpongeMinecartEntity.ABSORB_RADIUS,SpongeMinecartEntity.ABSORB_LIMIT, (MinecartWithBlockItem)MRModItems.SPONGE_MINECART)),
-                Map.entry(Blocks.WET_SPONGE, (w, pos) -> new SpongeMinecartEntity(MRModEntities.SPONGE_MINECART.get(), w, pos.x, pos.y, pos.z,SpongeMinecartEntity.ABSORB_RADIUS,SpongeMinecartEntity.ABSORB_LIMIT, (MinecartWithBlockItem)MRModItems.WET_SPONGE_MINECART)),
+                Map.entry(Blocks.CACTUS, (w, pos) -> new DamageCausingMinecartEntity(MRModEntities.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, (MinecartWithBlockItem) MRModItems.CACTUS_MINECART.get(), DamageTypes.CACTUS)),
+                Map.entry(Blocks.MAGMA_BLOCK, (w, pos) -> new DamageCausingMinecartEntity(MRModEntities.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, (MinecartWithBlockItem) MRModItems.MAGMA_BLOCK_MINECART.get(), DamageTypes.HOT_FLOOR)),
+                Map.entry(Blocks.CAMPFIRE, (w, pos) -> new DamageCausingMinecartEntity(MRModEntities.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, (MinecartWithBlockItem) MRModItems.CAMPFIRE_MINECART.get(), DamageTypes.CAMPFIRE)),
+                Map.entry(Blocks.SOUL_CAMPFIRE, (w, pos) -> new DamageCausingMinecartEntity(MRModEntities.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 2f, (MinecartWithBlockItem) MRModItems.SOUL_CAMPFIRE_MINECART.get(), DamageTypes.CAMPFIRE)),
+                Map.entry(Blocks.REDSTONE_BLOCK, (w, pos) -> new RedstoneBlockMinecartEntity(MRModEntities.POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem) MRModItems.REDSTONE_MINECART.get())),
+                Map.entry(Blocks.REPEATER, (w, pos) -> new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRModEntities.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem) MRModItems.REPEATER_MINECART.get())),
+                Map.entry(Blocks.SPONGE, (w, pos) -> new SpongeMinecartEntity(MRModEntities.SPONGE_MINECART.get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, (MinecartWithBlockItem) MRModItems.SPONGE_MINECART.get())),
+                Map.entry(Blocks.WET_SPONGE, (w, pos) -> new SpongeMinecartEntity(MRModEntities.SPONGE_MINECART.get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, (MinecartWithBlockItem) MRModItems.WET_SPONGE_MINECART.get())),
                 Map.entry(Blocks.BARREL, (w, pos) -> new BarrelMinecartEntity(MRModEntities.BARREL_MINECART.get(), w, pos.x, pos.y, pos.z)),
-                Map.entry(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRModEntities.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z,(MinecartWithBlockItem)MRModItems.GOLDEN_PRESHER_PLATE_MINECART)),
-                Map.entry(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRModEntities.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z,(MinecartWithBlockItem)MRModItems.IRON_PRESHER_PLATE_MINECART)),
-                Map.entry(Blocks.JUKEBOX, (w, pos) -> new JukeboxMinecartEntity(MRModEntities.JUKEBOX_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem)MRModItems.JUKEBOX_MINECART))
+                Map.entry(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRModEntities.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem) MRModItems.GOLDEN_PRESHER_PLATE_MINECART.get())),
+                Map.entry(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRModEntities.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem) MRModItems.IRON_PRESHER_PLATE_MINECART.get())),
+                Map.entry(Blocks.JUKEBOX, (w, pos) -> new JukeboxMinecartEntity(MRModEntities.JUKEBOX_MINECART.get(), w, pos.x, pos.y, pos.z, (MinecartWithBlockItem) MRModItems.JUKEBOX_MINECART.get()))
         ));
         factoryMap.putAll(PRESSURE_PLATE_ENTITY_MAP);
         factoryMap.putAll(SHULKER_ENTITY_MAP);

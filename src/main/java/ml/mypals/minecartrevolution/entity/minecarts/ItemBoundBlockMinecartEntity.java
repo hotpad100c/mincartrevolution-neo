@@ -131,19 +131,16 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
     }
 
 
-    @Override
     public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
-        if (nbt.getString("correspondingItem").isPresent()) {
-
-            this.correspondingItem = BuiltInRegistries.ITEM.get(
-                Identifier.parse(String.valueOf(nbt.getString("correspondingItem"))))
-                .orElse(Items.AIR.builtInRegistryHolder()).value();
-        } else {
-            this.correspondingItem = Items.MINECART;
-        }
+        Optional<String> itemIdOpt = nbt.getString("correspondingItem");
+        this.correspondingItem = itemIdOpt.map(s -> BuiltInRegistries.ITEM.get(
+                        Identifier.parse(s))
+                .orElse(Items.AIR.builtInRegistryHolder())
+                .value()).orElse(Items.MINECART);
         this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
     }
+
     @Override
     public void saveWithoutId(ValueOutput nbt) {
         nbt.putString("correspondingItem", BuiltInRegistries.ITEM.getKey(this.correspondingItem).toString());
