@@ -1,10 +1,16 @@
 package ml.mypals.minecartrevolution;
 
 import ml.mypals.minecartrevolution.advancements.criterion.MRModCriteria;
+import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
 import ml.mypals.minecartrevolution.entity.minecarts.MRModEntities;
 import ml.mypals.minecartrevolution.item.MRModItems;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.data.advancements.AdvancementProvider;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handlers.ServerPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -37,6 +43,13 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.List;
+
+import static ml.mypals.minecartrevolution.advancements.criterion.MRModCriteria.TRIGGERS;
+import static ml.mypals.minecartrevolution.entity.minecarts.MRModEntities.ENTITIES;
+import static ml.mypals.minecartrevolution.item.MRModItems.*;
+import static net.neoforged.neoforge.common.NeoForgeMod.MOD_ID;
+
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(MinecartRevolution.MODID)
 public class MinecartRevolution {
@@ -44,52 +57,50 @@ public class MinecartRevolution {
     public static final String MODID = "minecartrevolution";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold Blocks which will all be registered under the "mincartrevolution" namespace
-    public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(MODID);
-    // Create a Deferred Register to hold Items which will all be registered under the "mincartrevolution" namespace
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "mincartrevolution" namespace
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-
 
     // Creates a creative tab with the id "mincartrevolution:example_tab" for the example item, that is placed after the combat tab
 
 
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MODID, path);
+    }
+    public static String idString(String path) {
+        return MODID + ":" + path;
+    }
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public MinecartRevolution(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
-        ENTITIES.register(modEventBus);
+        modEventBus.addListener(this::gatherData);
         ITEMS.register(modEventBus);
+        ENTITIES.register(modEventBus);
+        TRIGGERS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
 
+        /*
+        MRModCriteria.init();
+        MRModItems.init();
+        MRModEntities.init();*/
     }
 
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
-
-        if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
-            LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
-        }
-
-        LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
-
-        Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
-
-
-        MRModCriteria.init();
-        MRModItems.init();
-        MRModEntities.init();
-
+        registerDispenserBehaviors();
     }
 
 
-
+    public void gatherData(GatherDataEvent.Client event) {
+        event.createProvider((output, lookupProvider) ->
+                new AdvancementProvider(
+                output, lookupProvider,
+                List.of(
+                        MRAdvancementProvider::generate
+                )
+    ));
+    }
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {

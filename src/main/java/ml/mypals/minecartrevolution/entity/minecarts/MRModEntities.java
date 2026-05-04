@@ -14,12 +14,15 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-import static ml.mypals.minecartrevolution.MinecartRevolution.ENTITIES;
+import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
+
 
 public class MRModEntities {
+    public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(MODID);
 
     public static final Supplier<EntityType<DamageCausingMinecartEntity>> DAMAGE_CAUSING_MINECART = ENTITIES.register(
             "harmful_minecart",
@@ -27,7 +30,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "harmful_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "harmful_minecart")))
     );
 
     public static final Supplier<EntityType<RedstoneBlockMinecartEntity>> POWER_PROVIDER_MINECART = ENTITIES.register(
@@ -36,7 +39,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "power_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "power_minecart")))
     );
 
     public static final Supplier<EntityType<RedstoneBlockMinecartEntity>> DIRECTIONAL_POWER_PROVIDER_MINECART = ENTITIES.register(
@@ -45,7 +48,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "power_minecart_directional")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "power_minecart_directional")))
     );
 
     public static final Supplier<EntityType<HasVariantRegularBlockMinecartEntity>> BLOCK_MINECART = ENTITIES.register(
@@ -54,7 +57,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "block_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "block_minecart")))
     );
 
     public static final Supplier<EntityType<SpongeMinecartEntity>> SPONGE_MINECART = ENTITIES.register(
@@ -63,7 +66,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "sponge_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "sponge_minecart")))
     );
 
     public static final Supplier<EntityType<BarrelMinecartEntity>> BARREL_MINECART = ENTITIES.register(
@@ -72,7 +75,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "barrel_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "barrel_minecart")))
     );
 
     public static final Supplier<EntityType<TrappedChestMinecartEntity>> TRAPPED_CHEST_MINECART = ENTITIES.register(
@@ -81,7 +84,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "trapped_chest_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "trapped_chest_minecart")))
     );
 
     public static final Supplier<EntityType<PresherPlateMinecartEntity>> PRESHER_PLATE_MINECART = ENTITIES.register(
@@ -90,7 +93,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "presher_plate_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "presher_plate_minecart")))
     );
 
     public static final Supplier<EntityType<WeightPresherPlateMinecartEntity>> WEIGHT_PRESHER_PLATE_MINECART = ENTITIES.register(
@@ -99,7 +102,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "weight_presher_plate_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "weight_presher_plate_minecart")))
     );
 
     public static final Supplier<EntityType<JukeboxMinecartEntity>> JUKEBOX_MINECART = ENTITIES.register(
@@ -108,7 +111,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "jukebox_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "jukebox_minecart")))
     );
 
     public static final Supplier<EntityType<ShulkerMinecartEntity>> SHULKER_MINECART = ENTITIES.register(
@@ -117,7 +120,7 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "shulker_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "shulker_minecart")))
     );
 
     public static final Supplier<EntityType<DragonEggMinecart>> DRAGON_EGG_MINECART = ENTITIES.register(
@@ -126,10 +129,10 @@ public class MRModEntities {
                     .sized(0.98F, 0.7F)
                     .passengerAttachments(0.1875F)
                     .clientTrackingRange(8)
-                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MinecartRevolution.MODID, "dragon_egg_minecart")))
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MODID, "dragon_egg_minecart")))
     );
 
-    public static void init() {
-        // Method to ensure class loading
+    public static void init(){
+        System.out.println("MRModEntities loaded");
     }
 }

@@ -4,6 +4,7 @@ package ml.mypals.minecartrevolution.item;
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -12,6 +13,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
@@ -19,11 +22,17 @@ import static ml.mypals.minecartrevolution.MinecartRevolution.*;
 
 
 public class MRModItems {
+
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+
+    // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "mincartrevolution" namespace
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+
+
+
     public static final ResourceKey<CreativeModeTab> MINECART_REVOLUTION_ITEM_GROUP_KEY =
             ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(),
                     Identifier.fromNamespaceAndPath(MODID, "item_group"));
-
-// ==================== 物品注册 ====================
 
     public static final Supplier<Item> CACTUS_MINECART = ITEMS.register(
             "minecart_cactus",
@@ -218,8 +227,7 @@ public class MRModItems {
             }).build());
 
     public static void init(){
-        
-        registerDispenserBehaviors();
+        System.out.println("MRModItems loaded");
     }
     public static void registerDispenserBehaviors(){
         DispenserBlock.registerBehavior(MRModItems.CACTUS_MINECART.get(), DamageCausingMinecartItem.DISPENSER_BEHAVIOR);

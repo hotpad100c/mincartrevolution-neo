@@ -180,7 +180,7 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
         if (this.moveDist > 2f && !this.level().isClientSide() && !this.disc.isEmpty()) {
             for(Entity passenger : this.getPassengers()) {
                 if (passenger instanceof ServerPlayer player) {
-                    MRModCriteria.ENTITY_MOVED.trigger(player, this);
+                    MRModCriteria.ENTITY_MOVED.get().trigger(player, this);
                 }
             }
         }

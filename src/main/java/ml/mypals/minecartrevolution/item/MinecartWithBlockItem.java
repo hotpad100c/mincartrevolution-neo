@@ -94,7 +94,7 @@ public class MinecartWithBlockItem extends Item {
         this.type = type;
         this.corrospondingItem = this;
         this.blockInside = blockInside;
-        DispenserBlock.registerBehavior(this, DISPENSER_BEHAVIOR);
+        //DispenserBlock.registerBehavior(this, DISPENSER_BEHAVIOR);
     }
     public void setBlockInside(Block blockInside) {
         this.blockInside = blockInside;
@@ -103,7 +103,7 @@ public class MinecartWithBlockItem extends Item {
         return this.blockInside;
     }
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NonNull InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
         BlockState blockState = world.getBlockState(blockPos);

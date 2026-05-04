@@ -71,14 +71,14 @@ public class SpongeMinecartEntity extends ItemBoundBlockMinecartEntity {
             if (this.absorbWater(world, pos)) {
                 this.setCustomDisplayBlockState(Optional.of(Blocks.WET_SPONGE.defaultBlockState()));
                 world.playSound(this, pos, SoundEvents.SPONGE_ABSORB, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setCorrespondingItem(MRModItems.WET_SPONGE_MINECART);
+                this.setCorrespondingItem(MRModItems.WET_SPONGE_MINECART.get());
             }
         } else if (block instanceof WetSpongeBlock) {
 
             if (level().dimensionType().attributes().contains(EnvironmentAttributes.WATER_EVAPORATES)) {
                 this.setCustomDisplayBlockState(Optional.of(Blocks.SPONGE.defaultBlockState()));
                 world.playSound(this, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setCorrespondingItem(MRModItems.SPONGE_MINECART);
+                this.setCorrespondingItem(MRModItems.SPONGE_MINECART.get());
 
             }else if(level() instanceof ServerLevel serverLevel &&
                     serverLevel.getRandom().nextInt(4096)

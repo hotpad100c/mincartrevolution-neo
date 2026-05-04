@@ -25,27 +25,26 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
 public class DamageCausingMinecartItem extends MinecartWithBlockItem {
     final float damageAmount;
     final MinecartWithBlockItem correspondingItem;
-    final Block blockInside;
     final ResourceKey<DamageType> damageType;
 
     public DamageCausingMinecartItem(AdvancedMinecartEntityTypes.Type type, Properties settings, float damageAmount, Block blockInside, ResourceKey<DamageType> damageType) {
-        super(type, settings,blockInside);
+        super(type, settings, blockInside);
         this.damageAmount = damageAmount;
         this.damageType = damageType;
         this.correspondingItem = this;
-        this.blockInside = blockInside;
     }
     public static final DispenseItemBehavior DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior() {
         private final DefaultDispenseItemBehavior defaultBehavior = new DefaultDispenseItemBehavior();
 
         @Override
-        public ItemStack execute(BlockSource pointer, ItemStack stack) {
+        public @NonNull ItemStack execute(BlockSource pointer, @NonNull ItemStack stack) {
             Direction direction = pointer.state().getValue(DispenserBlock.FACING);
             ServerLevel serverWorld = pointer.level();
             Vec3 vec3d = pointer.center();
@@ -98,7 +97,7 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
     public static AbstractMinecart getCart(Level world, double x, double y, double z, Block blockInside, MinecartWithBlockItem correspondingItem) {
 
        DamageCausingMinecartEntity damageCausingMinecartEntity = new DamageCausingMinecartEntity(
-               MRModEntities.DAMAGE_CAUSING_MINECART, world,
+               MRModEntities.DAMAGE_CAUSING_MINECART.get(), world,
                 x, y, z,
                 ((DamageCausingMinecartItem)correspondingItem).damageAmount,
                correspondingItem,
@@ -109,7 +108,7 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NonNull InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
         BlockState blockState = world.getBlockState(blockPos);

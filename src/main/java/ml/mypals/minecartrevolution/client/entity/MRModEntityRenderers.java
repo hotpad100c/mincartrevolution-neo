@@ -1,13 +1,34 @@
 package ml.mypals.minecartrevolution.client.entity;
 
+import ml.mypals.minecartrevolution.MinecartRevolution;
 import ml.mypals.minecartrevolution.entity.minecarts.MRModEntities;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.vehicle.minecart.Minecart;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+
+import javax.swing.text.html.parser.Entity;
+
+import static ml.mypals.minecartrevolution.entity.minecarts.MRModEntities.ENTITIES;
 
 public class MRModEntityRenderers {
     public static void init(EntityRenderersEvent.RegisterRenderers registerRenderers){
-        registerRenderers.registerEntityRenderer(MRModEntities.DRAGON_EGG_MINECART.get(), (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
+
+        ENTITIES.getEntries()
+                .forEach(
+                entityTypeDeferredHolder -> {
+                    try {
+                        EntityType<? extends Minecart> entity = (EntityType<? extends Minecart>) (entityTypeDeferredHolder.get());
+                        registerRenderers.registerEntityRenderer(
+                                entity,
+                                (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
+
+                    }catch (Exception ignored){
+
+                    }
+                }
+        );/*
         registerRenderers.registerEntityRenderer(MRModEntities.TRAPPED_CHEST_MINECART.get(), (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
         registerRenderers.registerEntityRenderer(MRModEntities.SPONGE_MINECART.get(), (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
         registerRenderers.registerEntityRenderer(MRModEntities.DAMAGE_CAUSING_MINECART.get(), (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
@@ -19,5 +40,6 @@ public class MRModEntityRenderers {
         registerRenderers.registerEntityRenderer(MRModEntities.WEIGHT_PRESHER_PLATE_MINECART.get(), (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
         registerRenderers.registerEntityRenderer(MRModEntities.JUKEBOX_MINECART.get(), (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
         registerRenderers.registerEntityRenderer(MRModEntities.SHULKER_MINECART.get(), (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
+ */
     }
 }
