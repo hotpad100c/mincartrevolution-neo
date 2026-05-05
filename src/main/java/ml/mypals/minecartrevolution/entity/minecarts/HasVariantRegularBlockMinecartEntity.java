@@ -173,10 +173,10 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
         String blockName = blockState.getBlock().getName().getString();
 
-        String cartName = Items.MINECART.getDescriptionId();
+        String cartName = Items.MINECART.getName(Items.MINECART.getDefaultInstance()).getString();
 
         stack.set(DataComponents.ITEM_NAME, Component.nullToEmpty(String.format(
-                stack.getHoverName().getString(),blockName,cartName)));
+                stack.getHoverName().getString(), blockName, cartName)));
         return stack;
     }
     public boolean hasCustomDisplay() {

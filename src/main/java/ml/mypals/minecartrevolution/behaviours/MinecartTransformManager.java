@@ -8,6 +8,7 @@ import ml.mypals.minecartrevolution.entity.minecarts.redstone.HorizontalDirectio
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.WeightPresherPlateMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
@@ -40,6 +41,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.LOGGER;
+import static ml.mypals.minecartrevolution.entity.minecarts.maps.NonInventoryWorkingBlockEntityMapper.NON_INVENTORY_WORKING;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.PressurePlateEntityMapper.PRESSURE_PLATE_ENTITY_MAP;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.ShulkerBoxEntityMapper.SHULKER_ENTITY_MAP;
 
@@ -155,6 +157,7 @@ public class MinecartTransformManager {
         ));
         factoryMap.putAll(PRESSURE_PLATE_ENTITY_MAP);
         factoryMap.putAll(SHULKER_ENTITY_MAP);
+        factoryMap.putAll(NON_INVENTORY_WORKING);
     }
 
     public static AbstractMinecart getTransform(Level world, Vec3 pos, Block block, ItemStack handStack){
@@ -192,6 +195,7 @@ public class MinecartTransformManager {
                 minecartFurnace.setInitialPos(pos.x,pos.y, pos.z);
                 yield minecartFurnace;
             }
+            case WORKING_NON_INVENTORY -> new NonInventoryWorkingBlockMinecartEntity(MRMinecarts.NON_INVENTORY_WORKING_MINECART.get(), world, pos.x,pos.y,pos.z,blockInside);
             default -> new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z,blockInside);
         };
     }

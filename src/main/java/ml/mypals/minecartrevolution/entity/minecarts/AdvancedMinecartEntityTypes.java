@@ -14,6 +14,7 @@ public class AdvancedMinecartEntityTypes {
         SHULKER,
         TRAPPED_CHEST,
         DRAGON_EGG,
-        FURNACE
+        FURNACE,
+        WORKING_NON_INVENTORY
     }
 }

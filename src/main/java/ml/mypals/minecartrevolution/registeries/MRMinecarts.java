@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.registeries;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
+import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.*;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
@@ -209,6 +210,10 @@ public class MRMinecarts {
             "smoker_minecart", null,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.FURNACE, p.stacksTo(1), Blocks.SMOKER),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+
+    public static final DeferredHolder<EntityType<?>, EntityType<NonInventoryWorkingBlockMinecartEntity>> NON_INVENTORY_WORKING_MINECART =
+            registerEntityOnly("working_minecart", NonInventoryWorkingBlockMinecartEntity::new);
 
 
     public static void init() {
