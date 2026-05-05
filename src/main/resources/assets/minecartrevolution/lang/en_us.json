@@ -29,6 +29,16 @@
   "item.minecartrevolution.minecart_iron_presher_plate":"Heavy Weight Presher Plate Minecart",
   "item.minecartrevolution.smoker_minecart":"Smoker Minecart",
   "item.minecartrevolution.blast_furnace_minecart":"Blast Furnace Minecart",
+  "item.minecartrevolution.minecart_crafting_table": "Crafting Table Minecart",
+  "item.minecartrevolution.minecart_stonecutter": "Stonecutter Minecart",
+  "item.minecartrevolution.minecart_loom": "Loom Minecart",
+  "item.minecartrevolution.minecart_cartography_table": "Cartography Table Minecart",
+  "item.minecartrevolution.minecart_grindstone": "Grindstone Minecart",
+  "item.minecartrevolution.minecart_smithing_table": "Smithing Table Minecart",
+  "item.minecartrevolution.minecart_anvil": "Anvil Minecart",
+  "item.minecartrevolution.minecart_enchanting_table": "Enchanting Table Minecart",
+  "item.minecartrevolution.minecart_ender_chest": "Ender Chest Minecart",
+  "entity.minecartrevolution.working_minecart": "Working Minecart",
 
   "itemGroup.minecartrevolution": "Minecart Revolution"
 }

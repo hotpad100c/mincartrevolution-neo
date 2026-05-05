@@ -115,6 +115,9 @@ public class MRMinecarts {
     public static final DeferredHolder<EntityType<?>, EntityType<WeightPresherPlateMinecartEntity>> WEIGHT_PRESHER_PLATE_MINECART = registerEntityOnly(
             "weight_presher_plate_minecart", WeightPresherPlateMinecartEntity::new);
 
+    public static final DeferredHolder<EntityType<?>, EntityType<NonInventoryWorkingBlockMinecartEntity>> NON_INVENTORY_WORKING_MINECART =
+            registerEntityOnly("working_minecart", NonInventoryWorkingBlockMinecartEntity::new);
+
     public static final MinecartEntry<DamageCausingMinecartEntity, DamageCausingMinecartItem> CACTUS_MINECART = registerItemOnly(
             "minecart_cactus", DAMAGE_CAUSING_MINECART,
             p -> new DamageCausingMinecartItem(AdvancedMinecartEntityTypes.Type.CAUSING_DAMAGE, p.stacksTo(1), 1.0f, Blocks.CACTUS, DamageTypes.CACTUS),
@@ -211,9 +214,51 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.FURNACE, p.stacksTo(1), Blocks.SMOKER),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> CRAFTING_TABLE_MINECART = registerItemOnly(
+            "minecart_crafting_table", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.CRAFTING_TABLE),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<NonInventoryWorkingBlockMinecartEntity>> NON_INVENTORY_WORKING_MINECART =
-            registerEntityOnly("working_minecart", NonInventoryWorkingBlockMinecartEntity::new);
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> STONECUTTER_MINECART = registerItemOnly(
+            "minecart_stonecutter", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.STONECUTTER),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> LOOM_MINECART = registerItemOnly(
+            "minecart_loom", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.LOOM),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> CARTOGRAPHY_TABLE_MINECART = registerItemOnly(
+            "minecart_cartography_table", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.CARTOGRAPHY_TABLE),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> GRINDSTONE_MINECART = registerItemOnly(
+            "minecart_grindstone", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.GRINDSTONE),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> SMITHING_TABLE_MINECART = registerItemOnly(
+            "minecart_smithing_table", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.SMITHING_TABLE),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ANVIL_MINECART = registerItemOnly(
+            "minecart_anvil", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ANVIL),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ENCHANTING_TABLE_MINECART = registerItemOnly(
+            "minecart_enchanting_table", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ENCHANTING_TABLE),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ENDER_CHEST_MINECART = registerItemOnly(
+            "minecart_ender_chest", NON_INVENTORY_WORKING_MINECART,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ENDER_CHEST),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
 
 
     public static void init() {
