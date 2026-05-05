@@ -1,10 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
-import ml.mypals.minecartrevolution.registeries.MRModEntities;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
-import ml.mypals.minecartrevolution.registeries.MRModItems;
-import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

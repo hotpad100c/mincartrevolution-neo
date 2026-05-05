@@ -27,6 +27,8 @@
   "item.minecartrevolution.minecart_presher_plate":"Presher Plate Minecart",
   "item.minecartrevolution.minecart_golden_presher_plate":"Light Weight Presher Plate Minecart",
   "item.minecartrevolution.minecart_iron_presher_plate":"Heavy Weight Presher Plate Minecart",
+  "item.minecartrevolution.smoker_minecart":"Smoker Minecart",
+  "item.minecartrevolution.blast_furnace_minecart":"Blast Furnace Minecart",
 
   "itemGroup.minecartrevolution": "Minecart Revolution"
 }

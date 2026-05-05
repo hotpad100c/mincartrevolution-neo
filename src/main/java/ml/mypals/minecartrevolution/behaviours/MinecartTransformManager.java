@@ -98,11 +98,25 @@ public class MinecartTransformManager {
                     abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
                     return abstractMinecart;
                 }),
+
                 Map.entry(Blocks.FURNACE, (w, pos) -> {
                     AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
                     abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
                     return abstractMinecart;
                 }),
+                Map.entry(Blocks.BLAST_FURNACE, (w, pos) -> {
+                    AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
+                    abstractMinecart.setCustomDisplayBlockState(Optional.of(Blocks.BLAST_FURNACE.defaultBlockState()));
+                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+                    return abstractMinecart;
+                }),
+                Map.entry(Blocks.SMOKER, (w, pos) -> {
+                    AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
+                    abstractMinecart.setCustomDisplayBlockState(Optional.of(Blocks.SMOKER.defaultBlockState()));
+                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+                    return abstractMinecart;
+                }),
+
                 Map.entry(Blocks.TNT, (w, pos) -> {
                     AbstractMinecart abstractMinecart = new MinecartTNT(EntityType.TNT_MINECART, w);
                     abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
@@ -172,6 +186,12 @@ public class MinecartTransformManager {
             case BARREL -> new BarrelMinecartEntity(MRMinecarts.BARREL_MINECART.entity().get(), world, pos.x, pos.y, pos.z);
             case JUKEBOX -> new JukeboxMinecartEntity(MRMinecarts.JUKEBOX_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case TRAPPED_CHEST -> new TrappedChestMinecartEntity(world, pos.x, pos.y, pos.z);
+            case FURNACE -> {
+                MinecartFurnace minecartFurnace = new MinecartFurnace(EntityType.FURNACE_MINECART, world);
+                minecartFurnace.setCustomDisplayBlockState(Optional.of(blockInside.defaultBlockState()));
+                minecartFurnace.setInitialPos(pos.x,pos.y, pos.z);
+                yield minecartFurnace;
+            }
             default -> new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z,blockInside);
         };
     }

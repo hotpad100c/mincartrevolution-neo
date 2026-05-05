@@ -12,7 +12,9 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.MinecartFurnace;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -35,7 +37,13 @@ public class MRMinecarts {
         DeferredItem<I> item,
         DispenseItemBehavior dispenseBehavior
     ) {}
-
+    public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> register(
+            String baseName,
+            EntityType.EntityFactory<E> entityFactory,
+            Function<Item.Properties, I> itemFactory
+    ) {
+        return register(baseName, entityFactory, itemFactory, MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+    }
     public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> register(
             String baseName,
             EntityType.EntityFactory<E> entityFactory,
@@ -191,6 +199,17 @@ public class MRMinecarts {
             "dragon_egg", DragonEggMinecart::new,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.DRAGON_EGG, p.stacksTo(1), Blocks.DRAGON_EGG),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<MinecartFurnace, MinecartWithBlockItem> BLAST_FURNACE_MINECART = registerItemOnly(
+            "blast_furnace_minecart", null,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.FURNACE, p.stacksTo(1), Blocks.BLAST_FURNACE),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<MinecartFurnace, MinecartWithBlockItem> SMOKER_MINECART = registerItemOnly(
+            "smoker_minecart", null,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.FURNACE, p.stacksTo(1), Blocks.SMOKER),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
 
     public static void init() {
         System.out.println("MRMinecarts loaded");

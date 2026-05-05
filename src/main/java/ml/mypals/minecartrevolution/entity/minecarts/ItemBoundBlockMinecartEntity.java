@@ -120,7 +120,7 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
 
         String blockName = blockState.getBlock().getName().getString();
 
-        String cartName = Items.MINECART.getDescriptionId();
+        String cartName = Items.MINECART.getDefaultInstance().getDisplayName().getString();
 
         stack.set(DataComponents.ITEM_NAME, Component.nullToEmpty(String.format(
                 stack.getHoverName().getString(),blockName,cartName)));

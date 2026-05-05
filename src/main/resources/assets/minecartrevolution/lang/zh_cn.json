@@ -17,5 +17,7 @@
   "item.minecartrevolution.minecart_presher_plate": "压力板矿车",
   "item.minecartrevolution.minecart_golden_presher_plate": "轻质压力板矿车",
   "item.minecartrevolution.minecart_iron_presher_plate": "重质压力板矿车",
+  "item.minecartrevolution.smoker_minecart":"烟熏炉矿车",
+  "item.minecartrevolution.blast_furnace_minecart":"高炉矿车",
   "itemGroup.minecartrevolution": "矿车革命"
 }

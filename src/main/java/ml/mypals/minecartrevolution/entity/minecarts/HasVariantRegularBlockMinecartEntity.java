@@ -1,8 +1,13 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
-import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
+import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,13 +30,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Optional;
+
+import static ml.mypals.minecartrevolution.client.light.DynamicLightsSpread.clearFromCenter;
 
 public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
     public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
@@ -76,6 +84,11 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
 
         }
         this.kill(serverLevel);
+    }
+    @Override
+    public void remove(Entity.@NonNull RemovalReason reason) {
+        removeDynamicLight(this.getOnPos().asLong(),true);
+        this.setRemoved(reason);
     }
     private void clear(){
         setCustomDisplayBlockState(Optional.of(Blocks.AIR.defaultBlockState()));
@@ -129,6 +142,12 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
             return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
         }
     }
+
+    @Override
+    public void activateMinecart(@NonNull ServerLevel level, int x, int y, int z, boolean powered) {
+        super.activateMinecart(level, x, y, z, powered);
+        handleActive(this, level, x, y, z, powered);
+    }
     @Override
     public @NonNull Vec3 getPassengerRidingPosition(@NonNull Entity passenger) {
         if (this.hasCustomDisplay()) {
@@ -160,10 +179,118 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
                 stack.getHoverName().getString(),blockName,cartName)));
         return stack;
     }
-    @Unique
     public boolean hasCustomDisplay() {
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
         return !(blockState.getBlock() instanceof AirBlock );
     }
+    public static void handleActive(HasVariantRegularBlockMinecartEntity minecart, ServerLevel level, int x, int y, int z, boolean powered){
+        BlockState blockState = minecart.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
+        if (blockState.hasProperty(BlockStateProperties.POWERED)) {
+            blockState = blockState.setValue(BlockStateProperties.POWERED, powered);
+        }
+        if (blockState.hasProperty(RedstoneLampBlock.LIT)) {
+            blockState = blockState.setValue(RedstoneLampBlock.LIT, powered);
+            if(!powered)minecart.removeDynamicLight(minecart.blockPosition().asLong(),true);
+
+        }
+        minecart.setCustomDisplayBlockState(Optional.of(blockState));
+    }
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.level().isClientSide()) {
+            tickDynamicLight((ClientLevel) this.level());
+        }
+    }
+
+    private void tickDynamicLight(ClientLevel world) {
+
+        BlockState displayBlock = this.entityData
+                .get(DATA_ID_CUSTOM_DISPLAY_BLOCK)
+                .orElse(Blocks.AIR.defaultBlockState());
+
+        int lightLevel = displayBlock.getLightEmission();
+
+        BlockPos blockPos = this.blockPosition();
+        long posLong = blockPos.asLong();
+        Vec3 entityPos = this.position();
+
+        BlockPos oldPos = BlockPos.containing(this.oldPosition());
+        boolean moved = !oldPos.equals(blockPos);
+
+        if (moved) {
+            removeDynamicLight(oldPos.asLong(), true);
+
+            if (lightLevel > 0) {
+                DynamicLightsStorage.BP_TO_LIGHT_LEVEL.put(posLong, (double) lightLevel);
+
+                DynamicLightsSpread.computeDynamicLights(
+                        posLong,
+                        entityPos.x, entityPos.y, entityPos.z,
+                        lightLevel,
+                        DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
+                        pos -> {
+                            BlockPos bp = BlockPos.of(pos);
+                            setBlockDirty(bp);
+                        }
+                );
+                updateDynamicLight(world, blockPos);
+            }
+        } else if (lightLevel > 0 && DynamicLightsStorage.getLightLevel(blockPos) == 0.0) {
+            DynamicLightsStorage.BP_TO_LIGHT_LEVEL.put(posLong, (double) lightLevel);
+
+            DynamicLightsSpread.computeDynamicLights(
+                    posLong,
+                    entityPos.x, entityPos.y, entityPos.z,
+                    lightLevel,
+                    DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
+                    pos -> {
+                        BlockPos bp = BlockPos.of(pos);
+                        setBlockDirty(bp);
+                    }
+            );
+
+            updateDynamicLight(world, blockPos);
+        }
+    }
+
+    private void removeDynamicLight(long posLong, boolean update) {
+
+        DynamicLightsStorage.BP_TO_LIGHT_LEVEL.remove(posLong);
+        DynamicLightsSpread.computeLightsOff(
+                posLong,
+                DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
+                bp -> {
+                    if(update){
+                        BlockPos blockPos = BlockPos.of(bp);
+                        setBlockDirty(blockPos);
+                    }
+                }
+        );
+    }
+    private void setBlockDirty(BlockPos pos) {
+        for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
+            for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++) {
+                for (int y = pos.getY() - 1; y <= pos.getY() + 1; y++) {
+                    Minecraft.getInstance().levelRenderer.setSectionDirty(
+                            SectionPos.blockToSectionCoord(x),
+                            SectionPos.blockToSectionCoord(y),
+                            SectionPos.blockToSectionCoord(z)
+                    );
+                }
+            }
+        }
+    }
+
+    private void updateDynamicLight(ClientLevel world, BlockPos pos) {
+
+
+        int vanillaLight = world.getBlockState(pos).getLightEmission(world, pos);
+        double dynamicLight = DynamicLightsStorage.getLightLevel(pos);
+
+        if (dynamicLight >= vanillaLight) {
+            world.getChunkSource().getLightEngine().checkBlock(pos);
+        }
+    }
 }

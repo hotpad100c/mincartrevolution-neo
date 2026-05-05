@@ -13,6 +13,7 @@ public class AdvancedMinecartEntityTypes {
         JUKEBOX,
         SHULKER,
         TRAPPED_CHEST,
-        DRAGON_EGG
+        DRAGON_EGG,
+        FURNACE
     }
 }
