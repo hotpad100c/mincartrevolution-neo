@@ -1,4 +1,4 @@
-package ml.mypals.minecartrevolution.mixin;
+package ml.mypals.minecartrevolution.mixin.client;
 
 import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;

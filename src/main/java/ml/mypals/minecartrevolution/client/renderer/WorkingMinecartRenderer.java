@@ -38,7 +38,7 @@ public class WorkingMinecartRenderer extends AbstractMinecartRenderer<NonInvento
     }
 
     @Override
-    public WorkingMinecartRenderState createRenderState() {
+    public @NonNull WorkingMinecartRenderState createRenderState() {
         return new WorkingMinecartRenderState();
     }
 

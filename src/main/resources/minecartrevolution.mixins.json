@@ -5,9 +5,9 @@
   "mixins": [
     "RedstoneViewMixin",
     "blocks.UnrenderableBlocksMixin",
-    "light.LevelChunkMixin"
     "entity.EntityMixin",
     "light.LevelChunkMixin",
+    "minecart.ChestMinecartMixin",
     "minecart.MinecartMixin",
     "minecart.furnace.FurnaceMinecartMixin"
   ],
@@ -18,9 +18,10 @@
     "requireAnnotations": true
   },
   "client": [
-    "AbstractMinecartRendererMixin",
-    "BlockModelRenderStateAccessor",
     "blocks.BlockRenderManagerMixin",
+    "client.AbstractMinecartRendererMixin",
+    "client.MinecartRenderStateMixin",
+    "client.BlockModelRenderStateAccessor",
     "light.LevelRendererMixin"
   ]
 }

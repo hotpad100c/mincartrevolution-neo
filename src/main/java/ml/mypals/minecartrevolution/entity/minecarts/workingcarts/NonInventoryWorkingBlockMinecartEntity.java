@@ -1,10 +1,9 @@
 package ml.mypals.minecartrevolution.entity.minecarts.workingcarts;
 import ml.mypals.minecartrevolution.client.menu.MinecartChestMenu;
 import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
+import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
-import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -29,7 +28,7 @@ import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nullable;
 
-public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlockMinecartEntity {
+public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlockMinecartEntity implements IMinecartContainer {
     public int time;
     public float flip;
     public float oFlip;
@@ -147,15 +146,6 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
         }
     }
 
-    public void onContainerClosed() {
-        this.level().broadcastEntityEvent(this, (byte) 11);
-        if (this.openCount == 0) {
-            if (this.getDisplayBlockState().is(Blocks.ENDER_CHEST)) {
-                this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_CLOSE, SoundSource.BLOCKS);
-            }
-        }
-    }
-
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         if (!player.isSecondaryUseActive() && !player.isSprinting()) {
@@ -167,9 +157,6 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
             MenuProvider provider = getMenuProvider(blockState);
             if (provider != null) {
                 player.openMenu(provider);
-                if (this.getDisplayBlockState().is(Blocks.ENDER_CHEST)) {
-                    this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS);
-                }
                 this.level().broadcastEntityEvent(this, (byte)10);
                 return InteractionResult.SUCCESS;
             }
@@ -196,8 +183,19 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
         } else if (state.is(Blocks.ENCHANTING_TABLE)) {
             return new SimpleMenuProvider((id, inv, _) -> new EnchantmentMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.enchant"));
         } else if (state.is(Blocks.ENDER_CHEST)) {
+            this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS);
             return new SimpleMenuProvider((id, inv, p) -> new MinecartChestMenu(MenuType.GENERIC_9x3, id, inv, p.getEnderChestInventory(), 3, this), Component.translatable("container.enderchest"));
         }
         return null;
+    }
+
+    @Override
+    public void minecartrevolution$OnContainerClosed(Level level, Player player) {
+        this.level().broadcastEntityEvent(this, (byte) 11);
+        if (this.openCount == 0) {
+            if (this.getDisplayBlockState().is(Blocks.ENDER_CHEST)) {
+                this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_CLOSE, SoundSource.BLOCKS);
+            }
+        }
     }
 }

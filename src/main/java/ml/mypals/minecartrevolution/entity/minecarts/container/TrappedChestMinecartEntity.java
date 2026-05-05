@@ -1,10 +1,14 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
+import ml.mypals.minecartrevolution.client.menu.MinecartChestMenu;
+import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,19 +18,23 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecartContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.ChestLidController;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+import org.spongepowered.asm.mixin.Unique;
 
-public class TrappedChestMinecartEntity extends AbstractMinecartContainer implements PowerEmitterMinecartEntity {
-    private int viwers = 0;
+public class TrappedChestMinecartEntity extends AbstractMinecartContainer implements PowerEmitterMinecartEntity, IMinecartContainer {
+    private int viewers = 0;
+    @Unique
+    public final ChestLidController chestLidController = new ChestLidController();
     public TrappedChestMinecartEntity(EntityType<? extends AbstractMinecartContainer> entityType, Level world) {
         super(entityType, world);
     }
@@ -36,16 +44,12 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
     }
 
     @Override
-    public ItemStack getPickResult() {
+    public @NonNull ItemStack getPickResult() {
         return MRMinecarts.TRAPPED_CHEST_MINECART.item().get().getDefaultInstance();
     }
-  /*  @Override
-    public Type getMinecartType() {
-        return Type.CHEST;
-    }
-*/
+
     @Override
-    public Item getDropItem() {
+    public @NonNull Item getDropItem() {
         return MRMinecarts.BARREL_MINECART.item().get();
     }
 
@@ -54,7 +58,7 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
         return 27;
     }
     @Override
-    public BlockState getDefaultDisplayBlockState() {
+    public @NonNull BlockState getDefaultDisplayBlockState() {
         return Blocks.TRAPPED_CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.NORTH);
     }
 
@@ -64,14 +68,12 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
-        return ChestMenu.threeRows(syncId, playerInventory, this);
+    public @NonNull AbstractContainerMenu createMenu(int syncId, @NonNull Inventory playerInventory) {
+        return new MinecartChestMenu(MenuType.GENERIC_9x3, syncId, playerInventory, this, 3, this);
     }
 
     @Override
     public void tick() {
-        super.tick();
-
         this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
             if(!updatedBlocks || !this.isAlive()){
                 if(getPreviousBlockPos() != null)updateNeighbors(this.level(),previousBlockPos, blockState.getBlock());
@@ -84,24 +86,22 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
                 updateNeighbors(this.level(),this.blockPosition(), blockState.getBlock());
             }
         });
-
-
+        this.chestLidController.shouldBeOpen(this.viewers > 0);
+        this.chestLidController.tickLid();
+        super.tick();
     }
-    /*@Override
-    public void stopOpen(Player player) {
-        this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(player));
-        updateNeighbors(this.level(),this.blockPosition(), Block.stateById(this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK)).getBlock());
-        viwers = Math.min(0, viwers - 1);
-    }*/
+    public float getOpenness(float partialTick) {
+        return this.chestLidController.getOpenness(partialTick);
+    }
     @Override
    public @NonNull InteractionResult interactWithContainerVehicle(@NonNull Player player) {
-        viwers++;
+        viewers++;
         return super.interactWithContainerVehicle(player);
     }
     @Override
     public int getPowerStrength(Direction direction, BlockPos pos) {
         return direction == Direction.UP ? 0:
-                Mth.clamp(viwers, 0, 15);
+                Mth.clamp(viewers, 0, 15);
     }
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
@@ -117,11 +117,14 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
         return actionResult;
     }
 
-    public int getViwers() {
-        return viwers;
-    }
-
-    public void setViwers(int viwers) {
-        this.viwers = viwers;
+    @Override
+    public void minecartrevolution$OnContainerClosed(Level level, Player player) {
+        this.level().broadcastEntityEvent(this, (byte) 11);
+        viewers--;
+        if (this.viewers <= 0) {
+            viewers = 0;
+            this.gameEvent(GameEvent.CONTAINER_CLOSE, player);
+            this.level().playSound(this, this.blockPosition(), SoundEvents.SHULKER_CLOSE, SoundSource.BLOCKS);
+        }
     }
 }
