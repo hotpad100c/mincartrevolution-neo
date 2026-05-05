@@ -27,10 +27,12 @@ public class PresherPlateMinecartEntity extends HasVariantRegularBlockMinecartEn
     public PresherPlateMinecartEntity(EntityType<? extends PresherPlateMinecartEntity> presherPlateMinecartEntityEntityType, Level world) {
         super(presherPlateMinecartEntityEntityType, world);
     }
+
     @Override
     public @NonNull Item getDropItem() {
         return MRMinecarts.PRESHER_PLATE_MINECART_ITEM.item().get();
     }
+
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         super.interact(player, hand, pos);
@@ -39,28 +41,30 @@ public class PresherPlateMinecartEntity extends HasVariantRegularBlockMinecartEn
         } else if (!this.level().isClientSide()) {
             BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
-            updateNeighbors(this.level(),previousBlockPos, blockState.getBlock());
-            updateNeighbors(this.level(),this.blockPosition(), blockState.getBlock());
+            updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
+            updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
             return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
         } else {
             return InteractionResult.SUCCESS;
         }
     }
+
     @Override
     public void tick() {
         super.tick();
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        if(!updatedBlocks || !this.isAlive()){
-            if(getPreviousBlockPos() != null)updateNeighbors(this.level(),previousBlockPos, blockState.getBlock());
+        if (!updatedBlocks || !this.isAlive()) {
+            if (getPreviousBlockPos() != null) updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
             updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
         }
         if (this.getPreviousBlockPos() == null || !this.getPreviousBlockPos().equals(this.blockPosition())) {
-            if(this.getPreviousBlockPos() == null) this.setPreviousBlockPos(this.blockPosition());
-            updateNeighbors(this.level(),previousBlockPos, blockState.getBlock());
+            if (this.getPreviousBlockPos() == null) this.setPreviousBlockPos(this.blockPosition());
+            updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
             this.setPreviousBlockPos(this.blockPosition());
-            updateNeighbors(this.level(),this.blockPosition(), blockState.getBlock());
+            updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
         }
     }
+
     @Override
     public void activateMinecart(@NonNull ServerLevel level, int xt, int yt, int zt, boolean powered) {
 
@@ -77,11 +81,12 @@ public class PresherPlateMinecartEntity extends HasVariantRegularBlockMinecartEn
             }
         }
     }
+
     @Override
     public int getPowerStrength(Direction direction, BlockPos pos) {
-        if(!this.isAlive()){
+        if (!this.isAlive()) {
             return 0;
         }
-        return this.isVehicle()?15:0;
+        return this.isVehicle() ? 15 : 0;
     }
 }

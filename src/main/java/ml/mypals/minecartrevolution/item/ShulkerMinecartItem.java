@@ -13,12 +13,13 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 
-public class ShulkerMinecartItem extends MultiVariantMinecartWithBlockItem{
+public class ShulkerMinecartItem extends MultiVariantMinecartWithBlockItem {
     private static final Component UNKNOWN_CONTENTS_TEXT = Component.translatable("container.shulkerBox.unknownContents");
 
     public ShulkerMinecartItem(AdvancedMinecartEntityTypes.Type type, Properties settings, Block blockInside) {
         super(type, settings, blockInside);
     }
+
     /*
     @Override
     public void appendHoverText(@NonNull ItemStack stack, Item.@NonNull TooltipContext context, @NonNull TooltipDisplay tooltip, @NonNull Consumer<Component> builder, @NonNull TooltipFlag tooltipFlag) {
@@ -48,14 +49,14 @@ public class ShulkerMinecartItem extends MultiVariantMinecartWithBlockItem{
         CustomData nbtCompound = stack.get(DataComponents.CUSTOM_DATA);
         ItemContainerContents inventoryNbt = stack.get(DataComponents.CONTAINER);
         Block block = corrospondingItem.blockInside;
-        if(nbtCompound != null && nbtCompound.contains("block_in_minecart")){
+        if (nbtCompound != null && nbtCompound.contains("block_in_minecart")) {
             block = Block.stateById(nbtCompound.copyTag().getInt("block_in_minecart").orElse(1)).getBlock();
         }
         AbstractMinecart abstractMinecartEntity = MinecartTransformManager.getTransform(
-                serverWorld,corrospondingItem, block,new Vec3(x,y,z),
+                serverWorld, corrospondingItem, block, new Vec3(x, y, z),
                 type
         );
-        if(abstractMinecartEntity instanceof ShulkerMinecartEntity shulkerMinecartEntity){
+        if (abstractMinecartEntity instanceof ShulkerMinecartEntity shulkerMinecartEntity) {
             if (inventoryNbt != null) {
                 inventoryNbt.copyInto(shulkerMinecartEntity.getItemStacks());
             }

@@ -49,7 +49,8 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
     private float progressOld;
     private int openCount;
     private AnimationStatus animationStatus = AnimationStatus.CLOSED;
-    public enum AnimationStatus { CLOSED, OPENING, OPENED, CLOSING }
+
+    public enum AnimationStatus {CLOSED, OPENING, OPENED, CLOSING}
 
     public ShulkerMinecartEntity(EntityType<? extends AbstractMinecartContainer> entityType, Level world) {
         super(entityType, world);

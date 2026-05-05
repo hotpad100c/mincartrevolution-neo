@@ -15,8 +15,9 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
-public class CobwebMinecartEntity extends ItemBoundBlockMinecartEntity{
+public class CobwebMinecartEntity extends ItemBoundBlockMinecartEntity {
     private static int MAX_PASSENGERS_COUNT = 25;
+
     public CobwebMinecartEntity(EntityType<CobwebMinecartEntity> entityType, Level world) {
         super(entityType, world);
     }
@@ -33,7 +34,7 @@ public class CobwebMinecartEntity extends ItemBoundBlockMinecartEntity{
     public void activateMinecart(@NonNull ServerLevel level, int xt, int yt, int zt, boolean state) {
         if (state) {
             if (this.isVehicle()) {
-                if(random.nextFloat()<0.2) {
+                if (random.nextFloat() < 0.2) {
                     this.getPassengers().getFirst().stopRiding();
                 }
                 if (this.getHurtTime() == 0) {
@@ -51,29 +52,31 @@ public class CobwebMinecartEntity extends ItemBoundBlockMinecartEntity{
     public boolean isRideable() {
         return true;
     }
+
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide())return;
+        if (this.level().isClientSide()) return;
         AABB hitbox = this.getBoundingBox().inflate(0.3F, 0.3F, 0.3F);
         List<Entity> entities = this.level().getEntities(this, hitbox);
         if (!entities.isEmpty()) {
             for (Entity entity : entities) {
                 if (
-                    (!(entity instanceof Player) || ((entity instanceof Player) && this.getDeltaMovement().horizontalDistanceSqr() >= 0.01))
-                    && !(entity instanceof CobwebMinecartEntity)
-                    && this.getPassengers().size() < MAX_PASSENGERS_COUNT
+                        (!(entity instanceof Player) || ((entity instanceof Player) && this.getDeltaMovement().horizontalDistanceSqr() >= 0.01))
+                                && !(entity instanceof CobwebMinecartEntity)
+                                && this.getPassengers().size() < MAX_PASSENGERS_COUNT
                 ) {
                     entity.startRiding(this, true, true);
                 }
             }
         }
-        if(this.getPassengers().size() >= 24){
-            for (Entity passenger : this.getPassengers()){
-                passenger.hurtServer((ServerLevel) this.level(), this.damageSources().cramming(),1);
+        if (this.getPassengers().size() >= 24) {
+            for (Entity passenger : this.getPassengers()) {
+                passenger.hurtServer((ServerLevel) this.level(), this.damageSources().cramming(), 1);
             }
         }
     }
+
     @Override
     protected void positionRider(@NonNull Entity passenger, Entity.MoveFunction moveFunction) {
         Vec3 position = this.getPassengerRidingPosition(passenger);

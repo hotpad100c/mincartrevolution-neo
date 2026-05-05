@@ -50,34 +50,41 @@ import java.util.Optional;
 public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
         implements PowerEmitterMinecartEntity, Clearable {
     private MovingJukeboxManager jukeboxManager = new MovingJukeboxManager(this::onManagerChange, this.blockPosition());
-    protected static final EntityDataAccessor<ItemStack> DISC=
+    protected static final EntityDataAccessor<ItemStack> DISC =
             SynchedEntityData.defineId(JukeboxMinecartEntity.class, EntityDataSerializers.ITEM_STACK);
     private ItemStack disc = Items.AIR.getDefaultInstance();
+
     public JukeboxMinecartEntity(EntityType<? extends JukeboxMinecartEntity> entityType, Level world) {
         super(entityType, world);
         disc = Items.AIR.getDefaultInstance();
     }
+
     public void onManagerChange() {
         this.level().updateNeighborsAt(this.blockPosition(), Blocks.JUKEBOX);
     }
+
     public JukeboxMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
         disc = Items.AIR.getDefaultInstance();
     }
+
     private void onRecordStackChanged(boolean hasRecord) {
         this.level().gameEvent(GameEvent.BLOCK_CHANGE, this.position(), GameEvent.Context.of(this));
     }
+
     @Override
     public void clearContent() {
         playOrStop(false);
         this.disc = Items.AIR.getDefaultInstance();
         this.entityData.set(DISC, this.disc);
     }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DISC, Items.AIR.getDefaultInstance());
     }
+
     @Override
     public boolean hurtServer(@NonNull ServerLevel serverLevel, @NonNull DamageSource source, float amount) {
         if (this.isRemoved()) {
@@ -90,7 +97,7 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
             this.markHurt();
             this.setDamage(this.getDamage() + amount * 10.0F);
             this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
-            boolean bl = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
+            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
             if ((bl || !(this.getDamage() > 40.0F)) && !this.shouldSourceDestroy(source)) {
                 if (bl) {
                     this.playOrStop(false);
@@ -111,17 +118,21 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
             this.spawnAtLocation(serverLevel, this.getDisc());
         }
     }
+
     @Override
     public @NonNull ItemStack getPickResult() {
         return new ItemStack(MRMinecarts.JUKEBOX_MINECART.item().get());
     }
+
     public ItemStack getDisc() {
         return entityData.get(DISC).isEmpty() ? this.disc : entityData.get(DISC);
     }
+
     @Override
     public @NonNull Item getDropItem() {
         return MRMinecarts.JUKEBOX_MINECART.item().get();
     }
+
     @Override
     public ItemStack addDataToStack(ItemStack originalStack) {
         /*if(originalStack.isEmpty() || originalStack.getItem() != Items.JUKEBOX || this.disc.isEmpty()) {
@@ -134,6 +145,7 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
         playOrStop(false);
         return originalStack;
     }
+
     public void dropRecord() {
         if (!this.level().isClientSide()) {
             BlockPos pos = this.blockPosition();
@@ -149,9 +161,10 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
             playOrStop(false);
         }
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        this.updateNeighbors(level(),this.getPreviousBlockPos(), blockState.getBlock());
-        this.updateNeighbors(level(),this.blockPosition(), blockState.getBlock());
+        this.updateNeighbors(level(), this.getPreviousBlockPos(), blockState.getBlock());
+        this.updateNeighbors(level(), this.blockPosition(), blockState.getBlock());
     }
+
     @Override
     public void tick() {
         super.tick();
@@ -159,36 +172,37 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
 
         this.jukeboxManager.tick(level(), blockState);
         if (this.getPreviousBlockPos() == null || !this.getPreviousBlockPos().equals(this.blockPosition())) {
-            if(this.getPreviousBlockPos() == null) this.setPreviousBlockPos(this.blockPosition());
-            updateNeighbors(this.level(),previousBlockPos, blockState.getBlock());
+            if (this.getPreviousBlockPos() == null) this.setPreviousBlockPos(this.blockPosition());
+            updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
             this.setPreviousBlockPos(this.blockPosition());
-            updateNeighbors(this.level(),this.blockPosition(), blockState.getBlock());
+            updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
         }
 
-        if(!this.disc.isEmpty()){
-            if(this.getHurtTime() <= 0){
+        if (!this.disc.isEmpty()) {
+            if (this.getHurtTime() <= 0) {
                 this.setHurtDir(-this.getHurtDir());
                 this.setHurtTime(20);
                 this.setDamage(2);
             }
-            if(!level().isClientSide()) {
+            if (!level().isClientSide()) {
                 jukeboxManager.movingPos = this.position();
             }
         }
         if (this.moveDist > 2f && !this.level().isClientSide() && !this.disc.isEmpty()) {
-            for(Entity passenger : this.getPassengers()) {
+            for (Entity passenger : this.getPassengers()) {
                 if (passenger instanceof ServerPlayer player) {
                     MRModCriteria.ENTITY_MOVED.get().trigger(player, this);
                 }
             }
         }
     }
+
     @Override
     public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
 
         if (nbt.getInt("RecordItem").isPresent()) {
-            this.disc = (ItemStack)Item.byId(nbt.getInt("RecordItem").orElse(0)).getDefaultInstance();
+            this.disc = (ItemStack) Item.byId(nbt.getInt("RecordItem").orElse(0)).getDefaultInstance();
         } else {
             this.disc = ItemStack.EMPTY;
         }
@@ -196,11 +210,12 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
 
         if (nbt.getLong("ticks_since_song_started").isPresent()) {
             JukeboxSong.fromStack(this.disc).
-            ifPresent((song) -> this.jukeboxManager.
-            setSongWithoutPlaying(song, nbt.getLong("ticks_since_song_started").orElse(4L)));
+                    ifPresent((song) -> this.jukeboxManager.
+                            setSongWithoutPlaying(song, nbt.getLong("ticks_since_song_started").orElse(4L)));
         }
 
     }
+
     @Override
     public void saveWithoutId(ValueOutput nbt) {
         if (!this.disc.isEmpty()) {
@@ -211,11 +226,12 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
         }
         super.saveWithoutId(nbt);
     }
+
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         ItemStack stack = player.getItemInHand(hand);
         player.swing(hand);
-        if(player.isSecondaryUseActive()){
+        if (player.isSecondaryUseActive()) {
             return super.interact(player, hand, pos);
         }
         if (level().isClientSide()) {
@@ -254,17 +270,18 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
 
     @Override
     public int getPowerStrength(Direction direction, BlockPos pos) {
-        if(!this.isAlive()){
+        if (!this.isAlive()) {
             return 0;
         }
-        return this.jukeboxManager.isPlaying()?15:0;
+        return this.jukeboxManager.isPlaying() ? 15 : 0;
     }
+
     private void playOrStop(boolean play) {
-        if(level() instanceof ServerLevel serverWorld) {
+        if (level() instanceof ServerLevel serverWorld) {
             Optional<Holder<JukeboxSong>> optional = JukeboxSong.fromStack(this.getDisc());
             for (ServerPlayer players : getPlayersAround(serverWorld, this.position(), 128)) {
 
-                if(optional.isPresent()) {
+                if (optional.isPresent()) {
                     int i = level().registryAccess().lookupOrThrow(Registries.JUKEBOX_SONG).getId(optional.get().value());
                     PacketDistributor.sendToPlayer(players, new JukeboxUpdateS2CPacket(
                             this.getId(), i, play
@@ -274,7 +291,7 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
             if (play) {
                 this.jukeboxManager.play(level(), optional.get());
             } else {
-                this.jukeboxManager.stop(level(),null);
+                this.jukeboxManager.stop(level(), null);
             }
         }
 
@@ -282,10 +299,11 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
                 .setValue(JukeboxBlock.HAS_RECORD, !this.getDisc().isEmpty())));
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
-        this.updateNeighbors(level(),this.getPreviousBlockPos(), blockState.getBlock());
-        this.updateNeighbors(level(),this.blockPosition(), blockState.getBlock());
+        this.updateNeighbors(level(), this.getPreviousBlockPos(), blockState.getBlock());
+        this.updateNeighbors(level(), this.blockPosition(), blockState.getBlock());
 
     }
+
     public static Collection<ServerPlayer> getPlayersAround(ServerLevel world, Vec3 pos, double radius) {
         double radiusSq = radius * radius;
         return new ArrayList<>(Collections.unmodifiableCollection(world.getPlayers((player) -> player.distanceToSqr(pos) <= radiusSq)));

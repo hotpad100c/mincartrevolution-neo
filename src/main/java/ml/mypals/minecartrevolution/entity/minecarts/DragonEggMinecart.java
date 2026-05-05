@@ -20,7 +20,7 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
+public class DragonEggMinecart extends ItemBoundBlockMinecartEntity {
     public DragonEggMinecart(EntityType<DragonEggMinecart> entityType, Level world) {
         super(entityType, world);
     }
@@ -32,24 +32,25 @@ public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
     @Override
     public void activateMinecart(@NonNull ServerLevel level, int x, int y, int z, boolean powered) {
         super.activateMinecart(level, x, y, z, powered);
-        if(!powered){
+        if (!powered) {
             this.setDisplayOffset(0);
             return;
         }
-        if(this.level().isClientSide()) {
+        if (this.level().isClientSide()) {
             return;
-        };
-        ServerChunkCache chunkManager = ((ServerLevel)this.level()).getChunkSource();
+        }
+        ;
+        ServerChunkCache chunkManager = ((ServerLevel) this.level()).getChunkSource();
 
         chunkManager.addTicketAndLoadWithRadius(TicketType.DRAGON, ChunkPos.containing(this.blockPosition()), 2);
 
-        if(this.getHurtTime() <= 0){
+        if (this.getHurtTime() <= 0) {
             this.setHurtDir(-this.getHurtDir());
             this.setHurtTime(10);
             this.setDamage(20.0F);
         }
         this.setDisplayOffset(this.getHurtTime());
-        spawnParticles((ServerLevel)this.level(), this.blockPosition());
+        spawnParticles((ServerLevel) this.level(), this.blockPosition());
     }
 
     private static void spawnParticles(ServerLevel world, BlockPos pos) {
@@ -59,7 +60,7 @@ public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
                 if (dx == 0 && dz == 0) continue;
-                if(random.nextBoolean()) continue;
+                if (random.nextBoolean()) continue;
                 int baseX = (chunkX + dx) << 4;
                 int baseZ = (chunkZ + dz) << 4;
                 if (Math.abs(dx) == 1) {
@@ -94,15 +95,15 @@ public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
         super.move(moverType, delta);
         Vec3 actual = this.position();
         double ad = actual.horizontalDistance();
-        if(horizontalCollision && td - ad > 0.05){
-             runAway();
+        if (horizontalCollision && td - ad > 0.05) {
+            runAway();
         }
     }
 
     @Override
     public boolean hurtServer(@NonNull ServerLevel level, @NonNull DamageSource source, float damage) {
         boolean bl = super.hurtServer(level, source, damage);
-        if(this.isAlive()) runAway();
+        if (this.isAlive()) runAway();
         return bl;
     }
 

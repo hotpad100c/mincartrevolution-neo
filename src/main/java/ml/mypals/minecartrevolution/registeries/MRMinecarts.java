@@ -33,11 +33,13 @@ public class MRMinecarts {
     public static final List<MinecartEntry<?, ?>> MINECARTS = new ArrayList<>();
 
     public record MinecartEntry<E extends AbstractMinecart, I extends Item>(
-        String itemName,
-        DeferredHolder<EntityType<?>, EntityType<E>> entity,
-        DeferredItem<I> item,
-        DispenseItemBehavior dispenseBehavior
-    ) {}
+            String itemName,
+            DeferredHolder<EntityType<?>, EntityType<E>> entity,
+            DeferredItem<I> item,
+            DispenseItemBehavior dispenseBehavior
+    ) {
+    }
+
     public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> register(
             String baseName,
             EntityType.EntityFactory<E> entityFactory,
@@ -45,6 +47,7 @@ public class MRMinecarts {
     ) {
         return register(baseName, entityFactory, itemFactory, MinecartWithBlockItem.DISPENSER_BEHAVIOR);
     }
+
     public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> register(
             String baseName,
             EntityType.EntityFactory<E> entityFactory,
@@ -73,6 +76,7 @@ public class MRMinecarts {
     ) {
         return registerItemOnly(itemName, existingEntity, itemFactory, MinecartWithBlockItem.DISPENSER_BEHAVIOR);
     }
+
     public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> registerItemOnly(
             String itemName,
             DeferredHolder<EntityType<?>, EntityType<E>> existingEntity,

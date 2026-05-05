@@ -42,7 +42,7 @@ public class MinecartWithBlockItem extends Item {
             BlockPos blockPos = pointer.pos().relative(direction);
             BlockState blockState = serverWorld.getBlockState(blockPos);
             RailShape railShape = blockState.getBlock() instanceof BaseRailBlock
-                    ? blockState.getValue(((BaseRailBlock)blockState.getBlock()).getShapeProperty())
+                    ? blockState.getValue(((BaseRailBlock) blockState.getBlock()).getShapeProperty())
                     : RailShape.NORTH_SOUTH;
             double g;
             if (blockState.is(BlockTags.RAILS)) {
@@ -58,7 +58,7 @@ public class MinecartWithBlockItem extends Item {
 
                 BlockState blockState2 = serverWorld.getBlockState(blockPos.below());
                 RailShape railShape2 = blockState2.getBlock() instanceof BaseRailBlock
-                        ? blockState2.getValue(((BaseRailBlock)blockState2.getBlock()).getShapeProperty())
+                        ? blockState2.getValue(((BaseRailBlock) blockState2.getBlock()).getShapeProperty())
                         : RailShape.NORTH_SOUTH;
                 if (direction != Direction.DOWN && railShape2.isSlope()) {
                     g = -0.4;
@@ -67,10 +67,10 @@ public class MinecartWithBlockItem extends Item {
                 }
             }
 
-            MinecartWithBlockItem minecartWithBlockItem = ((MinecartWithBlockItem)stack.getItem());
+            MinecartWithBlockItem minecartWithBlockItem = ((MinecartWithBlockItem) stack.getItem());
 
-            AbstractMinecart abstractMinecartEntity = minecartWithBlockItem.getCart(serverWorld,d,e + g, f,
-                    minecartWithBlockItem.type,minecartWithBlockItem,stack);
+            AbstractMinecart abstractMinecartEntity = minecartWithBlockItem.getCart(serverWorld, d, e + g, f,
+                    minecartWithBlockItem.type, minecartWithBlockItem, stack);
             serverWorld.addFreshEntity(abstractMinecartEntity);
             stack.shrink(1);
             return stack;
@@ -81,12 +81,14 @@ public class MinecartWithBlockItem extends Item {
             pointer.level().levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, pointer.pos(), 0);
         }
     };
+
     public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem corrospondingItem, ItemStack stack) {
         return MinecartTransformManager.getTransform(
-                serverWorld,corrospondingItem,corrospondingItem.blockInside,new Vec3(x,y, z),
+                serverWorld, corrospondingItem, corrospondingItem.blockInside, new Vec3(x, y, z),
                 type
         );
     }
+
     final AdvancedMinecartEntityTypes.Type type;
 
     public MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type type, Properties settings, Block blockInside) {
@@ -96,12 +98,15 @@ public class MinecartWithBlockItem extends Item {
         this.blockInside = blockInside;
         //DispenserBlock.registerBehavior(this, DISPENSER_BEHAVIOR);
     }
+
     public void setBlockInside(Block blockInside) {
         this.blockInside = blockInside;
     }
+
     public Block getBlockInside() {
         return this.blockInside;
     }
+
     @Override
     public @NonNull InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
@@ -113,7 +118,7 @@ public class MinecartWithBlockItem extends Item {
             ItemStack itemStack = context.getItemInHand();
             if (world instanceof ServerLevel serverWorld) {
                 RailShape railShape = blockState.getBlock() instanceof BaseRailBlock
-                        ? blockState.getValue(((BaseRailBlock)blockState.getBlock()).getShapeProperty())
+                        ? blockState.getValue(((BaseRailBlock) blockState.getBlock()).getShapeProperty())
                         : RailShape.NORTH_SOUTH;
                 double d = 0.0;
                 if (railShape.isSlope()) {
@@ -121,7 +126,7 @@ public class MinecartWithBlockItem extends Item {
                 }
 
                 AbstractMinecart abstractMinecartEntity = getCart(
-                        serverWorld, blockPos.getX() + 0.5, blockPos.getY() + 0.0625 + d, blockPos.getZ() + 0.5, this.type,this,itemStack
+                        serverWorld, blockPos.getX() + 0.5, blockPos.getY() + 0.0625 + d, blockPos.getZ() + 0.5, this.type, this, itemStack
                 );
                 abstractMinecartEntity.setYRot(railShape == RailShape.EAST_WEST ? 0 : 90.0F);
                 serverWorld.addFreshEntity(abstractMinecartEntity);

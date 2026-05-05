@@ -17,7 +17,7 @@ public interface PowerEmitterMinecartEntity {
         previousBlockPos.set(pos);
     }
 
-    default void updateNeighbors(Level world, BlockPos pos,Block block) {
+    default void updateNeighbors(Level world, BlockPos pos, Block block) {
         world.updateNeighborsAt(pos, block);
         for (Direction direction : Direction.values()) {
             world.updateNeighborsAt(pos.relative(direction), block);

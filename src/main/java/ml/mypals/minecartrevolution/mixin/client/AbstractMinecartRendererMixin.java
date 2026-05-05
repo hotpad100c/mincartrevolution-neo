@@ -50,18 +50,19 @@ public class AbstractMinecartRendererMixin {
 
         this.minecartrevolution$sprites = context.getSprites();
     }
+
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;Lnet/minecraft/client/renderer/entity/state/MinecartRenderState;F)V", at = @At(value = "RETURN"))
     private void extractRenderState(AbstractMinecart entity, MinecartRenderState state, float partialTicks, CallbackInfo ci) {
         if (entity.getDisplayBlockState().is(Blocks.ENCHANTING_TABLE)
                 || entity.getDisplayBlockState().getBlock() instanceof AbstractChestBlock<?>) {
             ((BlockModelRenderStateAccessor) state.displayBlockModel).setSpecialRenderer(null);
         }
-        if(entity instanceof MinecartChest minecartChest){
+        if (entity instanceof MinecartChest minecartChest) {
             IMinecartRenderStateExtension stateExt = (IMinecartRenderStateExtension) state;
-            stateExt.minecartrevolution$setOpenness(((IMinecartChestExtension)minecartChest)
+            stateExt.minecartrevolution$setOpenness(((IMinecartChestExtension) minecartChest)
                     .minecartrevolution$getChestLidController().getOpenness(partialTicks));
             stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState().getBlock());
-        }else if(entity instanceof TrappedChestMinecartEntity minecartChest){
+        } else if (entity instanceof TrappedChestMinecartEntity minecartChest) {
             IMinecartRenderStateExtension stateExt = (IMinecartRenderStateExtension) state;
             stateExt.minecartrevolution$setOpenness(minecartChest.getOpenness(partialTicks));
             stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState().getBlock());
@@ -69,19 +70,20 @@ public class AbstractMinecartRendererMixin {
             ((BlockModelRenderStateAccessor) state.displayBlockModel).setSpecialRenderer(null);
         }
     }
+
     @WrapMethod(method = "submitMinecartContents")
-    private void submitMinecartContents(MinecartRenderState minecartRenderState, BlockModelRenderState blockModel, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, Operation<Void> original){
+    private void submitMinecartContents(MinecartRenderState minecartRenderState, BlockModelRenderState blockModel, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, Operation<Void> original) {
         IMinecartRenderStateExtension state = (IMinecartRenderStateExtension) minecartRenderState;
         if (state.minecartrevolution$getDisplayBlock() instanceof AbstractChestBlock) {
             poseStack.pushPose();
-            poseStack.translate(0F, (float)(minecartRenderState.displayOffset - 8) / 16.0F, 1F);
+            poseStack.translate(0F, (float) (minecartRenderState.displayOffset - 8) / 16.0F, 1F);
             poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
             float open = state.minecartrevolution$getOpenness();
             open = 1.0F - open;
             open = 1.0F - open * open * open;
             ChestModel model = this.minecartrevolution$chestModels.select(ChestType.SINGLE);
 
-            SpriteId location = switch (state.minecartrevolution$getDisplayBlock()){
+            SpriteId location = switch (state.minecartrevolution$getDisplayBlock()) {
                 case TrappedChestBlock ignored -> Sheets.CHEST_TRAPPED.single();
                 case EnderChestBlock ignored -> Sheets.ENDER_CHEST_LOCATION;
                 default -> Sheets.CHEST_REGULAR.single();
@@ -100,7 +102,7 @@ public class AbstractMinecartRendererMixin {
                     null
             );
             poseStack.popPose();
-        }else {
+        } else {
             original.call(minecartRenderState, blockModel, poseStack, submitNodeCollector, lightCoords);
         }
     }

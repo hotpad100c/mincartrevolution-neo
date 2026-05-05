@@ -36,11 +36,11 @@ public abstract class EntityMixin {
 
     @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
     public void stopRiding(CallbackInfo ci) {
-        Entity me = (Entity)(Object)this;
-        if(this.vehicle instanceof CobwebMinecartEntity && me instanceof Player && this.random.nextFloat() < 0.7f){
-            if(!this.level.isClientSide()){
+        Entity me = (Entity) (Object) this;
+        if (this.vehicle instanceof CobwebMinecartEntity && me instanceof Player && this.random.nextFloat() < 0.7f) {
+            if (!this.level.isClientSide()) {
                 ci.cancel();
-            }else {
+            } else {
                 this.level.addDestroyBlockEffect(this.blockPosition, Blocks.COBWEB.defaultBlockState());
             }
         }

@@ -11,7 +11,8 @@ public class DynamicLightsSpread {
     public static final int RADIUS = 6;
     public static final double FACTOR = 0.18;
 
-    private DynamicLightsSpread() {}
+    private DynamicLightsSpread() {
+    }
 
     public static void computeDynamicLights(long origin, double originX, double originY, double originZ,
                                             double maxLight, Predicate<Long> hasLight, Consumer<Long> markChanged) {

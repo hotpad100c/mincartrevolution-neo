@@ -11,21 +11,21 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
 
 public class MRModEntityRenderers {
-    public static void init(EntityRenderersEvent.RegisterRenderers registerRenderers){
+    public static void init(EntityRenderersEvent.RegisterRenderers registerRenderers) {
         ENTITIES.getEntries()
                 .forEach(
-                entityTypeDeferredHolder -> {
-                    try {
-                        EntityType<? extends Minecart> entity = (EntityType<? extends Minecart>) (entityTypeDeferredHolder.get());
-                        registerRenderers.registerEntityRenderer(
-                                entity,
-                                (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
+                        entityTypeDeferredHolder -> {
+                            try {
+                                EntityType<? extends Minecart> entity = (EntityType<? extends Minecart>) (entityTypeDeferredHolder.get());
+                                registerRenderers.registerEntityRenderer(
+                                        entity,
+                                        (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
 
-                    }catch (Exception ignored){
+                            } catch (Exception ignored) {
 
-                    }
-                }
-        );
+                            }
+                        }
+                );
 
         registerRenderers.registerEntityRenderer(
                 MRMinecarts.NON_INVENTORY_WORKING_MINECART.get(),

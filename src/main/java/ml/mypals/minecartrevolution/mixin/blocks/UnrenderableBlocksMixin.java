@@ -16,6 +16,7 @@ public abstract class UnrenderableBlocksMixin extends BaseEntityBlock {
     public UnrenderableBlocksMixin(Properties settings) {
         super(settings);
     }
+
     @Override
     protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;

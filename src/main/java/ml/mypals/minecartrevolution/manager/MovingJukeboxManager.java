@@ -13,10 +13,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class MovingJukeboxManager extends JukeboxSongPlayer {
     public Vec3 movingPos;
+
     public MovingJukeboxManager(OnSongChanged changeNotifier, BlockPos pos) {
         super(changeNotifier, pos);
         this.movingPos = Vec3.atCenterOf(pos);
     }
+
     @Override
     public void tick(LevelAccessor world, @Nullable BlockState state) {
         if (this.getSong() != null) {
@@ -31,11 +33,12 @@ public class MovingJukeboxManager extends JukeboxSongPlayer {
             }
         }
     }
+
     private static void spawnNoteParticles(LevelAccessor world, Vec3 pos) {
         if (world instanceof ServerLevel serverWorld) {
-            Vec3 vec3d = pos.add((double)0.0F, (double)1.2F, (double)0.0F);
-            float f = (float)world.getRandom().nextInt(4) / 24.0F;
-            serverWorld.sendParticles(ParticleTypes.NOTE, vec3d.x(), vec3d.y(), vec3d.z(), 0, (double)f, (double)0.0F, (double)0.0F, (double)1.0F);
+            Vec3 vec3d = pos.add((double) 0.0F, (double) 1.2F, (double) 0.0F);
+            float f = (float) world.getRandom().nextInt(4) / 24.0F;
+            serverWorld.sendParticles(ParticleTypes.NOTE, vec3d.x(), vec3d.y(), vec3d.z(), 0, (double) f, (double) 0.0F, (double) 0.0F, (double) 1.0F);
         }
 
     }

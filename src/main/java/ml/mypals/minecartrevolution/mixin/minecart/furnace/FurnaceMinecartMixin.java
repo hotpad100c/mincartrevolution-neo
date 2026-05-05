@@ -114,8 +114,12 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
                 case 1:
                     mincartrevolution$litTotalTime = value;
                     break;
-                case 2: mincartrevolution$cookingTimer = value; break;
-                case 3: mincartrevolution$cookingTotalTime = value; break;
+                case 2:
+                    mincartrevolution$cookingTimer = value;
+                    break;
+                case 3:
+                    mincartrevolution$cookingTotalTime = value;
+                    break;
             }
         }
 
@@ -124,18 +128,20 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
             return 4;
         }
     };
+
     @Inject(method = "getDefaultDisplayBlockState", at = @At("RETURN"), cancellable = true)
     private void getDefaultDisplayBlockState(CallbackInfoReturnable<BlockState> cir) {
         BlockState displayBlock = this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(null);
         BlockState state;
-        if(displayBlock == null || !(displayBlock.getBlock() instanceof AbstractFurnaceBlock)){
+        if (displayBlock == null || !(displayBlock.getBlock() instanceof AbstractFurnaceBlock)) {
             state = Blocks.FURNACE.defaultBlockState();
-        }else {
+        } else {
             state = displayBlock;
         }
         cir.setReturnValue(state.setValue(AbstractFurnaceBlock.FACING, Direction.NORTH)
                 .setValue(AbstractFurnaceBlock.LIT, this.hasFuel()));
     }
+
     @Inject(method = "<init>", at = @At("RETURN"))
     private void initRecipeCheck(CallbackInfo ci) {
         this.mincartrevolution$quickCheck = RecipeManager.createCheck(mincartrevolution$getRecipie());
@@ -145,7 +151,7 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
     private void onTickSmelting(CallbackInfo ci) {
         super.tick();
 
-        MinecartFurnace self = (MinecartFurnace)(Object)this;
+        MinecartFurnace self = (MinecartFurnace) (Object) this;
         if (!self.level().isClientSide() && self.level() instanceof ServerLevel serverLevel) {
             this.mincartrevolution$processSmelting(serverLevel);
         }
@@ -165,47 +171,50 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
         }
         ci.cancel();
     }
+
     @Override
     public void setCustomDisplayBlockState(@NonNull Optional<BlockState> state) {
         super.setCustomDisplayBlockState(state);
         this.mincartrevolution$quickCheck = RecipeManager.createCheck(mincartrevolution$getRecipie());
     }
 
-    @Inject(method = "getDropItem",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getDropItem", at = @At("HEAD"), cancellable = true)
     protected void getDropItem(CallbackInfoReturnable<Item> cir) {
         cir.setReturnValue(mincartrevolution$getItem());
     }
 
-    @Inject(method = "getPickResult",at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getPickResult", at = @At("HEAD"), cancellable = true)
     public void getPickResult(CallbackInfoReturnable<ItemStack> cir) {
         cir.setReturnValue(mincartrevolution$getItem().getDefaultInstance());
     }
+
     @Unique
-    private Item mincartrevolution$getItem(){
+    private Item mincartrevolution$getItem() {
         BlockState displayBlock = this.entityData
                 .get(DATA_ID_CUSTOM_DISPLAY_BLOCK)
                 .orElse(Blocks.AIR.defaultBlockState());
         Block block = displayBlock.getBlock();
         return switch (block) {
             case BlastFurnaceBlock ignored -> MRMinecarts.BLAST_FURNACE_MINECART.item().asItem();
-            case SmokerBlock ignored       -> MRMinecarts.SMOKER_MINECART.item().asItem();
+            case SmokerBlock ignored -> MRMinecarts.SMOKER_MINECART.item().asItem();
             default -> Items.FURNACE_MINECART;
         };
     }
+
     @Inject(method = "addFuel", at = @At("HEAD"), cancellable = true)
     public void addFuel(Vec3 interactingPos, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
 
         ItemStack fuel = this.mincartrevolution$items.get(1);
 
         if (
-            itemStack.is(ItemTags.FURNACE_MINECART_FUEL)
-            && (fuel.isEmpty() || fuel.is(itemStack.typeHolder()))
-            && fuel.count() < fuel.getMaxStackSize()
+                itemStack.is(ItemTags.FURNACE_MINECART_FUEL)
+                        && (fuel.isEmpty() || fuel.is(itemStack.typeHolder()))
+                        && fuel.count() < fuel.getMaxStackSize()
         ) {
-            if(fuel.isEmpty()){
+            if (fuel.isEmpty()) {
                 fuel = itemStack.copy();
                 fuel.setCount(1);
-            }else {
+            } else {
                 fuel.grow(1);
             }
             this.mincartrevolution$items.set(1, fuel);
@@ -219,10 +228,12 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
         }
         cir.cancel();
     }
+
     @Inject(method = "hasFuel", at = @At("RETURN"), cancellable = true)
     protected void hasFuel(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(mincartrevolution$litTimeRemaining > 0);
     }
+
     @Unique
     private static void mincartrevolution$consumeFuel(NonNullList<ItemStack> items, ItemStack fuel) {
         Item fuelItem = fuel.getItem();
@@ -232,6 +243,7 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
             items.set(1, remainder != null ? remainder.create() : ItemStack.EMPTY);
         }
     }
+
     @Unique
     private void mincartrevolution$processSmelting(ServerLevel level) {
         ItemStack input = this.mincartrevolution$items.get(0);
@@ -286,19 +298,21 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
             );
         }
     }
+
     @Unique
     protected int mincartrevolution$getBurnDuration(FuelValues fuelValues, ItemStack itemStack) {
         return itemStack.getBurnTime(mincartrevolution$getRecipie(), fuelValues);
     }
+
     @Unique
-    private RecipeType<? extends AbstractCookingRecipe> mincartrevolution$getRecipie(){
+    private RecipeType<? extends AbstractCookingRecipe> mincartrevolution$getRecipie() {
         BlockState displayBlock = this.entityData
                 .get(DATA_ID_CUSTOM_DISPLAY_BLOCK)
                 .orElse(Blocks.AIR.defaultBlockState());
         Block block = displayBlock.getBlock();
         return switch (block) {
             case BlastFurnaceBlock ignored -> RecipeType.BLASTING;
-            case SmokerBlock ignored       -> RecipeType.SMOKING;
+            case SmokerBlock ignored -> RecipeType.SMOKING;
             default -> RecipeType.SMELTING;
         };
     }
@@ -340,7 +354,7 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
             Vec3 location,
             CallbackInfoReturnable<InteractionResult> cir
     ) {
-        MinecartFurnace self = (MinecartFurnace)(Object)this;
+        MinecartFurnace self = (MinecartFurnace) (Object) this;
 
         if (player.isShiftKeyDown() && !self.level().isClientSide()) {
             ItemStack held = player.getItemInHand(hand);
@@ -427,7 +441,7 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
         ContainerHelper.loadAllItems(input, this.mincartrevolution$items);
         this.mincartrevolution$cookingTimer = input.getShortOr("SmeltingProgress", (short) 0);
         this.mincartrevolution$cookingTotalTime = input.getShortOr("SmeltingTime", (short) 200);
-        if(this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).isEmpty())
+        if (this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).isEmpty())
             this.setCustomDisplayBlockState(Optional.of(Block.stateById(input.getIntOr("BlockInside", Block.getId(Blocks.FURNACE.defaultBlockState())))));
     }
 
@@ -495,7 +509,7 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
 
     @Override
     public boolean stillValid(@NonNull Player player) {
-        MinecartFurnace self = (MinecartFurnace)(Object)this;
+        MinecartFurnace self = (MinecartFurnace) (Object) this;
         return !self.isRemoved() && player.distanceToSqr(self) <= 64.0;
     }
 
