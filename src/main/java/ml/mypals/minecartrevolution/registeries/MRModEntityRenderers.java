@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.registeries;
 
+import ml.mypals.minecartrevolution.client.renderer.WorkingMinecartRenderer;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.world.entity.EntityType;
@@ -10,7 +11,6 @@ import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
 
 public class MRModEntityRenderers {
     public static void init(EntityRenderersEvent.RegisterRenderers registerRenderers){
-
         ENTITIES.getEntries()
                 .forEach(
                 entityTypeDeferredHolder -> {
@@ -24,6 +24,11 @@ public class MRModEntityRenderers {
 
                     }
                 }
+        );
+
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.NON_INVENTORY_WORKING_MINECART.get(),
+                WorkingMinecartRenderer::new
         );
     }
 }

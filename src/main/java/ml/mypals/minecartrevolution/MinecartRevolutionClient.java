@@ -62,6 +62,7 @@ public class MinecartRevolutionClient {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         MRModEntityRenderers.init(event);
     }
+
     private static void jukeboxEntityPlayUpdate(
             final JukeboxUpdateS2CPacket payload, final IPayloadContext context) {
         int entityId = payload.uuid();

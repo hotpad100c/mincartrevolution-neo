@@ -29,11 +29,6 @@ public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
         super(minecart, world, x, y, z, correspondingItem);
     }
 
-    protected DragonEggMinecart(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {
-        super(entityType, world, correspondingItem);
-    }
-
-
     @Override
     public void activateMinecart(@NonNull ServerLevel level, int x, int y, int z, boolean powered) {
         super.activateMinecart(level, x, y, z, powered);
@@ -56,6 +51,7 @@ public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
         this.setDisplayOffset(this.getHurtTime());
         spawnParticles((ServerLevel)this.level(), this.blockPosition());
     }
+
     private static void spawnParticles(ServerLevel world, BlockPos pos) {
         RandomSource random = world.getRandom();
         int chunkX = pos.getX() >> 4;
@@ -90,6 +86,7 @@ public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
             }
         }
     }
+
     @Override
     public void move(@NonNull MoverType moverType, @NonNull Vec3 delta) {
         Vec3 target = this.position().add(delta);
@@ -101,12 +98,14 @@ public class DragonEggMinecart extends ItemBoundBlockMinecartEntity{
              runAway();
         }
     }
+
     @Override
     public boolean hurtServer(@NonNull ServerLevel level, @NonNull DamageSource source, float damage) {
         boolean bl = super.hurtServer(level, source, damage);
         if(this.isAlive()) runAway();
         return bl;
     }
+
     private void runAway() {
         Level level = this.level();
         WorldBorder worldBorder = level.getWorldBorder();
