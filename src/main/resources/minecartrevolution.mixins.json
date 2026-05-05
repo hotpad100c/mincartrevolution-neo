@@ -5,6 +5,7 @@
   "mixins": [
     "RedstoneViewMixin",
     "blocks.UnrenderableBlocksMixin",
+    "light.LevelChunkMixin"
     "entity.EntityMixin",
     "light.LevelChunkMixin",
     "minecart.MinecartMixin",
@@ -17,6 +18,8 @@
     "requireAnnotations": true
   },
   "client": [
+    "AbstractMinecartRendererMixin",
+    "BlockModelRenderStateAccessor",
     "blocks.BlockRenderManagerMixin",
     "light.LevelRendererMixin"
   ]

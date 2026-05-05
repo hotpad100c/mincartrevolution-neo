@@ -1,7 +1,12 @@
 package ml.mypals.minecartrevolution.entity.minecarts.workingcarts;
+import ml.mypals.minecartrevolution.client.menu.MinecartChestMenu;
 import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -17,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.ChestLidController;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
@@ -34,6 +40,9 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
     public float bookRotation;
     public float oBookRotation;
     public float tRot;
+    private final ChestLidController chestLidController = new ChestLidController();
+    private int openCount = 0;
+
     private static final RandomSource RANDOM = RandomSource.create();
 
     public NonInventoryWorkingBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
@@ -117,6 +126,31 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
             this.flip += this.flipA;
 
             this.time++;
+        } else if (this.getDisplayBlockState().is(Blocks.ENDER_CHEST)) {
+            this.chestLidController.shouldBeOpen(this.openCount > 0);
+            this.chestLidController.tickLid();
+        }
+    }
+
+    public float getOpenness(float partialTick) {
+        return this.chestLidController.getOpenness(partialTick);
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 10) {
+            this.openCount++;
+        } else if (id == 11) {
+            this.openCount = Math.max(0, this.openCount - 1);
+        } else {
+            super.handleEntityEvent(id);
+        }
+    }
+
+    public void onContainerClosed() {
+        this.level().broadcastEntityEvent(this, (byte) 11);
+        if (this.openCount == 0) {
+            this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_CLOSE, SoundSource.BLOCKS);
         }
     }
 
@@ -131,6 +165,8 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
             MenuProvider provider = getMenuProvider(blockState);
             if (provider != null) {
                 player.openMenu(provider);
+                this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS);
+                this.level().broadcastEntityEvent(this, (byte)10);
                 return InteractionResult.SUCCESS;
             }
         }
@@ -139,25 +175,24 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
 
     @Nullable
     private MenuProvider getMenuProvider(BlockState state) {
-        Block block = state.getBlock();
-        if (block == Blocks.CRAFTING_TABLE) {
+        if (state.is(Blocks.CRAFTING_TABLE)) {
             return new SimpleMenuProvider((id, inv, _) -> new CraftingMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.crafting"));
-        } else if (block == Blocks.STONECUTTER) {
+        } else if (state.is(Blocks.STONECUTTER)) {
             return new SimpleMenuProvider((id, inv, _) -> new StonecutterMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.stonecutter"));
-        } else if (block == Blocks.LOOM) {
+        } else if (state.is(Blocks.LOOM)) {
             return new SimpleMenuProvider((id, inv, _) -> new LoomMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.loom"));
-        } else if (block == Blocks.CARTOGRAPHY_TABLE) {
+        } else if (state.is(Blocks.CARTOGRAPHY_TABLE)) {
             return new SimpleMenuProvider((id, inv, _) -> new CartographyTableMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.cartography_table"));
-        } else if (block == Blocks.GRINDSTONE) {
+        } else if (state.is(Blocks.GRINDSTONE)) {
             return new SimpleMenuProvider((id, inv, _) -> new GrindstoneMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.grindstone_title"));
-        } else if (block == Blocks.SMITHING_TABLE) {
+        } else if (state.is(Blocks.SMITHING_TABLE)) {
             return new SimpleMenuProvider((id, inv, _) -> new SmithingMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.upgrade"));
-        } else if (block == Blocks.ANVIL || block == Blocks.CHIPPED_ANVIL || block == Blocks.DAMAGED_ANVIL) {
+        } else if (state.is(BlockTags.ANVIL)) {
             return new SimpleMenuProvider((id, inv, _) -> new AnvilMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.repair"));
-        } else if (block == Blocks.ENCHANTING_TABLE) {
+        } else if (state.is(Blocks.ENCHANTING_TABLE)) {
             return new SimpleMenuProvider((id, inv, _) -> new EnchantmentMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.enchant"));
-        } else if (block == Blocks.ENDER_CHEST) {
-            return new SimpleMenuProvider((id, inv, p) -> ChestMenu.threeRows(id, inv, p.getEnderChestInventory()), Component.translatable("container.enderchest"));
+        } else if (state.is(Blocks.ENDER_CHEST)) {
+            return new SimpleMenuProvider((id, inv, p) -> new MinecartChestMenu(MenuType.GENERIC_9x3, id, inv, p.getEnderChestInventory(), 3, this), Component.translatable("container.enderchest"));
         }
         return null;
     }
