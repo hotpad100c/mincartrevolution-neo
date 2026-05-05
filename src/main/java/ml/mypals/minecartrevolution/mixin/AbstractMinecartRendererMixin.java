@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AbstractMinecartRendererMixin {
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;Lnet/minecraft/client/renderer/entity/state/MinecartRenderState;F)V", at = @At(value = "RETURN"))
     private void submitMinecartContents(AbstractMinecart entity, MinecartRenderState state, float partialTicks, CallbackInfo ci) {
-        if (entity.getDisplayBlockState().is(Blocks.ENCHANTING_TABLE)) {
+        if (entity.getDisplayBlockState().is(Blocks.ENCHANTING_TABLE) || entity.getDisplayBlockState().is(Blocks.ENDER_CHEST)) {
             ((BlockModelRenderStateAccessor) state.displayBlockModel).setSpecialRenderer(null);
         }
     }
