@@ -103,8 +103,8 @@ public class WorkingMinecartRenderer extends AbstractMinecartRenderer<NonInvento
             poseStack.popPose();
         } else if (state.displayBlock.is(Blocks.ENDER_CHEST)) {
             poseStack.pushPose();
-            poseStack.translate(0F, (float)(state.displayOffset - 8) / 16.0F, 1F);
-            poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
+            poseStack.translate(1F, 0.12F, 1F);
+            poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
             float open = state.open;
             open = 1.0F - open;
             open = 1.0F - open * open * open;

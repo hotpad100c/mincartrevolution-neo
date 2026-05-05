@@ -150,7 +150,9 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
     public void onContainerClosed() {
         this.level().broadcastEntityEvent(this, (byte) 11);
         if (this.openCount == 0) {
-            this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_CLOSE, SoundSource.BLOCKS);
+            if (this.getDisplayBlockState().is(Blocks.ENDER_CHEST)) {
+                this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_CLOSE, SoundSource.BLOCKS);
+            }
         }
     }
 
@@ -165,7 +167,9 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
             MenuProvider provider = getMenuProvider(blockState);
             if (provider != null) {
                 player.openMenu(provider);
-                this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS);
+                if (this.getDisplayBlockState().is(Blocks.ENDER_CHEST)) {
+                    this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS);
+                }
                 this.level().broadcastEntityEvent(this, (byte)10);
                 return InteractionResult.SUCCESS;
             }

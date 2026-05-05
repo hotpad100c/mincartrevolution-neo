@@ -1,9 +1,10 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
-import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -62,21 +63,16 @@ public class BarrelMinecartEntity extends AbstractMinecartContainer implements C
 
     @Override
     public @NonNull AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
-
         return ChestMenu.threeRows(syncId, playerInventory, this);
     }
 
-    /*
-    @Override
-    public void stopOpen(Player player) {
-        this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(player));
-    }
-    */
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
         InteractionResult actionResult = this.interactWithContainerVehicle(player);
         if (actionResult.consumesAction()) {
             this.gameEvent(GameEvent.CONTAINER_OPEN, player);
+            player.awardStat(Stats.OPEN_BARREL);
+            this.playSound(SoundEvents.BARREL_OPEN);
             if(player.level() instanceof ServerLevel serverLevel) PiglinAi.angerNearbyPiglins(serverLevel, player, true);
         }
 
