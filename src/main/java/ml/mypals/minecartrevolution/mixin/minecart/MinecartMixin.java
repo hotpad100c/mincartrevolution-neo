@@ -1,8 +1,7 @@
-package ml.mypals.minecartrevolution.mixin;
+package ml.mypals.minecartrevolution.mixin.minecart;
 
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
-import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.component.DataComponents;

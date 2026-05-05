@@ -1,4 +1,4 @@
-package ml.mypals.minecartrevolution.mixin.furnace;
+package ml.mypals.minecartrevolution.mixin.minecart.furnace;
 
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.Direction;

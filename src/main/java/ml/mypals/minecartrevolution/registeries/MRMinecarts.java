@@ -204,6 +204,12 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.DRAGON_EGG, p.stacksTo(1), Blocks.DRAGON_EGG),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
+    public static final MinecartEntry<CobwebMinecartEntity, MinecartWithBlockItem> COBWEB_MINECART = register(
+            "cobweb", CobwebMinecartEntity::new,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.COBWEB, p.stacksTo(1), Blocks.COBWEB),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR
+    );
+
     public static final MinecartEntry<MinecartFurnace, MinecartWithBlockItem> BLAST_FURNACE_MINECART = registerItemOnly(
             "blast_furnace_minecart", null,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.FURNACE, p.stacksTo(1), Blocks.BLAST_FURNACE),
@@ -258,7 +264,6 @@ public class MRMinecarts {
             "minecart_ender_chest", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ENDER_CHEST),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
-
 
 
     public static void init() {

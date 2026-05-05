@@ -3,11 +3,12 @@
   "package": "ml.mypals.minecartrevolution.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "furnace.FurnaceMinecartMixin",
-    "MinecartMixin",
     "RedstoneViewMixin",
     "blocks.UnrenderableBlocksMixin",
-    "light.LevelChunkMixin"
+    "entity.EntityMixin",
+    "light.LevelChunkMixin",
+    "minecart.MinecartMixin",
+    "minecart.furnace.FurnaceMinecartMixin"
   ],
   "injectors": {
     "defaultRequire": 1
