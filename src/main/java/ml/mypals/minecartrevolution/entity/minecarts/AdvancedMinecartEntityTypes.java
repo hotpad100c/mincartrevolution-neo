@@ -15,6 +15,7 @@ public class AdvancedMinecartEntityTypes {
         TRAPPED_CHEST,
         DRAGON_EGG,
         FURNACE,
-        WORKING_NON_INVENTORY
+        WORKING_NON_INVENTORY,
+        COBWEB
     }
 }

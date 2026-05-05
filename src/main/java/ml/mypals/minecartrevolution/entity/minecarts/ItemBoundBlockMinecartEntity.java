@@ -42,7 +42,7 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
     protected static final EntityDataAccessor<String> CORRESPONDING_ITEM=
             SynchedEntityData.defineId(ItemBoundBlockMinecartEntity.class, EntityDataSerializers.STRING);
     private Item correspondingItem;
-    protected ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
+    public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
         this.correspondingItem = MRMinecarts.BLOCK_MINECART_ITEM.item().get();
     }
@@ -51,7 +51,7 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
         this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
         this.correspondingItem = correspondingItem;
     }
-    protected ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {
+    public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {
         super(entityType, world);
         this.correspondingItem = correspondingItem;
         this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
@@ -114,16 +114,13 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
     @Override
     public @NonNull ItemStack getPickResult(){
         ItemStack stack =
-                BuiltInRegistries.ITEM.get(Identifier.parse(this.getEntityData().get(CORRESPONDING_ITEM)))
-                .orElse(Items.AIR.builtInRegistryHolder()).value().getDefaultInstance();
+                this.correspondingItem != null? correspondingItem.getDefaultInstance() : Items.MINECART.getDefaultInstance();
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-
+/*
         String blockName = blockState.getBlock().getName().getString();
-
         String cartName = Items.MINECART.getDefaultInstance().getDisplayName().getString();
-
-        stack.set(DataComponents.ITEM_NAME, Component.nullToEmpty(String.format(
-                stack.getHoverName().getString(),blockName,cartName)));
+        stack.set(DataComponents.ITEM_NAME, Component.nullToEmpty(String.format(stack.getHoverName().getString(),blockName,cartName)));
+  */
         return stack;
     }
 
