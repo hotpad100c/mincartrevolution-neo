@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.TrappedChestMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartChestExtension;
 import ml.mypals.minecartrevolution.interfaces.IMinecartRenderStateExtension;
@@ -64,6 +65,8 @@ public class AbstractMinecartRendererMixin {
             IMinecartRenderStateExtension stateExt = (IMinecartRenderStateExtension) state;
             stateExt.minecartrevolution$setOpenness(minecartChest.getOpenness(partialTicks));
             stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState().getBlock());
+        } else if (entity instanceof ShulkerMinecartEntity shulker) {
+            ((BlockModelRenderStateAccessor) state.displayBlockModel).setSpecialRenderer(null);
         }
     }
     @WrapMethod(method = "submitMinecartContents")
