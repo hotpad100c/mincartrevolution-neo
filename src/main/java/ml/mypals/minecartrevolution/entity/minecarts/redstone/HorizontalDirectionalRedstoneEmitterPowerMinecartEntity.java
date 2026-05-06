@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.redstone;
 
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
+import ml.mypals.minecartrevolution.util.MinecartRotationUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
@@ -47,12 +48,7 @@ public class HorizontalDirectionalRedstoneEmitterPowerMinecartEntity extends Red
     }
 
     public Direction calculateBlockFacing(Direction blockFacing) {
-
-        int blockRotation = blockFacing.get2DDataValue();
-
-        int theta = Math.floorMod((int) (180 - this.getYRot()), 360);
-
-        return Direction.fromYRot(theta + blockRotation);
+        return MinecartRotationUtils.getAbsoluteDirection(blockFacing, this.getYRot());
     }
 
     @Override

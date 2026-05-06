@@ -1,7 +1,9 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
 import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
+import ml.mypals.minecartrevolution.interfaces.IMinecartSource;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import ml.mypals.minecartrevolution.util.MinecartRotationUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
@@ -79,38 +81,22 @@ public class DispenserMinecartEntity extends AbstractMinecartContainer implement
             this.level().levelEvent(1001, this.blockPosition(), 0);
         } else {
             float pitch = this.getXRot();
-            float rawYaw = this.getYRot();
-            boolean isClockwise = this.isOnRails();
-            float targetYaw = rawYaw + (isClockwise ? 90.0F : -90.0F);
+            BlockState currentState = this.getDisplayBlockState();
+            Direction localDir = currentState.hasProperty(DispenserBlock.FACING) ? 
+                    currentState.getValue(DispenserBlock.FACING) : Direction.NORTH;
+            
+            Direction placeDir = MinecartRotationUtils.getAbsoluteDirection(localDir, this.getYRot());
 
-            int offsetX;
-            int offsetY = 0;
-            int offsetZ;
-            Direction placeDir;
+            int offsetX = placeDir.getStepX();
+            int offsetY = placeDir.getStepY();
+            int offsetZ = placeDir.getStepZ();
 
+            // 如果方块水平放置，但矿车有明显的俯仰角，我们根据俯仰角调整 Y 偏移
+            // 保持原有的逻辑：大俯仰角时强制上下发射
             if (pitch < -15.0F) {
-                float yaw = Math.round(targetYaw / 90.0F) * 90.0F;
-                placeDir = Direction.fromYRot(yaw);
-                offsetX = placeDir.getStepX();
-                offsetZ = placeDir.getStepZ();
-                offsetY = 1; // 往上一层放
+                offsetY = 1;
             } else if (pitch > 15.0F) {
-                // --- 向下 4 向 ---
-                float yaw = Math.round(targetYaw / 90.0F) * 90.0F;
-                placeDir = Direction.fromYRot(yaw);
-                offsetX = placeDir.getStepX();
-                offsetZ = placeDir.getStepZ();
-                offsetY = -1; // 往下一层放
-            } else {
-                // --- 水平 8 向 ---
-                float yaw = Math.round(targetYaw / 45.0F) * 45.0F;
-                placeDir = Direction.fromYRot(yaw);
-
-                // 这里的关键：8向需要根据 Yaw 手动算 XZ 偏移
-                // 因为 Direction 只有 4 个水平向，不能表示斜 45 度
-                float rad = yaw * ((float) Math.PI / 180F);
-                offsetX = -Math.round(Mth.sin(rad));
-                offsetZ = Math.round(Mth.cos(rad));
+                offsetY = -1;
             }
 
             // 3. 计算最终方块坐标
@@ -171,7 +157,8 @@ public class DispenserMinecartEntity extends AbstractMinecartContainer implement
 
     @Override
     public @NonNull BlockState getDefaultDisplayBlockState() {
-        return Blocks.DISPENSER.defaultBlockState();
+        // WEST in block-space maps to "Forward" in world-space (given 270-yaw rotation)
+        return Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.WEST);
     }
 
     @Override

@@ -158,8 +158,8 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         if (this.hasCustomDisplay()) {
             BlockState myBlock = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
             double y = myBlock.getCollisionShape(level(), this.blockPosition()).isEmpty() ?
-                    0 : myBlock.getCollisionShape(level(), this.blockPosition()).bounds().getMaxPosition().y * 0.9;
-            return super.getPassengerRidingPosition(passenger).add(0, y + ((double) this.getDisplayOffset() / 40), 0);
+                    0 : myBlock.getCollisionShape(level(), this.blockPosition()).bounds().getMaxPosition().y - 0.3;
+            return super.getPassengerRidingPosition(passenger).add(0, y + ((double) this.getDisplayOffset()/16), 0);
         } else {
             return super.getPassengerRidingPosition(passenger);
         }
