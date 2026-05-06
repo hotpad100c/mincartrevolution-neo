@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "RedstoneViewMixin",
+    "blocks.BlockSourceMixin",
+    "blocks.ProjectileDispenseBehaviorMixin",
     "blocks.UnrenderableBlocksMixin",
     "entity.EntityMixin",
     "light.LevelChunkMixin",
@@ -20,9 +22,10 @@
   "client": [
     "blocks.BlockRenderManagerMixin",
     "client.AbstractMinecartRendererMixin",
-    "client.BlockModelRenderStateAccessor",
-    "client.ItemModelResolverMixin",
     "client.MinecartRenderStateMixin",
+    "client.BlockModelRenderStateAccessor",
+    "client.MinecartRenderStateMixin",
+    "client.ItemModelResolverMixin",
     "light.LevelRendererMixin"
   ]
 }

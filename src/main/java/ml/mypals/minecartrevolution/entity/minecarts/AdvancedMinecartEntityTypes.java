@@ -16,6 +16,7 @@ public class AdvancedMinecartEntityTypes {
         DRAGON_EGG,
         FURNACE,
         WORKING_NON_INVENTORY,
-        COBWEB
+        COBWEB,
+        DISPENSER
     }
 }
