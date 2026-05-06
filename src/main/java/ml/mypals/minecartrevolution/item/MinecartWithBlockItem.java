@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution.item;
 
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
+import ml.mypals.minecartrevolution.interfaces.IMinecartWithBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
@@ -25,7 +26,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-public class MinecartWithBlockItem extends Item {
+public class MinecartWithBlockItem extends Item implements IMinecartWithBlockItem {
     final Item corrospondingItem;
     Block blockInside;
     public static final DispenseItemBehavior DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior() {
@@ -83,7 +84,7 @@ public class MinecartWithBlockItem extends Item {
     };
     public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem corrospondingItem, ItemStack stack) {
         return MinecartTransformManager.getTransform(
-                serverWorld,corrospondingItem,corrospondingItem.blockInside,new Vec3(x,y, z),
+                serverWorld, corrospondingItem, getBlockInside(stack).getBlock(), new Vec3(x, y, z),
                 type
         );
     }
@@ -94,7 +95,6 @@ public class MinecartWithBlockItem extends Item {
         this.type = type;
         this.corrospondingItem = this;
         this.blockInside = blockInside;
-        //DispenserBlock.registerBehavior(this, DISPENSER_BEHAVIOR);
     }
     public void setBlockInside(Block blockInside) {
         this.blockInside = blockInside;
@@ -132,4 +132,10 @@ public class MinecartWithBlockItem extends Item {
             return InteractionResult.SUCCESS;
         }
     }
+
+    @Override
+    public BlockState getBlockInside(ItemStack stack) {
+        return getSyncedBlockState(stack, this.blockInside);
+    }
+
 }

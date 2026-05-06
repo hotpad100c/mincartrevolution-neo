@@ -20,8 +20,9 @@
   "client": [
     "blocks.BlockRenderManagerMixin",
     "client.AbstractMinecartRendererMixin",
-    "client.MinecartRenderStateMixin",
     "client.BlockModelRenderStateAccessor",
+    "client.ItemModelResolverMixin",
+    "client.MinecartRenderStateMixin",
     "light.LevelRendererMixin"
   ]
 }

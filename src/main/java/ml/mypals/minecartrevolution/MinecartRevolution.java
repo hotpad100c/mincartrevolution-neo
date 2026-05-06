@@ -25,6 +25,7 @@ import java.util.List;
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ITEMS;
 import static ml.mypals.minecartrevolution.registeries.MRModCriteria.TRIGGERS;
+import ml.mypals.minecartrevolution.registeries.MRDataComponents;
 import static ml.mypals.minecartrevolution.registeries.MRModItems.*;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -54,6 +55,7 @@ public class MinecartRevolution {
         ENTITIES.register(modEventBus);
         TRIGGERS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+        MRDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
 
 
