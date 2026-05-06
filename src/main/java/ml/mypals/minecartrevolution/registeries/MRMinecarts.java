@@ -269,6 +269,11 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ENDER_CHEST),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
+    public static final MinecartEntry<DispenserMinecartEntity, MinecartWithBlockItem> DISPENSER_MINECART = registerItemOnly(
+            "minecart_dispenser", null,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.DISPENSER, p.stacksTo(1), Blocks.DISPENSER),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
 
     public static void init() {
         System.out.println("MRMinecarts loaded");

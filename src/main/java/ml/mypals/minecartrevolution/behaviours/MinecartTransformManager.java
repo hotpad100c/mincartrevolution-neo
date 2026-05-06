@@ -1,14 +1,9 @@
 package ml.mypals.minecartrevolution.behaviours;
 
 import ml.mypals.minecartrevolution.entity.minecarts.*;
-import ml.mypals.minecartrevolution.entity.minecarts.container.BarrelMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.container.TrappedChestMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.HorizontalDirectionalRedstoneEmitterPowerMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneBlockMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.WeightPresherPlateMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.container.*;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
+import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.*;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
@@ -157,7 +152,12 @@ public class MinecartTransformManager {
                 Map.entry(Blocks.BARREL, (w, pos) -> new BarrelMinecartEntity(MRMinecarts.BARREL_MINECART.entity().get(), w, pos.x, pos.y, pos.z)),
                 Map.entry(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.GOLDEN_PRESHER_PLATE_MINECART.item().get())),
                 Map.entry(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.IRON_PRESHER_PLATE_MINECART.item().get())),
-                Map.entry(Blocks.JUKEBOX, (w, pos) -> new JukeboxMinecartEntity(MRMinecarts.JUKEBOX_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.JUKEBOX_MINECART.item().get()))
+                Map.entry(Blocks.JUKEBOX, (w, pos) -> new JukeboxMinecartEntity(MRMinecarts.JUKEBOX_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.JUKEBOX_MINECART.item().get())),
+                Map.entry(Blocks.DISPENSER, (w, pos) -> {
+                    AbstractMinecart abstractMinecart = new DispenserMinecartEntity(EntityType.CHEST_MINECART, w);
+                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+                    return abstractMinecart;
+                })
         ));
         factoryMap.putAll(PRESSURE_PLATE_ENTITY_MAP);
         factoryMap.putAll(SHULKER_ENTITY_MAP);
