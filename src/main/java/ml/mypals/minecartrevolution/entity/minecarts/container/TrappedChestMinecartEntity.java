@@ -32,13 +32,15 @@ import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Unique;
 
 public class TrappedChestMinecartEntity extends AbstractMinecartContainer implements PowerEmitterMinecartEntity, IMinecartContainer {
-    private int viewers = 0;
+    private int openCount = 0;
     @Unique
     public final ChestLidController chestLidController = new ChestLidController();
+
     public TrappedChestMinecartEntity(EntityType<? extends AbstractMinecartContainer> entityType, Level world) {
         super(entityType, world);
     }
-    public TrappedChestMinecartEntity( Level world, double x, double y, double z) {
+
+    public TrappedChestMinecartEntity(Level world, double x, double y, double z) {
         super(MRMinecarts.TRAPPED_CHEST_MINECART.entity().get(), world);
         this.setInitialPos(x, y, z);
     }
@@ -57,6 +59,7 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
     public int getContainerSize() {
         return 27;
     }
+
     @Override
     public @NonNull BlockState getDefaultDisplayBlockState() {
         return Blocks.TRAPPED_CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.NORTH);
@@ -75,42 +78,56 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
     @Override
     public void tick() {
         this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
-            if(!updatedBlocks || !this.isAlive()){
-                if(getPreviousBlockPos() != null)updateNeighbors(this.level(),previousBlockPos, blockState.getBlock());
+            if (!updatedBlocks || !this.isAlive()) {
+                if (getPreviousBlockPos() != null)
+                    updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
                 updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
             }
             if (this.getPreviousBlockPos() == null || !this.getPreviousBlockPos().equals(this.blockPosition())) {
-                if(this.getPreviousBlockPos() == null) this.setPreviousBlockPos(this.blockPosition());
-                updateNeighbors(this.level(),previousBlockPos, blockState.getBlock());
+                if (this.getPreviousBlockPos() == null) this.setPreviousBlockPos(this.blockPosition());
+                updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
                 this.setPreviousBlockPos(this.blockPosition());
-                updateNeighbors(this.level(),this.blockPosition(), blockState.getBlock());
+                updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
             }
         });
-        this.chestLidController.shouldBeOpen(this.viewers > 0);
+        this.chestLidController.shouldBeOpen(this.openCount > 0);
         this.chestLidController.tickLid();
         super.tick();
     }
+
     public float getOpenness(float partialTick) {
         return this.chestLidController.getOpenness(partialTick);
     }
+
     @Override
-   public @NonNull InteractionResult interactWithContainerVehicle(@NonNull Player player) {
-        viewers++;
+    public @NonNull InteractionResult interactWithContainerVehicle(@NonNull Player player) {
+        if (!this.level().isClientSide()) {
+            this.openCount++;
+            this.level().broadcastEntityEvent(this, (byte) 10);
+        }
         return super.interactWithContainerVehicle(player);
     }
+
     @Override
     public int getPowerStrength(Direction direction, BlockPos pos) {
-        return direction == Direction.UP ? 0:
-                Mth.clamp(viewers, 0, 15);
+        return direction == Direction.UP ? 0 :
+                Mth.clamp(openCount, 0, 15);
     }
+
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         InteractionResult actionResult = this.interactWithContainerVehicle(player);
         if (actionResult.consumesAction()) {
+            this.openCount++;
+            if (this.openCount >= 1) {
+                this.level().playSound(this, this.blockPosition(), SoundEvents.CHEST_OPEN, SoundSource.BLOCKS);
+            }
+            this.level().broadcastEntityEvent(this, (byte) 11);
             this.gameEvent(GameEvent.CONTAINER_OPEN, player);
-            if(player.level() instanceof ServerLevel serverLevel) PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+            if (player.level() instanceof ServerLevel serverLevel)
+                PiglinAi.angerNearbyPiglins(serverLevel, player, true);
             this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
-                updateNeighbors(this.level(),this.blockPosition(), blockState.getBlock());
+                updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
             });
         }
 
@@ -118,13 +135,23 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
     }
 
     @Override
-    public void minecartrevolution$OnContainerClosed(Level level, Player player) {
-        this.level().broadcastEntityEvent(this, (byte) 11);
-        viewers--;
-        if (this.viewers <= 0) {
-            viewers = 0;
-            this.gameEvent(GameEvent.CONTAINER_CLOSE, player);
-            this.level().playSound(this, this.blockPosition(), SoundEvents.SHULKER_CLOSE, SoundSource.BLOCKS);
+    public void handleEntityEvent(byte id) {
+        if (id == 10) {
+            this.openCount++;
+        } else if (id == 11) {
+            this.openCount = Math.max(0, this.openCount - 1);
+        } else {
+            super.handleEntityEvent(id);
         }
+    }
+
+    @Override
+    public void minecartrevolution$OnContainerClosed(Level level, Player player) {
+        this.openCount = Math.max(0, this.openCount - 1);
+        if (this.openCount == 0) {
+            this.level().playSound(this, this.blockPosition(), SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS);
+        }
+        this.level().broadcastEntityEvent(this, (byte) 11);
+        updateNeighbors(this.level(), this.blockPosition(), Blocks.TRAPPED_CHEST);
     }
 }

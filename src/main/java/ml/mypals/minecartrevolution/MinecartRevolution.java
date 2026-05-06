@@ -42,9 +42,11 @@ public class MinecartRevolution {
     public static Identifier id(String path) {
         return Identifier.fromNamespaceAndPath(MODID, path);
     }
+
     public static String idString(String path) {
         return MODID + ":" + path;
     }
+
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public MinecartRevolution(IEventBus modEventBus, ModContainer modContainer) {
@@ -83,12 +85,13 @@ public class MinecartRevolution {
     public void gatherData(GatherDataEvent.Client event) {
         event.createProvider((output, lookupProvider) ->
                 new AdvancementProvider(
-                output, lookupProvider,
-                List.of(
-                        MRAdvancementProvider::generate
-                )
-    ));
+                        output, lookupProvider,
+                        List.of(
+                                MRAdvancementProvider::generate
+                        )
+                ));
     }
+
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {

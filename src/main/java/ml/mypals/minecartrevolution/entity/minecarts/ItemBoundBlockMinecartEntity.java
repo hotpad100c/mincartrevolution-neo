@@ -39,45 +39,50 @@ import java.util.Optional;
 public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecartEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
-    protected static final EntityDataAccessor<String> CORRESPONDING_ITEM=
+    protected static final EntityDataAccessor<String> CORRESPONDING_ITEM =
             SynchedEntityData.defineId(ItemBoundBlockMinecartEntity.class, EntityDataSerializers.STRING);
     private Item correspondingItem;
+
     public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
         this.correspondingItem = MRMinecarts.BLOCK_MINECART_ITEM.item().get();
     }
+
     public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
-        super(minecart, world, x, y, z,correspondingItem.getBlockInside());
+        super(minecart, world, x, y, z, correspondingItem.getBlockInside());
         this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
         this.correspondingItem = correspondingItem;
     }
+
     public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {
         super(entityType, world);
         this.correspondingItem = correspondingItem;
         this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
         this.setCustomDisplayBlockState(Optional.of(correspondingItem.getBlockInside().defaultBlockState()));
     }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(this.correspondingItem).toString());
     }
+
     @Override
     public void destroy(@NonNull ServerLevel serverLevel, DamageSource source) {
         boolean sourceIsPlayer = false;
         Player playerEntity = null;
-        if(source.getEntity() instanceof Player player){
+        if (source.getEntity() instanceof Player player) {
             sourceIsPlayer = true;
             playerEntity = player;
         }
         boolean shouldDrop = !serverLevel.getGameRules().get(GameRules.ENTITY_DROPS) ||
-                (sourceIsPlayer  && !((Player)source.getEntity()).isCreative());
-        if(shouldDrop) {
-            if (playerEntity != null){
-                if(playerEntity.isSecondaryUseActive()){
+                (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
+        if (shouldDrop) {
+            if (playerEntity != null) {
+                if (playerEntity.isSecondaryUseActive()) {
                     ItemStack stack = getDropItem().getDefaultInstance();
                     spawnAtLocation(serverLevel, stack);
-                }else{
+                } else {
                     ItemStack stack = Items.MINECART.getDefaultInstance();
                     spawnAtLocation(serverLevel, stack);
                     BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
@@ -89,22 +94,24 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
         }
         this.kill(serverLevel);
     }
+
     @Override
     public @NonNull Item getDropItem() {
-        if(this.correspondingItem != null && !(this.correspondingItem instanceof AirItem)) {
+        if (this.correspondingItem != null && !(this.correspondingItem instanceof AirItem)) {
             return this.correspondingItem;
-        }else {
+        } else {
             return this.getCorrospondingItem();
         }
     }
-    public Item getCorrospondingItem(){
+
+    public Item getCorrospondingItem() {
         ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(this.problemPath(), LOGGER);
         TagValueOutput valueOutput = TagValueOutput.createWithContext(reporter, this.registryAccess());
 
         this.saveWithoutId(valueOutput);
         CompoundTag nbt = valueOutput.buildResult();
         this.correspondingItem = BuiltInRegistries.ITEM.get(
-                Identifier.parse(String.valueOf(nbt.getString("correspondingItem"))))
+                        Identifier.parse(String.valueOf(nbt.getString("correspondingItem"))))
                 .orElse(MRMinecarts.BLOCK_MINECART_ITEM.item().get().builtInRegistryHolder()).value();
 
 
@@ -112,9 +119,9 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
     }
 
     @Override
-    public @NonNull ItemStack getPickResult(){
+    public @NonNull ItemStack getPickResult() {
         ItemStack stack =
-                this.correspondingItem != null? correspondingItem.getDefaultInstance() : Items.MINECART.getDefaultInstance();
+                this.correspondingItem != null ? correspondingItem.getDefaultInstance() : Items.MINECART.getDefaultInstance();
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 /*
         String blockName = blockState.getBlock().getName().getString();
@@ -140,6 +147,7 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
         nbt.putString("correspondingItem", BuiltInRegistries.ITEM.getKey(this.correspondingItem).toString());
         super.saveWithoutId(nbt);
     }
+
     public void setCorrespondingItem(Item correspondingItem) {
         this.correspondingItem = correspondingItem;
         this.entityData.set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());

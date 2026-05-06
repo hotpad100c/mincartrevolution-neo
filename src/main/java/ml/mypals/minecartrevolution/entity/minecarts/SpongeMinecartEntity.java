@@ -59,12 +59,13 @@ public class SpongeMinecartEntity extends ItemBoundBlockMinecartEntity {
     @Override
     public void tick() {
         super.tick();
-        this.update(level(),blockPosition());
+        this.update(level(), blockPosition());
     }
+
     protected void update(Level world, BlockPos pos) {
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
         Block block = blockState.getBlock();
-        if(block instanceof SpongeBlock spongeBlock) {
+        if (block instanceof SpongeBlock spongeBlock) {
             if (this.absorbWater(world, pos)) {
                 this.setCustomDisplayBlockState(Optional.of(Blocks.WET_SPONGE.defaultBlockState()));
                 world.playSound(this, pos, SoundEvents.SPONGE_ABSORB, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -77,9 +78,9 @@ public class SpongeMinecartEntity extends ItemBoundBlockMinecartEntity {
                 world.playSound(this, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 this.setCorrespondingItem(MRMinecarts.SPONGE_MINECART.item().get());
 
-            }else if(level() instanceof ServerLevel serverLevel &&
+            } else if (level() instanceof ServerLevel serverLevel &&
                     serverLevel.getRandom().nextInt(4096)
-                    < serverLevel.getGameRules().get(GameRules.RANDOM_TICK_SPEED)) {
+                            < serverLevel.getGameRules().get(GameRules.RANDOM_TICK_SPEED)) {
                 this.setCustomDisplayBlockState(Optional.of(Blocks.SPONGE.defaultBlockState()));
                 world.playSound(this, pos, SoundEvents.WET_SPONGE_DRIES, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
@@ -87,25 +88,29 @@ public class SpongeMinecartEntity extends ItemBoundBlockMinecartEntity {
 
         }
     }
+
     @Override
     protected @NonNull Vec3 applyNaturalSlowdown(@NonNull Vec3 movement) {
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        if(blockState.getBlock() instanceof WetSpongeBlock)
+        if (blockState.getBlock() instanceof WetSpongeBlock)
             movement = this.getDeltaMovement().multiply(0.5, 0.0, 0.5);
         return super.applyNaturalSlowdown(movement);
     }
+
     @Override
     public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
         this.absorbRadius = nbt.getInt("absort_radius").orElse(6);
         this.absorbRadius = nbt.getInt("absort_limit").orElse(64);
     }
+
     @Override
     public void saveWithoutId(ValueOutput nbt) {
         nbt.putInt("absort_radius", this.absorbRadius);
         nbt.putInt("absort_limit", this.absorbLimit);
         super.saveWithoutId(nbt);
     }
+
     private boolean absorbWater(Level level, BlockPos startPos) {
         BlockState spongeState = level.getBlockState(startPos);
         return BlockPos.breadthFirstTraversal(startPos, 6, 65, (pos, consumer) -> {

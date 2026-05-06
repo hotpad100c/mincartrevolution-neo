@@ -1,4 +1,5 @@
 package ml.mypals.minecartrevolution.entity.minecarts.workingcarts;
+
 import ml.mypals.minecartrevolution.client.menu.MinecartChestMenu;
 import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
@@ -52,7 +53,7 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
         super(minecart, world, x, y, z, blockInside);
     }
 
-    private Item getItem(){
+    private Item getItem() {
         BlockState displayBlock = this.entityData
                 .get(DATA_ID_CUSTOM_DISPLAY_BLOCK)
                 .orElse(Blocks.AIR.defaultBlockState());
@@ -64,7 +65,7 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
             case LoomBlock ignored -> MRMinecarts.LOOM_MINECART.item().get();
             case CartographyTableBlock ignored -> MRMinecarts.CARTOGRAPHY_TABLE_MINECART.item().get();
             case GrindstoneBlock ignored -> MRMinecarts.GRINDSTONE_MINECART.item().get();
-            case AnvilBlock ignored-> MRMinecarts.ANVIL_MINECART.item().get();
+            case AnvilBlock ignored -> MRMinecarts.ANVIL_MINECART.item().get();
             case EnchantingTableBlock ignored -> MRMinecarts.ENCHANTING_TABLE_MINECART.item().get();
             case EnderChestBlock ignored -> MRMinecarts.ENDER_CHEST_MINECART.item().get();
             default -> super.getPickResult().getItem();
@@ -77,7 +78,7 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
     }
 
     @Override
-    public @NonNull ItemStack getPickResult(){
+    public @NonNull ItemStack getPickResult() {
         return getItem().getDefaultInstance();
     }
 
@@ -93,10 +94,10 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
                 double dX = player.getX() - this.getX();
                 double dZ = player.getZ() - this.getZ();
                 float worldAngle = (float) Mth.atan2(dZ, dX);
-                float entityYawRadians = this.getYRot() * (float)(Math.PI / 180.0);
+                float entityYawRadians = this.getYRot() * (float) (Math.PI / 180.0);
                 this.tRot = worldAngle - entityYawRadians;
                 if (this.level().getBlockState(this.blockPosition()).is(BlockTags.RAILS)) {
-                    this.tRot += (float)Math.PI;
+                    this.tRot += (float) Math.PI;
                 }
                 this.bookOpen = Mth.clamp(this.bookOpen + 0.1F, 0.0F, 1.0F);
                 if (this.bookOpen < 0.5F || RANDOM.nextInt(40) == 0) {
@@ -157,7 +158,7 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
             MenuProvider provider = getMenuProvider(blockState);
             if (provider != null) {
                 player.openMenu(provider);
-                this.level().broadcastEntityEvent(this, (byte)10);
+                this.level().broadcastEntityEvent(this, (byte) 10);
                 return InteractionResult.SUCCESS;
             }
         }

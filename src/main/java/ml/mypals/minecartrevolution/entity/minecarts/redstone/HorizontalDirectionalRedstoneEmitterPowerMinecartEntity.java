@@ -23,7 +23,7 @@ public class HorizontalDirectionalRedstoneEmitterPowerMinecartEntity extends Red
     public HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(EntityType<? extends RedstoneBlockMinecartEntity> entityType, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(entityType, world, x, y, z, correspondingItem);
         this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
-            if(blockState.hasProperty(HorizontalDirectionalBlock.FACING)) {
+            if (blockState.hasProperty(HorizontalDirectionalBlock.FACING)) {
                 this.setCustomDisplayBlockState(Optional.of(blockState.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST)));
             }
         });
@@ -31,18 +31,21 @@ public class HorizontalDirectionalRedstoneEmitterPowerMinecartEntity extends Red
 
     public boolean shouldPowerSide(Direction direction) {
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        if (blockState.hasProperty(HorizontalDirectionalBlock.FACING)){
+        if (blockState.hasProperty(HorizontalDirectionalBlock.FACING)) {
             Direction blockFacing = blockState.getValue(HorizontalDirectionalBlock.FACING);
             return calculateBlockFacing(blockFacing) == direction;
         }
         return false;
     }
+
     @Override
     public @NonNull BlockState getDefaultDisplayBlockState() {
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        if(blockState.hasProperty(HorizontalDirectionalBlock.FACING)) return blockState.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST);
+        if (blockState.hasProperty(HorizontalDirectionalBlock.FACING))
+            return blockState.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST);
         else return blockState;
     }
+
     public Direction calculateBlockFacing(Direction blockFacing) {
 
         int blockRotation = blockFacing.get2DDataValue();
@@ -51,12 +54,13 @@ public class HorizontalDirectionalRedstoneEmitterPowerMinecartEntity extends Red
 
         return Direction.fromYRot(theta + blockRotation);
     }
+
     @Override
     public void tick() {
         super.tick();
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
-        if(blockState.hasProperty(DiodeBlock.POWERED) && getPower(this.level(), this.blockPosition(), blockState) > 0){
+        if (blockState.hasProperty(DiodeBlock.POWERED) && getPower(this.level(), this.blockPosition(), blockState) > 0) {
             this.setCustomDisplayBlockState(Optional.of(getDefaultDisplayBlockState().setValue(DiodeBlock.POWERED, true)));
             this.updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
         } else {
@@ -64,21 +68,23 @@ public class HorizontalDirectionalRedstoneEmitterPowerMinecartEntity extends Red
             this.updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
         }
     }
+
     @Override
     public int getPowerStrength(Direction direction, BlockPos pos) {
-        if(!this.isAlive() || !shouldPowerSide(direction)){
+        if (!this.isAlive() || !shouldPowerSide(direction)) {
             return 0;
         }
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        if(!blockState.hasProperty(DiodeBlock.POWERED)) return 0;
+        if (!blockState.hasProperty(DiodeBlock.POWERED)) return 0;
 
         return blockState.getValue(DiodeBlock.POWERED) ? 15 : 0;
     }
+
     protected int getPower(Level world, BlockPos pos, BlockState state) {
-        if(!state.hasProperty(HorizontalDirectionalBlock.FACING)) return 0;
+        if (!state.hasProperty(HorizontalDirectionalBlock.FACING)) return 0;
         Direction direction = calculateBlockFacing(state.getValue(HorizontalDirectionalBlock.FACING));
         BlockPos blockPos = pos.relative(direction);
-        int i = Math.max(world.getDirectSignal(blockPos, direction),world.getSignal(blockPos, direction));
-        return i > 0 ? 15:0;
+        int i = Math.max(world.getDirectSignal(blockPos, direction), world.getSignal(blockPos, direction));
+        return i > 0 ? 15 : 0;
     }
 }

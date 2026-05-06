@@ -33,10 +33,11 @@ public abstract class ChestMinecartMixin extends AbstractMinecart implements IMi
         super(type, level);
     }
 
-    @Inject(method = "interact", at = @At(target = "Lnet/minecraft/world/entity/monster/piglin/PiglinAi;angerNearbyPiglins(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/player/Player;Z)V",value = "INVOKE"))
+    @Inject(method = "interact", at = @At(target = "Lnet/minecraft/world/entity/monster/piglin/PiglinAi;angerNearbyPiglins(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/player/Player;Z)V", value = "INVOKE"))
     public void interact(Player player, InteractionHand hand, Vec3 location, CallbackInfoReturnable<InteractionResult> cir) {
         minecartrevolution$viewers++;
     }
+
     @Override
     public void minecartrevolution$OnContainerClosed(Level level, Player player) {
         this.level().broadcastEntityEvent(this, (byte) 11);
@@ -49,14 +50,13 @@ public abstract class ChestMinecartMixin extends AbstractMinecart implements IMi
     }
 
 
-
-
     @Override
     public ChestLidController minecartrevolution$getChestLidController() {
         return minecartrevolution$chestLidController;
     }
+
     @Override
-    public void tick(){
+    public void tick() {
         super.tick();
         this.minecartrevolution$chestLidController.shouldBeOpen(this.minecartrevolution$viewers > 0);
         this.minecartrevolution$chestLidController.tickLid();

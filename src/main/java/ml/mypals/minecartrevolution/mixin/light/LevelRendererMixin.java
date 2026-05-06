@@ -1,4 +1,5 @@
 package ml.mypals.minecartrevolution.mixin.light;
+
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;

@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ClientLevel.class)
-public abstract class LevelChunkMixin  extends Level implements BlockAndTintGetter {
+public abstract class LevelChunkMixin extends Level implements BlockAndTintGetter {
 
 
     protected LevelChunkMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {

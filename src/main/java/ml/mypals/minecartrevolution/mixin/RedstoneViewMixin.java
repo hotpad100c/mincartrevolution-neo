@@ -20,16 +20,18 @@ import java.util.Optional;
 public abstract class RedstoneViewMixin implements LevelAccessor {
     @Override
     public int getSignal(@NotNull BlockPos pos, @NotNull Direction direction) {
-        int redstonePowerFromBlock = minecartrevolution_neo$getRedstonePower(pos,direction);
+        int redstonePowerFromBlock = minecartrevolution_neo$getRedstonePower(pos, direction);
         int redstonePowerFromEntity = this.minecartrevolution_neo$getRedstonePowerFromEntity(pos, direction);
         return Math.max(redstonePowerFromBlock, redstonePowerFromEntity);
     }
+
     @Unique
     private int minecartrevolution_neo$getRedstonePower(BlockPos pos, Direction direction) {
         BlockState blockState = this.getBlockState(pos);
         int i = blockState.getSignal(this, pos, direction);
         return blockState.isRedstoneConductor(this, pos) ? Math.max(i, this.getDirectSignalTo(pos)) : i;
     }
+
     @Unique
     public int minecartrevolution_neo$getRedstonePowerFromEntity(BlockPos pos, Direction direction) {
         AABB box = new AABB(
@@ -40,8 +42,8 @@ public abstract class RedstoneViewMixin implements LevelAccessor {
                 box,
                 entity -> entity instanceof PowerEmitterMinecartEntity
         );
-        Optional <? extends AbstractMinecart> strongest = powers.stream()
-                .max(Comparator.comparingInt(cart -> ((PowerEmitterMinecartEntity)cart).getPowerStrength(direction,pos)));
-        return strongest.map(redstoneEmitterPowerMinecart ->((PowerEmitterMinecartEntity) redstoneEmitterPowerMinecart).getPowerStrength(direction,pos)).orElse(0);
+        Optional<? extends AbstractMinecart> strongest = powers.stream()
+                .max(Comparator.comparingInt(cart -> ((PowerEmitterMinecartEntity) cart).getPowerStrength(direction, pos)));
+        return strongest.map(redstoneEmitterPowerMinecart -> ((PowerEmitterMinecartEntity) redstoneEmitterPowerMinecart).getPowerStrength(direction, pos)).orElse(0);
     }
 }

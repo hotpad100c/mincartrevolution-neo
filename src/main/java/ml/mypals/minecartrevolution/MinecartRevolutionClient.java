@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @EventBusSubscriber(modid = MinecartRevolution.MODID, value = Dist.CLIENT)
 public class MinecartRevolutionClient {
     public static HashMap<JukeboxMinecartEntity, SoundInstance> songs = new HashMap<>();
+
     public MinecartRevolutionClient(ModContainer container) {
         // Allows NeoForge to create a config screen for this mod's configs.
         // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
@@ -50,6 +51,7 @@ public class MinecartRevolutionClient {
         MinecartRevolution.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
 
     }
+
     @SubscribeEvent // on the mod event bus
     public static void register(RegisterClientPayloadHandlersEvent event) {
         event.register(
@@ -86,7 +88,7 @@ public class MinecartRevolutionClient {
                 songs.remove(instance);
                 instance.set(null);
                 notifyNearbyEntities(client.level, jukeboxMinecartEntity.blockPosition(), true);
-            }else{
+            } else {
                 Level world = client.level;
                 JukeboxMinecartEntity finalJukeboxMinecartEntity = jukeboxMinecartEntity;
 

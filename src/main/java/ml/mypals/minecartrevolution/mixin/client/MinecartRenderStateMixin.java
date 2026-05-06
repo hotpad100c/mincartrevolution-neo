@@ -13,6 +13,7 @@ public class MinecartRenderStateMixin implements IMinecartRenderStateExtension {
     private float minecartrevolution$openess = 0;
     @Unique
     private Block minecartrevolution$displayBlock = Blocks.AIR;
+
     @Override
     public float minecartrevolution$getOpenness() {
         return minecartrevolution$openess;

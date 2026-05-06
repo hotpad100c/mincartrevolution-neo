@@ -9,7 +9,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class MRModCriteria {
-    public static final DeferredRegister<CriterionTrigger<?>> TRIGGERS  = DeferredRegister.create(Registries.TRIGGER_TYPE, MinecartRevolution.MODID);
+    public static final DeferredRegister<CriterionTrigger<?>> TRIGGERS = DeferredRegister.create(Registries.TRIGGER_TYPE, MinecartRevolution.MODID);
 
     public static final DeferredHolder<CriterionTrigger<?>, MovingOnJukeboxCartCriterion> ENTITY_MOVED = TRIGGERS
             .register(
@@ -22,7 +22,7 @@ public class MRModCriteria {
                     BlockCartCraftedCriterion::new
             );
 
-    public static void init(){
+    public static void init() {
         System.out.println("MRModCriteria loaded");
     }
 }

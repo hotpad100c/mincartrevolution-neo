@@ -45,6 +45,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
     public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
     }
+
     public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Block blockInside) {
         super(minecart, world, x, y, z);
         this.setCustomDisplayBlockState(Optional.of(blockInside.defaultBlockState()));
@@ -60,18 +61,18 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
     public void destroy(@NonNull ServerLevel serverLevel, DamageSource source) {
         boolean sourceIsPlayer = false;
         Player playerEntity = null;
-        if(source.getEntity() instanceof Player player){
+        if (source.getEntity() instanceof Player player) {
             sourceIsPlayer = true;
             playerEntity = player;
         }
         boolean shouldDrop = serverLevel.getGameRules().get(GameRules.ENTITY_DROPS) ||
-                (sourceIsPlayer  && !((Player)source.getEntity()).isCreative());
-        if(shouldDrop) {
-            if (playerEntity != null){
-                if(playerEntity.isSecondaryUseActive()){
+                (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
+        if (shouldDrop) {
+            if (playerEntity != null) {
+                if (playerEntity.isSecondaryUseActive()) {
                     ItemStack stack = getPickResult();
                     spawnAtLocation(serverLevel, stack);
-                }else{
+                } else {
                     ItemStack stack = Items.MINECART.getDefaultInstance();
                     spawnAtLocation(serverLevel, stack);
                     BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
@@ -85,18 +86,21 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         }
         this.kill(serverLevel);
     }
+
     @Override
     public void remove(Entity.@NonNull RemovalReason reason) {
-        removeDynamicLight(this.getOnPos().asLong(),true);
+        removeDynamicLight(this.getOnPos().asLong(), true);
         this.setRemoved(reason);
     }
-    private void clear(){
+
+    private void clear() {
         setCustomDisplayBlockState(Optional.of(Blocks.AIR.defaultBlockState()));
         Minecart minecartEntity = new Minecart(EntityType.MINECART, level());
 
         minecartEntity.restoreFrom(this);
         minecartEntity.copyPosition(this);
-        minecartEntity.setDeltaMovement(this.getDeltaMovement());;
+        minecartEntity.setDeltaMovement(this.getDeltaMovement());
+        ;
         this.remove(RemovalReason.DISCARDED);
         this.level().addFreshEntity(minecartEntity);
         minecartEntity.setHurtDir(-minecartEntity.getHurtDir());
@@ -104,40 +108,41 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         minecartEntity.setDamage(50.0F);
 
     }
+
     public ItemStack addDataToStack(ItemStack stack) {
-       return stack;
+        return stack;
     }
+
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
-        if (player.isSecondaryUseActive()){
-            if (this.hasCustomDisplay()){
+        if (player.isSecondaryUseActive()) {
+            if (this.hasCustomDisplay()) {
                 BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
-                if(player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()){
+                if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
                     Block block = blockState.getBlock();
                     playSound(block.defaultBlockState().getSoundType().getBreakSound(), 1, 1);
                     player.swing(hand);
-                    if(!this.level().isClientSide()){
+                    if (!this.level().isClientSide()) {
                         clear();
                         ItemStack stack = block.asItem().getDefaultInstance();
                         player.setItemInHand(hand, addDataToStack(stack));
                     }
                 }
                 return InteractionResult.SUCCESS;
-            }
-            else if(!player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof BlockItem blockItem) {
+            } else if (!player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof BlockItem blockItem) {
                 setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
                 player.swing(hand);
                 playSound(blockItem.getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1, 1);
-                if(!this.level().isClientSide()) {
+                if (!this.level().isClientSide()) {
                     MinecartTransformManager.checkForTransform(level(), this.position(), blockItem.getBlock(), this, player.getItemInHand(InteractionHand.MAIN_HAND));
                     player.getItemInHand(InteractionHand.MAIN_HAND).shrink(1);
                 }
                 return InteractionResult.SUCCESS;
-            }else {
+            } else {
                 return InteractionResult.PASS;
             }
-        }else{
+        } else {
             player.swing(hand);
             return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
         }
@@ -148,27 +153,30 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         super.activateMinecart(level, x, y, z, powered);
         handleActive(this, level, x, y, z, powered);
     }
+
     @Override
     public @NonNull Vec3 getPassengerRidingPosition(@NonNull Entity passenger) {
         if (this.hasCustomDisplay()) {
             BlockState myBlock = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
             double y = myBlock.getCollisionShape(level(), this.blockPosition()).isEmpty() ?
-                    0:myBlock.getCollisionShape(level(), this.blockPosition()).bounds().getMaxPosition().y*0.9;
-            return super.getPassengerRidingPosition(passenger).add(0,y+((double) this.getDisplayOffset() / 40),0);
-        }else {
+                    0 : myBlock.getCollisionShape(level(), this.blockPosition()).bounds().getMaxPosition().y * 0.9;
+            return super.getPassengerRidingPosition(passenger).add(0, y + ((double) this.getDisplayOffset() / 40), 0);
+        } else {
             return super.getPassengerRidingPosition(passenger);
         }
     }
+
     @Override
     public @NonNull Item getDropItem() {
         return MRMinecarts.BLOCK_MINECART_ITEM.item().get();
     }
+
     @Override
-    public @NonNull ItemStack getPickResult(){
+    public @NonNull ItemStack getPickResult() {
         ItemStack stack = getDropItem().getDefaultInstance();
         CompoundTag nbt = new CompoundTag();
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        
+
         nbt.putInt("block_in_minecart", Block.getId(blockState));
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
         String blockName = blockState.getBlock().getName().getString();
@@ -179,11 +187,13 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
                 stack.getHoverName().getString(), blockName, cartName)));
         return stack;
     }
+
     public boolean hasCustomDisplay() {
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        return !(blockState.getBlock() instanceof AirBlock );
+        return !(blockState.getBlock() instanceof AirBlock);
     }
-    public static void handleActive(HasVariantRegularBlockMinecartEntity minecart, ServerLevel level, int x, int y, int z, boolean powered){
+
+    public static void handleActive(HasVariantRegularBlockMinecartEntity minecart, ServerLevel level, int x, int y, int z, boolean powered) {
         BlockState blockState = minecart.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
         if (blockState.hasProperty(BlockStateProperties.POWERED)) {
@@ -191,11 +201,12 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         }
         if (blockState.hasProperty(RedstoneLampBlock.LIT)) {
             blockState = blockState.setValue(RedstoneLampBlock.LIT, powered);
-            if(!powered)minecart.removeDynamicLight(minecart.blockPosition().asLong(),true);
+            if (!powered) minecart.removeDynamicLight(minecart.blockPosition().asLong(), true);
 
         }
         minecart.setCustomDisplayBlockState(Optional.of(blockState));
     }
+
     @Override
     public void tick() {
         super.tick();
@@ -262,13 +273,14 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
                 posLong,
                 DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
                 bp -> {
-                    if(update){
+                    if (update) {
                         BlockPos blockPos = BlockPos.of(bp);
                         setBlockDirty(blockPos);
                     }
                 }
         );
     }
+
     private void setBlockDirty(BlockPos pos) {
         for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
             for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++) {

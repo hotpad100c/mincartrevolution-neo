@@ -39,6 +39,7 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
         this.damageType = damageType;
         this.correspondingItem = this;
     }
+
     public static final DispenseItemBehavior DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior() {
         private final DefaultDispenseItemBehavior defaultBehavior = new DefaultDispenseItemBehavior();
 
@@ -53,7 +54,7 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
             BlockPos blockPos = pointer.pos().relative(direction);
             BlockState blockState = serverWorld.getBlockState(blockPos);
             RailShape railShape = blockState.getBlock() instanceof BaseRailBlock
-                    ? blockState.getValue(((BaseRailBlock)blockState.getBlock()).getShapeProperty())
+                    ? blockState.getValue(((BaseRailBlock) blockState.getBlock()).getShapeProperty())
                     : RailShape.NORTH_SOUTH;
             double g;
             if (blockState.is(BlockTags.RAILS)) {
@@ -69,7 +70,7 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
 
                 BlockState blockState2 = serverWorld.getBlockState(blockPos.below());
                 RailShape railShape2 = blockState2.getBlock() instanceof BaseRailBlock
-                        ? blockState2.getValue(((BaseRailBlock)blockState2.getBlock()).getShapeProperty())
+                        ? blockState2.getValue(((BaseRailBlock) blockState2.getBlock()).getShapeProperty())
                         : RailShape.NORTH_SOUTH;
                 if (direction != Direction.DOWN && railShape2.isSlope()) {
                     g = -0.4;
@@ -78,8 +79,8 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
                 }
             }
 
-            AbstractMinecart abstractMinecartEntity = getCart(serverWorld,d,e + g, f,
-                    ((DamageCausingMinecartItem)stack.getItem()).blockInside, ((DamageCausingMinecartItem)stack.getItem()).correspondingItem);
+            AbstractMinecart abstractMinecartEntity = getCart(serverWorld, d, e + g, f,
+                    ((DamageCausingMinecartItem) stack.getItem()).blockInside, ((DamageCausingMinecartItem) stack.getItem()).correspondingItem);
 
 
             serverWorld.addFreshEntity(abstractMinecartEntity);
@@ -95,12 +96,12 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
 
     public static AbstractMinecart getCart(Level world, double x, double y, double z, Block blockInside, MinecartWithBlockItem correspondingItem) {
 
-       DamageCausingMinecartEntity damageCausingMinecartEntity = new DamageCausingMinecartEntity(
-               ml.mypals.minecartrevolution.registeries.MRMinecarts.DAMAGE_CAUSING_MINECART.get(), world,
+        DamageCausingMinecartEntity damageCausingMinecartEntity = new DamageCausingMinecartEntity(
+                ml.mypals.minecartrevolution.registeries.MRMinecarts.DAMAGE_CAUSING_MINECART.get(), world,
                 x, y, z,
-                ((DamageCausingMinecartItem)correspondingItem).damageAmount,
-               correspondingItem,
-                ((DamageCausingMinecartItem)correspondingItem).damageType
+                ((DamageCausingMinecartItem) correspondingItem).damageAmount,
+                correspondingItem,
+                ((DamageCausingMinecartItem) correspondingItem).damageType
         );
         damageCausingMinecartEntity.setCustomDisplayBlockState(Optional.of(blockInside.defaultBlockState()));
         return damageCausingMinecartEntity;
@@ -117,7 +118,7 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
             ItemStack itemStack = context.getItemInHand();
             if (world instanceof ServerLevel serverWorld) {
                 RailShape railShape = blockState.getBlock() instanceof BaseRailBlock
-                        ? blockState.getValue(((BaseRailBlock)blockState.getBlock()).getShapeProperty())
+                        ? blockState.getValue(((BaseRailBlock) blockState.getBlock()).getShapeProperty())
                         : RailShape.NORTH_SOUTH;
                 double d = 0.0;
                 if (railShape.isSlope()) {

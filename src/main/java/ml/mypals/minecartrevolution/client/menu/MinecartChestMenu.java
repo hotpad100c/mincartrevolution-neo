@@ -11,6 +11,7 @@ import org.jspecify.annotations.NonNull;
 
 public class MinecartChestMenu extends ChestMenu {
     private final IMinecartContainer entity;
+
     public MinecartChestMenu(MenuType<?> menuType, int containerId, Inventory inventory, Container container, int rows, IMinecartContainer entity) {
         super(menuType, containerId, inventory, container, rows);
         this.entity = entity;

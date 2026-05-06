@@ -74,7 +74,7 @@ public class WorkingMinecartRenderer extends AbstractMinecartRenderer<NonInvento
             float floatOffset = 0.1F + Mth.sin(state.time * 0.1F) * 0.01F;
             poseStack.translate(0.5F, 0.8F + floatOffset, 0.5F);
 
-            poseStack.mulPose(Axis.YP.rotation(-state.yRot + ((float)Math.PI / 2f)));
+            poseStack.mulPose(Axis.YP.rotation(-state.yRot + ((float) Math.PI / 2f)));
             poseStack.mulPose(Axis.ZP.rotationDegrees(80.0F));
 
             float ff1 = Mth.frac(state.flip + 0.25F) * 1.6F - 0.3F;

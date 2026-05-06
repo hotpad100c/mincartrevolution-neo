@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
@@ -17,11 +18,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecartContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -32,7 +33,6 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -45,39 +45,79 @@ import java.util.Optional;
 
 public class ShulkerMinecartEntity extends AbstractMinecartContainer implements IMinecartContainer {
     private static final Logger LOGGER = LogUtils.getLogger();
-    public int viewers = 0;
+    private float progress;
+    private float progressOld;
+    private int openCount;
+    private AnimationStatus animationStatus = AnimationStatus.CLOSED;
+
+    public enum AnimationStatus {CLOSED, OPENING, OPENED, CLOSING}
+
     public ShulkerMinecartEntity(EntityType<? extends AbstractMinecartContainer> entityType, Level world) {
         super(entityType, world);
     }
+
     public ShulkerMinecartEntity(EntityType<? extends AbstractMinecartContainer> entityType, Level world, double x, double y, double z) {
         super(entityType, world);
         setInitialPos(x, y, z);
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        this.updateAnimation();
+    }
+
+    private void updateAnimation() {
+        this.progressOld = this.progress;
+        switch (this.animationStatus) {
+            case CLOSED -> this.progress = 0.0F;
+            case OPENING -> {
+                this.progress += 0.1F;
+                if (this.progress >= 1.0F) {
+                    this.animationStatus = AnimationStatus.OPENED;
+                    this.progress = 1.0F;
+                }
+            }
+            case OPENED -> this.progress = 1.0F;
+            case CLOSING -> {
+                this.progress -= 0.1F;
+                if (this.progress <= 0.0F) {
+                    this.animationStatus = AnimationStatus.CLOSED;
+                    this.progress = 0.0F;
+                }
+            }
+        }
+    }
+
+    public float getProgress(float partialTick) {
+        return Mth.lerp(partialTick, this.progressOld, this.progress);
+    }
 
     public ShulkerMinecartEntity(EntityType<ShulkerMinecartEntity> shulkerMinecart, Level world, double x, double y, double z, ShulkerBoxBlock blockInside) {
         super(shulkerMinecart, world);
         setInitialPos(x, y, z);
         this.setCustomDisplayBlockState(Optional.of(blockInside.defaultBlockState().setValue(ShulkerBoxBlock.FACING, Direction.UP)));
     }
+
     @Override
     public void destroy(@NonNull ServerLevel level, @NonNull DamageSource source) {
         killAndDropSelf(level, source, false);
         this.kill(level);
     }
+
     @Override
     public void remove(Entity.@NonNull RemovalReason reason) {
         this.setRemoved(reason);
     }
 
-    public void killAndDropSelf(ServerLevel level, DamageSource source, boolean separate){
-        if(this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).isEmpty()) this.spawnAtLocation(level, Items.MINECART) ;
+    public void killAndDropSelf(ServerLevel level, DamageSource source, boolean separate) {
+        if (this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).isEmpty()) this.spawnAtLocation(level, Items.MINECART);
 
         Block block = this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).get().getBlock();
-        if(separate){
-            this.spawnAtLocation(level, getMinecartStack(level, block instanceof ShulkerBoxBlock ? ((ShulkerBoxBlock)block).getColor() : null)) ;
-        }else {
-            this.spawnAtLocation(level, getMinecartStackWithInventory(block instanceof ShulkerBoxBlock ? ((ShulkerBoxBlock)block).getColor() : null));
+        if (separate) {
+            this.spawnAtLocation(level, getMinecartStack(level, block instanceof ShulkerBoxBlock ? ((ShulkerBoxBlock) block).getColor() : null));
+        } else {
+            this.spawnAtLocation(level, getMinecartStackWithInventory(block instanceof ShulkerBoxBlock ? ((ShulkerBoxBlock) block).getColor() : null));
         }
 
     }
@@ -94,17 +134,17 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
             this.markHurt();
             this.setDamage(this.getDamage() + amount * 10.0F);
             this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
-            boolean bl = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
+            boolean bl = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
             if ((bl || !(this.getDamage() > 40.0F)) && !this.shouldSourceDestroy(source)) {
                 if (bl) {
-                    if(!this.isEmpty())
+                    if (!this.isEmpty())
                         this.killAndDropSelf(level, source, false);
                     this.remove(Entity.RemovalReason.DISCARDED);
                 }
             } else {
-                if(source.getEntity() instanceof Player playerEntity && !playerEntity.isShiftKeyDown()){
+                if (source.getEntity() instanceof Player playerEntity && !playerEntity.isShiftKeyDown()) {
                     this.killAndDropSelf(level, source, true);
-                }else {
+                } else {
                     this.destroy(level, source);
                 }
                 this.kill(level);
@@ -113,6 +153,7 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
             return true;
         }
     }
+
     /*
     @Override
     public void chestVehicleDestroyed(DamageSource source, Level world, Entity vehicle) {
@@ -127,6 +168,7 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
         return stack;
     }
+
     public ItemStack getMinecartStackWithInventory(@Nullable DyeColor dyeColor) {
         ItemStack itemStack = new ItemStack(MRMinecarts.SHULKER_MINECART.item().get());
 
@@ -149,8 +191,9 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
         this.spawnAtLocation(level, box);
         return itemStack;
     }
+
     public void setInventoryToItemStack(Block block, CompoundTag nbtCompound) {
-        if(block instanceof ShulkerBoxBlock) {
+        if (block instanceof ShulkerBoxBlock) {
             ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(this.problemPath(), LOGGER);
             TagValueOutput valueOutput = TagValueOutput.createWithContext(reporter, this.registryAccess());
             ContainerHelper.saveAllItems(valueOutput, this.getItemStacks(), false);
@@ -182,6 +225,7 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
             };
         }
     }
+
     @Override
     public @NonNull Item getDropItem() {
         return MRMinecarts.BARREL_MINECART.item().get();
@@ -191,6 +235,7 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
     public int getContainerSize() {
         return 27;
     }
+
     @Override
     public @NonNull BlockState getDefaultDisplayBlockState() {
         return Blocks.SHULKER_BOX.defaultBlockState().setValue(ShulkerBoxBlock.FACING, Direction.UP);
@@ -206,28 +251,58 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
 
         return new MinecartChestMenu(MenuType.GENERIC_9x3, syncId, playerInventory, this, 3, this);
     }
+
     public void getInventoryAsNbt(ValueOutput nbt, Inventory playerInventory) {
-        ContainerHelper.saveAllItems(nbt , getItemStacks(), false);
+        ContainerHelper.saveAllItems(nbt, getItemStacks(), false);
     }
 
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
         InteractionResult actionResult = this.interactWithContainerVehicle(player);
         if (actionResult.consumesAction()) {
-            this.gameEvent(GameEvent.CONTAINER_OPEN, player);
+            if (!this.level().isClientSide()) {
+                this.openCount++;
+                if (this.openCount >= 1) {
+                    this.level().playSound(this, this.blockPosition(),
+                            SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS);
+                }
+                this.level().broadcastEntityEvent(this, (byte) 10);
+                this.gameEvent(GameEvent.CONTAINER_OPEN, player);
+                if (player.level() instanceof ServerLevel serverLevel) {
+                    PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+                }
+            }
         }
         return actionResult;
     }
 
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 10) {
+            if (this.level().isClientSide()) {
+                this.openCount++;
+                this.animationStatus = AnimationStatus.OPENING;
+            }
+        } else if (id == 11) {
+            if (this.level().isClientSide()) {
+                this.openCount = Math.max(0, this.openCount - 1);
+            }
+            this.animationStatus = AnimationStatus.CLOSING;
+        } else {
+            super.handleEntityEvent(id);
+        }
+    }
 
     @Override
     public void minecartrevolution$OnContainerClosed(Level level, Player player) {
-        this.level().broadcastEntityEvent(this, (byte) 11);
-        viewers--;
-        if (this.viewers <= 0) {
-            viewers = 0;
-            this.gameEvent(GameEvent.CONTAINER_CLOSE, player);
-            this.level().playSound(this, this.blockPosition(), SoundEvents.SHULKER_CLOSE, SoundSource.BLOCKS);
+        if (!this.level().isClientSide()) {
+            this.openCount = Math.max(0, this.openCount - 1);
+            this.level().broadcastEntityEvent(this, (byte) 11);
+            if (this.openCount == 0) {
+                this.gameEvent(GameEvent.CONTAINER_CLOSE, player);
+                this.level().playSound(this, this.blockPosition(),
+                        SoundEvents.SHULKER_BOX_CLOSE, SoundSource.BLOCKS);
+            }
         }
     }
 }

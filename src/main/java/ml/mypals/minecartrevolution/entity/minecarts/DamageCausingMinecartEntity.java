@@ -18,18 +18,20 @@ public class DamageCausingMinecartEntity extends ItemBoundBlockMinecartEntity {
     private float damageAmount;
     private DamageSource damageSource;
     private ResourceKey<DamageType> damageType;
+
     public DamageCausingMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> entityType, Level world) {
         super(entityType, world);
         this.damageAmount = 0;
         this.damageSource = this.damageSources().source(DamageTypes.GENERIC);
         this.damageType = DamageTypes.GENERIC;
     }
+
     public void setDamageAmount(float damageAmount) {
         this.damageAmount = damageAmount;
     }
 
     public DamageCausingMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> minecart, Level world, double x, double y, double z, float damageAmount, MinecartWithBlockItem correspondingItem, ResourceKey<DamageType> damageType) {
-        super(minecart,world, x, y, z, correspondingItem);
+        super(minecart, world, x, y, z, correspondingItem);
         this.damageAmount = damageAmount;
         this.damageSource = this.damageSources().source(damageType);
         this.damageType = damageType;
@@ -53,21 +55,23 @@ public class DamageCausingMinecartEntity extends ItemBoundBlockMinecartEntity {
     @Override
     public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
-        this.damageAmount = nbt.getFloatOr("damageAmount",1.0f);
+        this.damageAmount = nbt.getFloatOr("damageAmount", 1.0f);
         try {
             String damageTypeString = nbt.getStringOr("damageType", "generic");
             this.damageType = getDamageSource(damageTypeString);
             this.damageSource = createDamageSource(damageType);
-        }catch(Exception ignored) {
+        } catch (Exception ignored) {
         }
 
     }
+
     @Override
     public void saveWithoutId(ValueOutput nbt) {
         nbt.putString("damageType", getDamageType(this.damageType));
         nbt.putFloat("damageAmount", this.damageAmount);
         super.saveWithoutId(nbt);
     }
+
     public ResourceKey<DamageType> getDamageSource(String damageType) {
         switch (damageType) {
             case "cactus":
@@ -80,9 +84,11 @@ public class DamageCausingMinecartEntity extends ItemBoundBlockMinecartEntity {
                 return DamageTypes.GENERIC;
         }
     }
+
     public DamageSource createDamageSource(ResourceKey<DamageType> damageType) {
         return this.damageSources().source(damageType);
     }
+
     public String getDamageType(ResourceKey<DamageType> damageType) {
         return switch (damageType.identifier().getPath()) {
             case "cactus" -> DamageTypes.CACTUS.identifier().getPath();

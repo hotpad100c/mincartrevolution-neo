@@ -19,7 +19,7 @@ public class ShulkerBoxEntityMapper {
     public static final Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> SHULKER_ENTITY_MAP = new HashMap<>();
 
     static {
-        for(DyeColor color : DyeColor.values()) {
+        for (DyeColor color : DyeColor.values()) {
             Block shulkerBox = byColor(color);
             SHULKER_ENTITY_MAP.put(
                     shulkerBox,
@@ -34,6 +34,7 @@ public class ShulkerBoxEntityMapper {
             );
         }
     }
+
     public static Block byColor(@Nullable DyeColor dyeColor) {
         if (dyeColor == null) {
             return Blocks.SHULKER_BOX;

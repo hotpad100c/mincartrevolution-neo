@@ -129,10 +129,10 @@ public class MRAdvancementProvider {
                                 new StartRidingTrigger.TriggerInstance(
                                         Optional.of(EntityPredicate.wrap(
                                                 EntityPredicate.Builder.entity()
-                                                .vehicle(EntityPredicate.Builder.entity().of(entityTypes,
-                                                MRMinecarts.DRAGON_EGG_MINECART.entity().get()).
-                                                passenger(EntityPredicate.Builder.entity().of(entityTypes,
-                                                EntityType.PLAYER)))
+                                                        .vehicle(EntityPredicate.Builder.entity().of(entityTypes,
+                                                                        MRMinecarts.DRAGON_EGG_MINECART.entity().get()).
+                                                                passenger(EntityPredicate.Builder.entity().of(entityTypes,
+                                                                        EntityType.PLAYER)))
                                         ))
                                 ))
                 )
