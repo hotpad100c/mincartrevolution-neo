@@ -66,6 +66,9 @@ public class ItemModelResolverMixin {
         if (this.mincartrevolution$isMinecartWithBlock(item)) {
             ci.cancel();
             BlockState blockInside = this.mincartrevolution$getBlockFromMinecart(item);
+            // Append block state as model identity element so the GUI renderer
+            // distinguishes between stacks with different blocks inside
+            output.appendModelIdentityElement(blockInside);
             if (blockInside != null && !blockInside.isAir()) {
                 this.mincartrevolution$renderMinecartWithBlock(output, item, displayContext, level, owner, seed, blockInside);
             } else {
