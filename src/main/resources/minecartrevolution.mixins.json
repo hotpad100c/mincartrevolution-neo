@@ -3,6 +3,7 @@
   "package": "ml.mypals.minecartrevolution.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "ItemStackMixin",
     "RedstoneViewMixin",
     "blocks.BlockSourceMixin",
     "blocks.ProjectileDispenseBehaviorMixin",
@@ -22,10 +23,9 @@
   "client": [
     "blocks.BlockRenderManagerMixin",
     "client.AbstractMinecartRendererMixin",
-    "client.MinecartRenderStateMixin",
     "client.BlockModelRenderStateAccessor",
-    "client.MinecartRenderStateMixin",
     "client.ItemModelResolverMixin",
+    "client.MinecartRenderStateMixin",
     "light.LevelRendererMixin"
   ]
 }

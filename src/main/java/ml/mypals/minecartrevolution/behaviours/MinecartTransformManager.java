@@ -211,6 +211,7 @@ public class MinecartTransformManager {
                 minecartFurnace.setInitialPos(pos.x, pos.y, pos.z);
                 yield minecartFurnace;
             }
+            case DISPENSER -> new DispenserMinecartEntity(MRMinecarts.DISPENSER_MINECART.entity().get(), world, pos.x, pos.y, pos.z);
             case COBWEB ->
                     new CobwebMinecartEntity(MRMinecarts.COBWEB_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case WORKING_NON_INVENTORY ->

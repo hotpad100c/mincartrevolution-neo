@@ -3,10 +3,19 @@ package ml.mypals.minecartrevolution;
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import net.minecraft.data.advancements.AdvancementProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.*;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.server.packs.resources.Resource;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforgespi.locating.IModFile;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -14,13 +23,14 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ITEMS;
@@ -53,6 +63,7 @@ public class MinecartRevolution {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::registerPayloads);
+
         ITEMS.register(modEventBus);
         ENTITIES.register(modEventBus);
         TRIGGERS.register(modEventBus);
@@ -98,4 +109,6 @@ public class MinecartRevolution {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
+
+
 }

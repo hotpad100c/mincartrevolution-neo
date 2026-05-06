@@ -5,15 +5,20 @@ import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.interfaces.IMinecartWithBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
@@ -101,6 +106,28 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
 
     public void setBlockInside(Block blockInside) {
         this.blockInside = blockInside;
+    }
+
+    @Override
+    public @NonNull Component getName(@NonNull ItemStack itemStack) {
+
+        String blockName = this.blockInside.getName().getString();
+        if(itemStack.getComponents().has(DataComponents.CUSTOM_DATA))
+        {
+            var customData = itemStack.getComponents().get(DataComponents.CUSTOM_DATA);
+            if(customData != null){
+                CompoundTag compoundTag = customData.copyTag();
+
+                if(compoundTag.contains("block_in_minecart")){
+                    blockName = Block.stateById(compoundTag.getIntOr("block_in_minecart", 1))
+                            .getBlock().getName().getString();
+                }
+            }
+        }
+        String cartName = Items.MINECART.getName(Items.MINECART.getDefaultInstance()).getString();
+
+        String prompt = Component.translatable("item.minecartrevolution.minecart_with_block").getString();
+        return Component.nullToEmpty(String.format(prompt, blockName, cartName));
     }
 
     public Block getBlockInside() {

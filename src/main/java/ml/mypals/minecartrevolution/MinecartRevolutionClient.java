@@ -9,6 +9,11 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,15 +30,18 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
+
 // This class will not load on dedicated servers. Accessing client side code from here is safe.
-@Mod(value = MinecartRevolution.MODID, dist = Dist.CLIENT)
+@Mod(value = MODID, dist = Dist.CLIENT)
 // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-@EventBusSubscriber(modid = MinecartRevolution.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class MinecartRevolutionClient {
     public static HashMap<JukeboxMinecartEntity, SoundInstance> songs = new HashMap<>();
 
@@ -115,4 +123,16 @@ public class MinecartRevolutionClient {
             entity.setRecordPlayingNearby(pos, isPlaying);
         }
     }
+    @SubscribeEvent
+    public static void setupBuiltInResourcePack(final AddPackFindersEvent event) {
+        event.addPackFinders(
+                Identifier.fromNamespaceAndPath(MODID, "resourcepacks/minecartrevolution_3d_minecart"),
+                PackType.CLIENT_RESOURCES,
+                Component.literal("MinecartRevolution 3D Minecart"),
+                PackSource.BUILT_IN,
+                true,
+                Pack.Position.TOP
+        );
+    }
+
 }

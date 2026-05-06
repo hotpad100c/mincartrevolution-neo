@@ -1,7 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
 import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
-import ml.mypals.minecartrevolution.interfaces.IMinecartSource;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -38,12 +38,23 @@ public class DispenserMinecartEntity extends AbstractMinecartContainer implement
     public DispenserMinecartEntity(EntityType<?> type, Level level) {
         super(type, level);
     }
+    public DispenserMinecartEntity(EntityType<?> type, Level level, double x, double y, double z) {
+        super(type, level);
+        setInitialPos(x, y, z);
+    }
 
     @Override
     public void tick() {
         super.tick();
         if (!this.level().isClientSide() && this.dispenseCooldown > 0) {
             this.dispenseCooldown--;
+        }
+        if(activated && level() instanceof ServerLevel serverLevel &&
+                !(this.level().getBlockState(BlockPos.containing(this.position())).getBlock()
+                        instanceof PoweredRailBlock poweredRailBlock
+                        && poweredRailBlock.isActivatorRail())
+        ){
+            activateMinecart(serverLevel,this.blockPosition().getX(),this.blockPosition().getY(),this.blockPosition().getZ(),false);
         }
     }
 
@@ -112,7 +123,7 @@ public class DispenserMinecartEntity extends AbstractMinecartContainer implement
     private void executeDispenseAt(BlockPos targetPos, Direction dir, int slot, ItemStack itemStack) {
         ItemStack itemstack = this.getItem(slot);
         DispenseItemBehavior behavior = DispenserBlock.DISPENSER_REGISTRY.get(itemstack.getItem());
-        if (behavior == null || !itemStack.isItemEnabled(this.level().enabledFeatures())) behavior = (DispenseItemBehavior) Blocks.DISPENSER.asItem();
+        if(behavior == null) behavior = DispenseItemBehavior.NOOP;
         BlockState fakeState = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, dir);
 
         BlockSource source = new BlockSource(

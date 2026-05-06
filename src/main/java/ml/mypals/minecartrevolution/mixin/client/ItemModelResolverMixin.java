@@ -105,7 +105,6 @@ public class ItemModelResolverMixin {
         ItemStack minecartStack = new ItemStack(Items.MINECART);
         Identifier minecartModelId = minecartStack.get(DataComponents.ITEM_MODEL);
         output.setOversizedInGui(this.getItemProperties(minecartModelId).oversizedInGui());
-
         this.getItemModel(minecartModelId).update(
                 output,
                 item,

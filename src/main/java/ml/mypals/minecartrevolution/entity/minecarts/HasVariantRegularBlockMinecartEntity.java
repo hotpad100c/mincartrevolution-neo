@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
+import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -27,10 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AirBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RedstoneLampBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gamerules.GameRules;
@@ -42,6 +40,7 @@ import java.util.Optional;
 import static ml.mypals.minecartrevolution.client.light.DynamicLightsSpread.clearFromCenter;
 
 public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
+    public boolean activated = false;
     public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
     }
@@ -151,7 +150,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
     @Override
     public void activateMinecart(@NonNull ServerLevel level, int x, int y, int z, boolean powered) {
         super.activateMinecart(level, x, y, z, powered);
-        handleActive(this, level, x, y, z, powered);
+        handleActive( level, x, y, z, powered);
     }
 
     @Override
@@ -173,18 +172,12 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public @NonNull ItemStack getPickResult() {
+        MinecartWithBlockItem item = ((MinecartWithBlockItem)getDropItem());
         ItemStack stack = getDropItem().getDefaultInstance();
         CompoundTag nbt = new CompoundTag();
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-
         nbt.putInt("block_in_minecart", Block.getId(blockState));
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
-        String blockName = blockState.getBlock().getName().getString();
-
-        String cartName = Items.MINECART.getName(Items.MINECART.getDefaultInstance()).getString();
-
-        stack.set(DataComponents.ITEM_NAME, Component.nullToEmpty(String.format(
-                stack.getHoverName().getString(), blockName, cartName)));
         return stack;
     }
 
@@ -193,18 +186,18 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         return !(blockState.getBlock() instanceof AirBlock);
     }
 
-    public static void handleActive(HasVariantRegularBlockMinecartEntity minecart, ServerLevel level, int x, int y, int z, boolean powered) {
-        BlockState blockState = minecart.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-
+    public void handleActive( ServerLevel level, int x, int y, int z, boolean powered) {
+        BlockState blockState = this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+        this.activated = powered;
         if (blockState.hasProperty(BlockStateProperties.POWERED)) {
             blockState = blockState.setValue(BlockStateProperties.POWERED, powered);
         }
         if (blockState.hasProperty(RedstoneLampBlock.LIT)) {
             blockState = blockState.setValue(RedstoneLampBlock.LIT, powered);
-            if (!powered) minecart.removeDynamicLight(minecart.blockPosition().asLong(), true);
+            if (!powered) this.removeDynamicLight(this.blockPosition().asLong(), true);
 
         }
-        minecart.setCustomDisplayBlockState(Optional.of(blockState));
+        this.setCustomDisplayBlockState(Optional.of(blockState));
     }
 
     @Override
@@ -212,6 +205,13 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         super.tick();
         if (this.level().isClientSide()) {
             tickDynamicLight((ClientLevel) this.level());
+        }
+        if(activated && level() instanceof ServerLevel serverLevel &&
+                !(this.level().getBlockState(BlockPos.containing(this.position())).getBlock()
+                        instanceof PoweredRailBlock poweredRailBlock
+                        && poweredRailBlock.isActivatorRail())
+        ){
+            activateMinecart(serverLevel,this.blockPosition().getX(),this.blockPosition().getY(),this.blockPosition().getZ(),false);
         }
     }
 
