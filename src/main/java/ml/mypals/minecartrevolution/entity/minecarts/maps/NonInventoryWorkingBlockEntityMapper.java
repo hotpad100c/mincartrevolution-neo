@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
+import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
@@ -135,6 +136,17 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.y(),
                         pos.z(),
                         Blocks.ENDER_CHEST
+                )
+        );
+        NON_INVENTORY_WORKING.put(
+                Blocks.BEACON,
+                (world, pos) -> new BeaconMinecartEntity(
+                        MRMinecarts.BEACON_MINECART.entity().get(),
+                        world,
+                        pos.x(),
+                        pos.y(),
+                        pos.z(),
+                        Blocks.BEACON
                 )
         );
     }

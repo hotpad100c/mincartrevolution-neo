@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.registeries;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
+import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.*;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -267,6 +268,11 @@ public class MRMinecarts {
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ENDER_CHEST_MINECART = registerItemOnly(
             "minecart_ender_chest", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ENDER_CHEST),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<BeaconMinecartEntity, MinecartWithBlockItem> BEACON_MINECART = register(
+            "minecart_beacon", BeaconMinecartEntity::new,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.BEACON, p.stacksTo(1), Blocks.BEACON),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<DispenserMinecartEntity, MinecartWithBlockItem> DISPENSER_MINECART = register(

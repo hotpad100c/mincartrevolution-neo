@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution.item;
 
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -30,8 +31,8 @@ public class MultiVariantMinecartWithBlockItem extends MinecartWithBlockItem {
                 CompoundTag compoundTag = customData.copyTag();
 
                 if(compoundTag.contains("block_in_minecart")){
-                    blockName = Block.stateById(compoundTag.getIntOr("block_in_minecart", 1))
-                            .getBlock().getName().getString();
+                    String key = Block.stateById(compoundTag.getIntOr("block_in_minecart", 1)).getBlock().getDescriptionId();
+                    blockName = I18n.get(key);
                 }
             }
         }

@@ -1,11 +1,12 @@
 package ml.mypals.minecartrevolution.registeries;
 
+import ml.mypals.minecartrevolution.client.renderer.BeaconMinecartRenderer;
 import ml.mypals.minecartrevolution.client.renderer.ShulkerMinecartRenderer;
 import ml.mypals.minecartrevolution.client.renderer.WorkingMinecartRenderer;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.vehicle.minecart.Minecart;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
@@ -16,7 +17,7 @@ public class MRModEntityRenderers {
                 .forEach(
                         entityTypeDeferredHolder -> {
                             try {
-                                EntityType<? extends Minecart> entity = (EntityType<? extends Minecart>) (entityTypeDeferredHolder.get());
+                                EntityType<? extends AbstractMinecart> entity = (EntityType<? extends AbstractMinecart>) (entityTypeDeferredHolder.get());
                                 registerRenderers.registerEntityRenderer(
                                         entity,
                                         (context) -> new MinecartRenderer(context, ModelLayers.MINECART));
@@ -35,6 +36,10 @@ public class MRModEntityRenderers {
         registerRenderers.registerEntityRenderer(
                 MRMinecarts.SHULKER_MINECART.entity().get(),
                 ShulkerMinecartRenderer::new
+        );
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.BEACON_MINECART.entity().get(),
+                BeaconMinecartRenderer::new
         );
     }
 }

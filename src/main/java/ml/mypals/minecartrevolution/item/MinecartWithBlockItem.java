@@ -119,8 +119,9 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
                 CompoundTag compoundTag = customData.copyTag();
 
                 if(compoundTag.contains("block_in_minecart")){
-                    blockName = Block.stateById(compoundTag.getIntOr("block_in_minecart", 1))
-                            .getBlock().getName().getString();
+                    String key = Block.stateById(compoundTag.getIntOr("block_in_minecart", 1))
+                            .getBlock().getDescriptionId();
+                    blockName = Component.translatable(key).getString();
                 }
             }
         }

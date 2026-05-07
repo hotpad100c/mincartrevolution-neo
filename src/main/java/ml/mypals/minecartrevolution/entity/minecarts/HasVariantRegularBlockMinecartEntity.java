@@ -41,6 +41,7 @@ import static ml.mypals.minecartrevolution.client.light.DynamicLightsSpread.clea
 
 public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
     public boolean activated = false;
+    public boolean keepUpdatingLight = false;
     public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
     }
@@ -215,13 +216,17 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         }
     }
 
-    private void tickDynamicLight(ClientLevel world) {
+    public int getLightLevel(){
 
         BlockState displayBlock = this.entityData
                 .get(DATA_ID_CUSTOM_DISPLAY_BLOCK)
                 .orElse(Blocks.AIR.defaultBlockState());
 
-        int lightLevel = displayBlock.getLightEmission();
+        return displayBlock.getLightEmission();
+    }
+    protected void tickDynamicLight(ClientLevel world) {
+
+        int lightLevel = getLightLevel();
 
         BlockPos blockPos = this.blockPosition();
         long posLong = blockPos.asLong();
@@ -230,7 +235,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         BlockPos oldPos = BlockPos.containing(this.oldPosition());
         boolean moved = !oldPos.equals(blockPos);
 
-        if (moved) {
+        if (moved || keepUpdatingLight) {
             removeDynamicLight(oldPos.asLong(), true);
 
             if (lightLevel > 0) {
@@ -295,7 +300,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         }
     }
 
-    private void updateDynamicLight(ClientLevel world, BlockPos pos) {
+    protected void updateDynamicLight(ClientLevel world, BlockPos pos) {
 
 
         int vanillaLight = world.getBlockState(pos).getLightEmission(world, pos);

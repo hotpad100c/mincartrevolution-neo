@@ -216,6 +216,8 @@ public class MinecartTransformManager {
                     new CobwebMinecartEntity(MRMinecarts.COBWEB_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case WORKING_NON_INVENTORY ->
                     new NonInventoryWorkingBlockMinecartEntity(MRMinecarts.NON_INVENTORY_WORKING_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
+            case BEACON ->
+                    new BeaconMinecartEntity(MRMinecarts.BEACON_MINECART.entity().get(), world, pos.x, pos.y, pos.z, blockInside);
             default ->
                     new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
         };

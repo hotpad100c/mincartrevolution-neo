@@ -17,6 +17,7 @@ public class AdvancedMinecartEntityTypes {
         FURNACE,
         WORKING_NON_INVENTORY,
         COBWEB,
-        DISPENSER
+        DISPENSER,
+        BEACON
     }
 }

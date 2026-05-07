@@ -35,7 +35,7 @@ import java.awt.*;
 public class DispenserMinecartEntity extends AbstractMinecartContainer implements ContainerEntity, IMinecartContainer {
 
     private boolean activated = false; // 用于检测红石边沿信号（从无电到有电）
-    private int dispenseCooldown = 0;   // 发射冷却
+    private int dispenseCooldown = 0;
 
     public DispenserMinecartEntity(EntityType<?> type, Level level) {
         super(type, level);
@@ -68,7 +68,6 @@ public class DispenserMinecartEntity extends AbstractMinecartContainer implement
                 this.activated = true;
             }
         } else {
-            // 离开铁轨或铁轨断电，重置状态
             this.activated = false;
         }
     }
