@@ -13,6 +13,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -115,9 +117,10 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+        ItemStack stackInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (player.isSecondaryUseActive()) {
             if (this.hasCustomDisplay()) {
-                BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+                BlockState blockState = getDisplayBlockState();
 
                 if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
                     Block block = blockState.getBlock();
@@ -130,13 +133,31 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
                     }
                 }
                 return InteractionResult.SUCCESS;
-            } else if (!player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof BlockItem blockItem) {
-                setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
-                player.swing(hand);
-                playSound(blockItem.getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1, 1);
-                if (!this.level().isClientSide()) {
-                    MinecartTransformManager.checkForTransform(level(), this.position(), blockItem.getBlock(), this, player.getItemInHand(InteractionHand.MAIN_HAND));
-                    player.getItemInHand(InteractionHand.MAIN_HAND).shrink(1);
+            } else if (! stackInHand.isEmpty() ) {
+                if(stackInHand.getItem() instanceof BlockItem blockItem) {
+                    setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
+                    player.swing(hand);
+                    playSound(blockItem.getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1, 1);
+                    if (!this.level().isClientSide()) {
+                        transformTo(blockItem.getBlock());
+                        stackInHand.consume(1, player);
+                    }
+                }else if (stackInHand.is(Items.WATER_BUCKET)) {
+                    if (!level().isClientSide()) {
+                        stackInHand.consume(1, player);
+                        player.getInventory().add(new ItemStack(Items.BUCKET));
+                        transformTo(Blocks.WATER);
+                    }
+                    playBucketSound(Blocks.WATER);
+                    return InteractionResult.SUCCESS;
+                } else if (stackInHand.is(Items.LAVA_BUCKET)) {
+                    if (!level().isClientSide()) {
+                        stackInHand.consume(1, player);
+                        player.getInventory().add(new ItemStack(Items.BUCKET));
+                        transformTo(Blocks.LAVA);
+                    }
+                    playBucketSound(Blocks.LAVA);
+                    return InteractionResult.SUCCESS;
                 }
                 return InteractionResult.SUCCESS;
             } else {
@@ -147,10 +168,29 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
             return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
         }
     }
+    public void transformTo(Block block) {
+        MinecartTransformManager.checkForTransform(level(), position(), block, this, ItemStack.EMPTY);
+    }
 
+    protected void playBucketSound(Block block) {
+        if (block == Blocks.LAVA) {
+            level().playSound(null, blockPosition(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F);
+        } else {
+            level().playSound(null, blockPosition(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+    }
     @Override
     public void activateMinecart(@NonNull ServerLevel level, int x, int y, int z, boolean powered) {
-        super.activateMinecart(level, x, y, z, powered);
+        if (powered) {
+            this.ejectPassengers();
+
+            if (this.getHurtTime() == 0) {
+                this.setHurtDir(-this.getHurtDir());
+                this.setHurtTime(10);
+                this.setDamage(50.0F);
+                this.markHurt();
+            }
+        }
         handleActive( level, x, y, z, powered);
     }
 
@@ -159,8 +199,8 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         if (this.hasCustomDisplay()) {
             BlockState myBlock = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
             double y = myBlock.getCollisionShape(level(), this.blockPosition()).isEmpty() ?
-                    0 : myBlock.getCollisionShape(level(), this.blockPosition()).bounds().getMaxPosition().y - 0.3;
-            return super.getPassengerRidingPosition(passenger).add(0, y + ((double) this.getDisplayOffset()/16), 0);
+                    0 : myBlock.getCollisionShape(level(), this.blockPosition()).bounds().getMaxPosition().y - 0.2;
+            return super.getPassengerRidingPosition(passenger).add(0, y, 0);
         } else {
             return super.getPassengerRidingPosition(passenger);
         }
@@ -173,7 +213,6 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public @NonNull ItemStack getPickResult() {
-        MinecartWithBlockItem item = ((MinecartWithBlockItem)getDropItem());
         ItemStack stack = getDropItem().getDefaultInstance();
         CompoundTag nbt = new CompoundTag();
         BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());

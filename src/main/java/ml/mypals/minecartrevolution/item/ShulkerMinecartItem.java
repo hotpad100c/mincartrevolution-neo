@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 
 public class ShulkerMinecartItem extends MultiVariantMinecartWithBlockItem {
-    private static final Component UNKNOWN_CONTENTS_TEXT = Component.translatable("container.shulkerBox.unknownContents");
 
     public ShulkerMinecartItem(AdvancedMinecartEntityTypes.Type type, Properties settings, Block blockInside) {
         super(type, settings, blockInside);

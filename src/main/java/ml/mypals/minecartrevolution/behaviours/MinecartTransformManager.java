@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.behaviours;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
+import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.*;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
@@ -12,13 +13,7 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
-import net.minecraft.world.entity.vehicle.minecart.MinecartChest;
-import net.minecraft.world.entity.vehicle.minecart.MinecartCommandBlock;
-import net.minecraft.world.entity.vehicle.minecart.MinecartFurnace;
-import net.minecraft.world.entity.vehicle.minecart.MinecartHopper;
-import net.minecraft.world.entity.vehicle.minecart.MinecartSpawner;
-import net.minecraft.world.entity.vehicle.minecart.MinecartTNT;
+import net.minecraft.world.entity.vehicle.minecart.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -149,6 +144,13 @@ public class MinecartTransformManager {
                 Map.entry(Blocks.REPEATER, (w, pos) -> new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRMinecarts.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.REPEATER_MINECART.item().get())),
                 Map.entry(Blocks.SPONGE, (w, pos) -> new SpongeMinecartEntity(MRMinecarts.SPONGE_MINECART.entity().get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, MRMinecarts.SPONGE_MINECART.item().get())),
                 Map.entry(Blocks.WET_SPONGE, (w, pos) -> new SpongeMinecartEntity(MRMinecarts.SPONGE_MINECART.entity().get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, MRMinecarts.WET_SPONGE_MINECART.item().get())),
+                Map.entry(Blocks.WATER, (w, pos) -> new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Blocks.WATER)),
+                Map.entry(Blocks.LAVA, (w, pos) -> new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Blocks.LAVA)),
+                Map.entry(Blocks.AIR, (w, pos) -> {
+                           Minecart minecart = new Minecart(EntityType.MINECART, w);
+                           minecart.setInitialPos(pos.x,pos.y,pos.z);
+                           return minecart;
+                }),
                 Map.entry(Blocks.BARREL, (w, pos) -> new BarrelMinecartEntity(MRMinecarts.BARREL_MINECART.entity().get(), w, pos.x, pos.y, pos.z)),
                 Map.entry(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.GOLDEN_PRESHER_PLATE_MINECART.item().get())),
                 Map.entry(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.IRON_PRESHER_PLATE_MINECART.item().get())),
@@ -218,6 +220,9 @@ public class MinecartTransformManager {
                     new NonInventoryWorkingBlockMinecartEntity(MRMinecarts.NON_INVENTORY_WORKING_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
             case BEACON ->
                     new BeaconMinecartEntity(MRMinecarts.BEACON_MINECART.entity().get(), world, pos.x, pos.y, pos.z, blockInside);
+            case FLUID -> blockInside == Blocks.WATER ?
+                    new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), world, pos.x, pos.y, pos.z, blockInside) :
+                    new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), world, pos.x, pos.y, pos.z, blockInside);
             default ->
                     new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
         };

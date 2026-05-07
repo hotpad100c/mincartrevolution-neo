@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.registeries;
 
 import ml.mypals.minecartrevolution.client.renderer.BeaconMinecartRenderer;
+import ml.mypals.minecartrevolution.client.renderer.FluidMinecartRenderer;
 import ml.mypals.minecartrevolution.client.renderer.ShulkerMinecartRenderer;
 import ml.mypals.minecartrevolution.client.renderer.WorkingMinecartRenderer;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -40,6 +41,14 @@ public class MRModEntityRenderers {
         registerRenderers.registerEntityRenderer(
                 MRMinecarts.BEACON_MINECART.entity().get(),
                 BeaconMinecartRenderer::new
+        );
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.WATER_MINECART.entity().get(),
+                FluidMinecartRenderer::new
+        );
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.LAVA_MINECART.entity().get(),
+                FluidMinecartRenderer::new
         );
     }
 }

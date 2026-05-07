@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.registeries;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
+import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.*;
@@ -279,6 +280,15 @@ public class MRMinecarts {
             "minecart_dispenser", DispenserMinecartEntity::new,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.DISPENSER, p.stacksTo(1), Blocks.DISPENSER),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+
+    public static final MinecartEntry<FluidMinecartEntity, MinecartWithBlockItem> WATER_MINECART = register(
+            "water", FluidMinecartEntity::new,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.FLUID, p.stacksTo(1), Blocks.WATER));
+
+    public static final MinecartEntry<FluidMinecartEntity, MinecartWithBlockItem> LAVA_MINECART = register(
+            "lava", FluidMinecartEntity::new,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.FLUID, p.stacksTo(1), Blocks.LAVA));
 
 
     public static void init() {

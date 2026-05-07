@@ -4,7 +4,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"minecart": "entity/minecart/minecart",
-		"fluid": "block/water_still"
+		"fluid": "block/lava_still"
 	},
 	"elements": [
 		{
