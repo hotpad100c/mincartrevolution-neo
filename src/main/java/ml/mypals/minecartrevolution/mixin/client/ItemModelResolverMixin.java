@@ -1,12 +1,18 @@
 package ml.mypals.minecartrevolution.mixin.client;
 
 import ml.mypals.minecartrevolution.interfaces.IMinecartWithBlockItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.item.ClientItem;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -27,6 +33,7 @@ import org.spongepowered.asm.mixin.Final;
 
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,7 +78,7 @@ public class ItemModelResolverMixin {
             // distinguishes between stacks with different blocks inside
             output.appendModelIdentityElement(blockInside);
 
-            if (blockInside != null && !blockInside.isAir()) {
+            if (!blockInside.isAir()) {
                 this.mincartrevolution$renderMinecartWithBlock(output, item, displayContext, level, owner, seed, blockInside);
             } else {
                 this.mincartrevolution$renderDefault(output, item, displayContext, level, owner, seed);
@@ -135,7 +142,7 @@ public class ItemModelResolverMixin {
                     0
             );
 
-            this.mincartrevolution$copyLayersWithTransform(output, tempBlockState);
+            this.mincartrevolution$copyLayersWithTransform(output, tempBlockState, blockInside);
         }
     }
 
@@ -161,40 +168,57 @@ public class ItemModelResolverMixin {
                     seed
             );
         }
-    }
-    @Unique
+    }@Unique
     private void mincartrevolution$copyLayersWithTransform(
             ItemStackRenderState output,
-            ItemStackRenderState source
-
+            ItemStackRenderState source,
+            BlockState blockInside
     ) {
-        List<ItemStackRenderState.LayerRenderState> layers = Arrays.stream(source.layers).toList();
+        BlockModelRenderState blockModelRenderState = new BlockModelRenderState();
+        Minecraft.getInstance().getBlockModelResolver().update(
+                blockModelRenderState,
+                blockInside,
+                BlockDisplayContext.create()
+        );
+
         ItemStackRenderState.LayerRenderState reference = output.layers[0];
         ItemTransform referenceTransform = reference.itemTransform;
-        for (ItemStackRenderState.LayerRenderState sourceLayer : layers) {
+
+        List<BlockStateModelPart> bakedQuads = blockModelRenderState.modelParts;
+        List<BakedQuad> quads = bakedQuads.stream()
+                .flatMap(bakedQuad -> {
+                    List<BakedQuad> qds = new ArrayList<>();
+                    for (Direction direction : Direction.values()) {
+                        qds.addAll(bakedQuad.getQuads(direction));
+                    }
+                    qds.addAll(bakedQuad.getQuads(null));
+                    return qds.stream();
+                })
+                .toList();
+        for (ItemStackRenderState.LayerRenderState sourceLayer : source.layers) {
             ItemStackRenderState.LayerRenderState targetLayer = output.newLayer();
 
             targetLayer.setFoilType(sourceLayer.foilType);
-            targetLayer.setExtents(sourceLayer.extents);
-            if(sourceLayer.specialRenderer != null){
-                targetLayer.setupSpecialModel(sourceLayer.specialRenderer, sourceLayer.argumentForSpecialRendering);
-            }
+
             targetLayer.setLocalTransform(reference.localTransform);
 
-            ItemTransform itemTransform = sourceLayer.itemTransform;
             Vector3f pos = new Vector3f();
-            itemTransform.translation().add(0f,0.04f,0f,pos);
+            sourceLayer.itemTransform.translation().add(0f, 0.04f, 0f, pos);
+
             Vector3f scale = new Vector3f();
-            referenceTransform.scale().mul(0.8f,scale);
+            referenceTransform.scale().mul(0.8f, scale);
+
             targetLayer.setItemTransform(new ItemTransform(
                     referenceTransform.rotation(),
                     pos,
                     scale
             ));
-
             targetLayer.tintLayers().addAll(sourceLayer.tintLayers());
-
-            targetLayer.prepareQuadList().addAll(sourceLayer.prepareQuadList());
+            targetLayer.prepareQuadList().addAll(quads.isEmpty()?sourceLayer.prepareQuadList():quads);
+            targetLayer.setExtents(sourceLayer.extents);
+            if(sourceLayer.specialRenderer != null){
+                targetLayer.setupSpecialModel(sourceLayer.specialRenderer, sourceLayer.argumentForSpecialRendering);
+            }
         }
 
         if (source.isAnimated()) {
