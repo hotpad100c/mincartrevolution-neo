@@ -52,14 +52,6 @@ public class MinecartRevolutionClient {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
-    @SubscribeEvent
-    static void onClientSetup(FMLClientSetupEvent event) {
-        // Some client setup code
-        MinecartRevolution.LOGGER.info("HELLO FROM CLIENT SETUP");
-        MinecartRevolution.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-
-    }
-
     @SubscribeEvent // on the mod event bus
     public static void register(RegisterClientPayloadHandlersEvent event) {
         event.register(
