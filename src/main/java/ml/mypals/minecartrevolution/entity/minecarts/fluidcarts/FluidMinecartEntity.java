@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
@@ -40,52 +41,34 @@ public class FluidMinecartEntity extends HasVariantRegularBlockMinecartEntity {
         super(entityType, world);
     }
 
-    public FluidMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Block blockInside) {
-        super(minecart, world, x, y, z, blockInside);
+    public FluidMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
+        super(minecart, world, x, y, z, item);
     }
 
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         ItemStack stack = player.getItemInHand(hand);
         BlockState currentBlock = getDisplayBlockState();
-        
-        if (stack.is(Items.BUCKET)) {
-            if (currentBlock.is(Blocks.WATER)) {
-                if (!level().isClientSide()) {
-                    stack.consume(1, player);
-                    player.getInventory().add(new ItemStack(Items.WATER_BUCKET));
-                    transformTo(Blocks.AIR);
+
+        if (player.isSecondaryUseActive()) {
+            if (stack.is(Items.BUCKET)) {
+                if (currentBlock.is(Blocks.WATER)) {
+                    if (!level().isClientSide()) {
+                        stack.split(1);
+                        player.getInventory().add(new ItemStack(Items.WATER_BUCKET));
+                        transformTo(Items.AIR);
+                    }
+                    playBucketSound(Blocks.WATER);
+                    return InteractionResult.SUCCESS;
+                } else if (currentBlock.is(Blocks.LAVA)) {
+                    if (!level().isClientSide()) {
+                        stack.consume(1, player);
+                        player.getInventory().add(new ItemStack(Items.LAVA_BUCKET));
+                        transformTo(Items.AIR);
+                    }
+                    playBucketSound(Blocks.LAVA);
+                    return InteractionResult.SUCCESS;
                 }
-                playBucketSound(Blocks.WATER);
-                return InteractionResult.SUCCESS;
-            } else if (currentBlock.is(Blocks.LAVA)) {
-                if (!level().isClientSide()) {
-                    stack.consume(1, player);
-                    player.getInventory().add(new ItemStack(Items.LAVA_BUCKET));
-                    transformTo(Blocks.AIR);
-                }
-                playBucketSound(Blocks.LAVA);
-                return InteractionResult.SUCCESS;
-            }
-        } else if (stack.is(Items.WATER_BUCKET)) {
-            if (!currentBlock.is(Blocks.WATER)) {
-                if (!level().isClientSide()) {
-                    stack.consume(1, player);
-                    player.getInventory().add(new ItemStack(Items.BUCKET));
-                    transformTo(Blocks.WATER);
-                }
-                playBucketSound(Blocks.WATER);
-                return InteractionResult.SUCCESS;
-            }
-        } else if (stack.is(Items.LAVA_BUCKET)) {
-            if (!currentBlock.is(Blocks.LAVA)) {
-                if (!level().isClientSide()) {
-                    stack.consume(1, player);
-                    player.getInventory().add(new ItemStack(Items.BUCKET));
-                    transformTo(Blocks.LAVA);
-                }
-                playBucketSound(Blocks.LAVA);
-                return InteractionResult.SUCCESS;
             }
         }
 

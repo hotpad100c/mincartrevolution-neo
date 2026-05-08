@@ -20,8 +20,8 @@ import org.jspecify.annotations.NonNull;
 
 public class PresherPlateMinecartEntity extends HasVariantRegularBlockMinecartEntity implements PowerEmitterMinecartEntity {
 
-    public PresherPlateMinecartEntity(EntityType<? extends PresherPlateMinecartEntity> entityType, Level world, double x, double y, double z, Block block) {
-        super(entityType, world, x, y, z, block);
+    public PresherPlateMinecartEntity(EntityType<? extends PresherPlateMinecartEntity> entityType, Level world, double x, double y, double z, Item item) {
+        super(entityType, world, x, y, z, item);
     }
 
     public PresherPlateMinecartEntity(EntityType<? extends PresherPlateMinecartEntity> presherPlateMinecartEntityEntityType, Level world) {

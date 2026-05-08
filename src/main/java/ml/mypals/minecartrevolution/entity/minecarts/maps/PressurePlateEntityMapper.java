@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.entity.minecarts.maps;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -24,7 +25,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.STONE_PRESSURE_PLATE
+                        Items.STONE_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -35,7 +36,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.OAK_PRESSURE_PLATE
+                        Items.OAK_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -46,7 +47,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.SPRUCE_PRESSURE_PLATE
+                        Items.SPRUCE_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -57,7 +58,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.BIRCH_PRESSURE_PLATE
+                        Items.BIRCH_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -68,7 +69,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.JUNGLE_PRESSURE_PLATE
+                        Items.JUNGLE_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -79,7 +80,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.ACACIA_PRESSURE_PLATE
+                        Items.ACACIA_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -90,7 +91,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.CHERRY_PRESSURE_PLATE
+                        Items.CHERRY_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -101,7 +102,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.DARK_OAK_PRESSURE_PLATE
+                        Items.DARK_OAK_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -112,7 +113,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.MANGROVE_PRESSURE_PLATE
+                        Items.MANGROVE_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -123,7 +124,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.BAMBOO_PRESSURE_PLATE
+                        Items.BAMBOO_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -134,7 +135,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE
+                        Items.POLISHED_BLACKSTONE_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -145,7 +146,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.WARPED_PRESSURE_PLATE
+                        Items.WARPED_PRESSURE_PLATE
                 )
         );
         PRESSURE_PLATE_ENTITY_MAP.put(
@@ -156,7 +157,7 @@ public class PressurePlateEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.CRIMSON_PRESSURE_PLATE
+                        Items.CRIMSON_PRESSURE_PLATE
                 )
         );
     }

@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
@@ -51,7 +52,7 @@ public class MultiVariantMinecartWithBlockItem extends MinecartWithBlockItem {
             block = Block.stateById(nbtCompound.copyTag().getInt("block_in_minecart").orElse(1)).getBlock();
         }
         return MinecartTransformManager.getTransform(
-                serverWorld, corrospondingItem, block, new Vec3(x, y, z),
+                serverWorld, corrospondingItem, Item.byBlock(block), new Vec3(x, y, z),
                 type
         );
     }

@@ -114,8 +114,8 @@ public class BeaconMinecartEntity extends HasVariantRegularBlockMinecartEntity i
         super(entityType, world);
     }
 
-    public BeaconMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Block blockInside) {
-        super(minecart, world, x, y, z, blockInside);
+    public BeaconMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
+        super(minecart, world, x, y, z, item);
     }
 
     @Override

@@ -31,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Unique;
 
-public class TrappedChestMinecartEntity extends AbstractMinecartContainer implements PowerEmitterMinecartEntity, IMinecartContainer {
+public class TrappedChestMinecartEntity extends BaseMinecartContainer implements PowerEmitterMinecartEntity, IMinecartContainer {
     private int openCount = 0;
     @Unique
     public final ChestLidController chestLidController = new ChestLidController();
@@ -116,22 +116,24 @@ public class TrappedChestMinecartEntity extends AbstractMinecartContainer implem
 
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
-        InteractionResult actionResult = this.interactWithContainerVehicle(player);
-        if (actionResult.consumesAction()) {
-            this.openCount++;
-            if (this.openCount >= 1) {
-                this.level().playSound(this, this.blockPosition(), SoundEvents.CHEST_OPEN, SoundSource.BLOCKS);
+        if (!player.isSecondaryUseActive()) {
+            InteractionResult actionResult = this.interactWithContainerVehicle(player);
+            if (actionResult.consumesAction()) {
+                this.openCount++;
+                if (this.openCount >= 1) {
+                    this.level().playSound(this, this.blockPosition(), SoundEvents.CHEST_OPEN, SoundSource.BLOCKS);
+                }
+                this.level().broadcastEntityEvent(this, (byte) 11);
+                this.gameEvent(GameEvent.CONTAINER_OPEN, player);
+                if (player.level() instanceof ServerLevel serverLevel)
+                    PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+                this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
+                    updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
+                });
             }
-            this.level().broadcastEntityEvent(this, (byte) 11);
-            this.gameEvent(GameEvent.CONTAINER_OPEN, player);
-            if (player.level() instanceof ServerLevel serverLevel)
-                PiglinAi.angerNearbyPiglins(serverLevel, player, true);
-            this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
-                updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
-            });
+            return actionResult;
         }
-
-        return actionResult;
+        return super.interact(player, hand, pos);
     }
 
     @Override

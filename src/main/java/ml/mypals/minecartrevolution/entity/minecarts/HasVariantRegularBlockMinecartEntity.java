@@ -48,9 +48,10 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         super(entityType, world);
     }
 
-    public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Block blockInside) {
+    public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z);
-        this.setCustomDisplayBlockState(Optional.of(blockInside.defaultBlockState()));
+        Block block = Block.byItem(item);
+        this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
     }
 
     /*
@@ -102,7 +103,6 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         minecartEntity.restoreFrom(this);
         minecartEntity.copyPosition(this);
         minecartEntity.setDeltaMovement(this.getDeltaMovement());
-        ;
         this.remove(RemovalReason.DISCARDED);
         this.level().addFreshEntity(minecartEntity);
         minecartEntity.setHurtDir(-minecartEntity.getHurtDir());
@@ -139,14 +139,14 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
                     player.swing(hand);
                     playSound(blockItem.getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1, 1);
                     if (!this.level().isClientSide()) {
-                        transformTo(blockItem.getBlock());
+                        transformTo(blockItem);
                         stackInHand.consume(1, player);
                     }
                 }else if (stackInHand.is(Items.WATER_BUCKET)) {
                     if (!level().isClientSide()) {
                         stackInHand.consume(1, player);
                         player.getInventory().add(new ItemStack(Items.BUCKET));
-                        transformTo(Blocks.WATER);
+                        transformTo(stackInHand.getItem());
                     }
                     playBucketSound(Blocks.WATER);
                     return InteractionResult.SUCCESS;
@@ -154,7 +154,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
                     if (!level().isClientSide()) {
                         stackInHand.consume(1, player);
                         player.getInventory().add(new ItemStack(Items.BUCKET));
-                        transformTo(Blocks.LAVA);
+                        transformTo(stackInHand.getItem());
                     }
                     playBucketSound(Blocks.LAVA);
                     return InteractionResult.SUCCESS;
@@ -168,8 +168,9 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
             return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
         }
     }
-    public void transformTo(Block block) {
-        MinecartTransformManager.checkForTransform(level(), position(), block, this, ItemStack.EMPTY);
+
+    public void transformTo(Item item) {
+        MinecartTransformManager.checkForTransform(level(), position(), item, this, ItemStack.EMPTY);
     }
 
     protected void playBucketSound(Block block) {

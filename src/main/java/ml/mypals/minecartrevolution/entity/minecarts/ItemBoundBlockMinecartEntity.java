@@ -49,7 +49,7 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
     }
 
     public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
-        super(minecart, world, x, y, z, correspondingItem.getBlockInside());
+        super(minecart, world, x, y, z, Item.byBlock(correspondingItem.getBlockInside()));
         this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
         this.correspondingItem = correspondingItem;
     }

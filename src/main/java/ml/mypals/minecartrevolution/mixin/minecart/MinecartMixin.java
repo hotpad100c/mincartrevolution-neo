@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.mixin.minecart;
 
+import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -93,7 +95,7 @@ public abstract class MinecartMixin extends AbstractMinecart {
                     playSound(blockItem.getBlock().defaultBlockState().getSoundType(this.level(), getOnPos(), player).getPlaceSound(), 1, 1);
 
                     if (!this.level().isClientSide()) {
-                        MinecartTransformManager.checkForTransform(level(), this.position(), blockItem.getBlock(), this, stackInHand);
+                        MinecartTransformManager.checkForTransform(level(), this.position(), blockItem, this, stackInHand);
                         stackInHand.consume(1, player);
                     }
 
@@ -102,53 +104,57 @@ public abstract class MinecartMixin extends AbstractMinecart {
                     }
 
                     cir.setReturnValue(InteractionResult.SUCCESS);
-                    cir.cancel();
                     return;
-
                 } else if (stackInHand.is(Items.WATER_BUCKET)) {
-
                     if (!this.level().isClientSide()) {
-                        stackInHand.consume(1, player);
+                        MinecartTransformManager.checkForTransform(level(), this.position(), stackInHand.getItem(), this, stackInHand);
+                        stackInHand.split(1);
                         player.getInventory().add(new ItemStack(Items.BUCKET));
-                        MinecartTransformManager.checkForTransform(level(), this.position(), Blocks.WATER, this, stackInHand);
                     }
                     playBucketSound(Blocks.WATER);
-                    cir.setReturnValue(InteractionResult.SUCCESS);
-                    cir.cancel();
-                    return;
 
                 } else if (stackInHand.is(Items.LAVA_BUCKET)) {
 
                     if (!this.level().isClientSide()) {
-                        stackInHand.consume(1, player);
+                        MinecartTransformManager.checkForTransform(level(), this.position(), stackInHand.getItem(), this, stackInHand);
+                        stackInHand.split(1);
                         player.getInventory().add(new ItemStack(Items.BUCKET));
-                        MinecartTransformManager.checkForTransform(level(), this.position(), Blocks.LAVA, this, stackInHand);
                     }
                     playBucketSound(Blocks.LAVA);
-                    cir.setReturnValue(InteractionResult.SUCCESS);
-                    cir.cancel();
-                    return;
+                }
+                if (!this.level().isClientSide()) {
+                    MinecartTransformManager.checkForTransform(level(), this.position(), null, this, stackInHand);
+                    if ((AbstractMinecart) this instanceof FluidMinecartEntity && stackInHand.is(Items.BUCKET)) {
+                        if (this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).get().is(Blocks.WATER)) {
+                            cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(new ItemStack(Items.WATER_BUCKET)));
+                            this.level().gameEvent(player, GameEvent.FLUID_PICKUP, this.position());
+                            level().playSound(null, blockPosition(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        } else if (this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).get().is(Blocks.LAVA)) {
+                            cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(new ItemStack(Items.WATER_BUCKET)));
+                            this.level().gameEvent(player, GameEvent.FLUID_PICKUP, this.position());
+                            level().playSound(null, blockPosition(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        }
+                    } else {
+                        stackInHand.consume(1, player);
+                    }
                 }
                 cir.setReturnValue(InteractionResult.SUCCESS);
-                cir.cancel();
                 return;
             } else {
                 cir.setReturnValue(InteractionResult.PASS);
-                cir.cancel();
                 return;
             }
         }
         if (minecartrevolution_neo$hasBlock()) {
             cir.setReturnValue(InteractionResult.PASS);
-            cir.cancel();
         }
     }
     @Unique
     private void playBucketSound(Block block) {
         if (block == Blocks.LAVA) {
-            level().playSound(null, blockPosition(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level().playSound(null, blockPosition(), SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F);
         } else {
-            level().playSound(null, blockPosition(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level().playSound(null, blockPosition(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 }

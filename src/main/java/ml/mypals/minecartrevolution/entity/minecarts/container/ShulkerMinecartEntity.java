@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 
 import java.util.Optional;
 
-public class ShulkerMinecartEntity extends AbstractMinecartContainer implements IMinecartContainer {
+public class ShulkerMinecartEntity extends BaseMinecartContainer implements IMinecartContainer {
     private static final Logger LOGGER = LogUtils.getLogger();
     private float progress;
     private float progressOld;
@@ -258,22 +258,25 @@ public class ShulkerMinecartEntity extends AbstractMinecartContainer implements 
 
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
-        InteractionResult actionResult = this.interactWithContainerVehicle(player);
-        if (actionResult.consumesAction()) {
-            if (!this.level().isClientSide()) {
-                this.openCount++;
-                if (this.openCount >= 1) {
-                    this.level().playSound(this, this.blockPosition(),
-                            SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS);
-                }
-                this.level().broadcastEntityEvent(this, (byte) 10);
-                this.gameEvent(GameEvent.CONTAINER_OPEN, player);
-                if (player.level() instanceof ServerLevel serverLevel) {
-                    PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+        if (!player.isSecondaryUseActive()) {
+            InteractionResult actionResult = this.interactWithContainerVehicle(player);
+            if (actionResult.consumesAction()) {
+                if (!this.level().isClientSide()) {
+                    this.openCount++;
+                    if (this.openCount >= 1) {
+                        this.level().playSound(this, this.blockPosition(),
+                                SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS);
+                    }
+                    this.level().broadcastEntityEvent(this, (byte) 10);
+                    this.gameEvent(GameEvent.CONTAINER_OPEN, player);
+                    if (player.level() instanceof ServerLevel serverLevel) {
+                        PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+                    }
                 }
             }
+            return actionResult;
         }
-        return actionResult;
+        return super.interact(player, hand, location);
     }
 
     @Override

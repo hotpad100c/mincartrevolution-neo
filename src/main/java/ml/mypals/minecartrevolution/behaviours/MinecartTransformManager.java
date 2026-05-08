@@ -1,10 +1,17 @@
 package ml.mypals.minecartrevolution.behaviours;
 
 import ml.mypals.minecartrevolution.entity.minecarts.*;
-import ml.mypals.minecartrevolution.entity.minecarts.container.*;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
-import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.*;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.*;
+import ml.mypals.minecartrevolution.entity.minecarts.container.BarrelMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.container.DispenserMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.container.TrappedChestMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.HorizontalDirectionalRedstoneEmitterPowerMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.WeightPresherPlateMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
@@ -14,7 +21,9 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -43,8 +52,15 @@ public class MinecartTransformManager {
         }
     };
 
-    public static AbstractMinecart checkForTransform(Level world, Vec3 pos, Block block, AbstractMinecart original, ItemStack handStack) {
-        AbstractMinecart minecart = getTransform(world, pos, block, handStack);
+    public static AbstractMinecart checkForTransform(Level world, Vec3 pos, Item item, AbstractMinecart original, ItemStack handStack) {
+        AbstractMinecart minecart = getTransform(world, pos, item, handStack);
+        if (original instanceof FluidMinecartEntity entity) {
+            if (item.equals(Items.WATER_BUCKET)) {
+                entity.setCustomDisplayBlockState(Optional.of(Blocks.WATER.defaultBlockState()));
+            } else if (item.equals(Items.LAVA_BUCKET)) {
+                entity.setCustomDisplayBlockState(Optional.of(Blocks.LAVA.defaultBlockState()));
+            }
+        }
         if (minecart != null) {
 
             ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(PATH_ELEMENT, LOGGER);
@@ -83,92 +99,106 @@ public class MinecartTransformManager {
         return minecart;
     }
 
-    public static final Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> factoryMap = new java.util.HashMap<>();
+    public static final Map<Item, BiFunction<Level, Vec3, AbstractMinecart>> factoryMap = new java.util.HashMap<>();
 
     static {
-        factoryMap.putAll(Map.ofEntries(
-                Map.entry(Blocks.TRAPPED_CHEST, (w, pos) -> new TrappedChestMinecartEntity(w, pos.x, pos.y, pos.z)),
-                Map.entry(Blocks.CHEST, (w, pos) -> {
-                    AbstractMinecart abstractMinecart = new MinecartChest(EntityType.CHEST_MINECART, w);
-                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                    return abstractMinecart;
-                }),
+        register(Blocks.TRAPPED_CHEST, (Level w, Vec3 pos) -> new TrappedChestMinecartEntity(w, pos.x, pos.y, pos.z));
+        register(Blocks.CHEST, (w, pos) -> {
+            AbstractMinecart abstractMinecart = new MinecartChest(EntityType.CHEST_MINECART, w);
+            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+            return abstractMinecart;
+        });
 
-                Map.entry(Blocks.FURNACE, (w, pos) -> {
-                    AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
-                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                    return abstractMinecart;
-                }),
-                Map.entry(Blocks.BLAST_FURNACE, (w, pos) -> {
-                    AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
-                    abstractMinecart.setCustomDisplayBlockState(Optional.of(Blocks.BLAST_FURNACE.defaultBlockState()));
-                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                    return abstractMinecart;
-                }),
-                Map.entry(Blocks.SMOKER, (w, pos) -> {
-                    AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
-                    abstractMinecart.setCustomDisplayBlockState(Optional.of(Blocks.SMOKER.defaultBlockState()));
-                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                    return abstractMinecart;
-                }),
+        register(Blocks.FURNACE, (w, pos) -> {
+            AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
+            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+            return abstractMinecart;
+        });
+        register(Blocks.BLAST_FURNACE, (w, pos) -> {
+            AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
+            abstractMinecart.setCustomDisplayBlockState(Optional.of(Blocks.BLAST_FURNACE.defaultBlockState()));
+            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+            return abstractMinecart;
+        });
+        register(Blocks.SMOKER, (w, pos) -> {
+            AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
+            abstractMinecart.setCustomDisplayBlockState(Optional.of(Blocks.SMOKER.defaultBlockState()));
+            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+            return abstractMinecart;
+        });
 
-                Map.entry(Blocks.TNT, (w, pos) -> {
-                    AbstractMinecart abstractMinecart = new MinecartTNT(EntityType.TNT_MINECART, w);
-                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                    return abstractMinecart;
-                }),
-                Map.entry(Blocks.SPAWNER, (w, pos) -> {
-                    AbstractMinecart abstractMinecart = new MinecartSpawner(EntityType.SPAWNER_MINECART, w);
-                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                    return abstractMinecart;
-                }),
-                Map.entry(Blocks.HOPPER, (w, pos) -> {
-                    MinecartHopper hopperMinecartEntity = new MinecartHopper(EntityType.HOPPER_MINECART, w);
-                    hopperMinecartEntity.setInitialPos(pos.x, pos.y, pos.z);
-                    hopperMinecartEntity.setDisplayOffset(1);
-                    hopperMinecartEntity.setCustomDisplayBlockState(Optional.of(Blocks.HOPPER.defaultBlockState()));
-                    return hopperMinecartEntity;
-                }),
-                Map.entry(Blocks.DRAGON_EGG, (w, pos) -> new DragonEggMinecart(MRMinecarts.DRAGON_EGG_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.DRAGON_EGG_MINECART.item().get())),
-                Map.entry(Blocks.COBWEB, (w, pos) -> new CobwebMinecartEntity(MRMinecarts.COBWEB_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.COBWEB_MINECART.item().get())),
-                Map.entry(Blocks.COMMAND_BLOCK, (w, pos) -> {
-                    AbstractMinecart abstractMinecart = new MinecartCommandBlock(EntityType.COMMAND_BLOCK_MINECART, w);
-                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                    return abstractMinecart;
-                }),
-                Map.entry(Blocks.CACTUS, (w, pos) -> new DamageCausingMinecartEntity(MRMinecarts.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, MRMinecarts.CACTUS_MINECART.item().get(), DamageTypes.CACTUS)),
-                Map.entry(Blocks.MAGMA_BLOCK, (w, pos) -> new DamageCausingMinecartEntity(MRMinecarts.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, MRMinecarts.MAGMA_BLOCK_MINECART.item().get(), DamageTypes.HOT_FLOOR)),
-                Map.entry(Blocks.CAMPFIRE, (w, pos) -> new DamageCausingMinecartEntity(MRMinecarts.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, MRMinecarts.CAMPFIRE_MINECART.item().get(), DamageTypes.CAMPFIRE)),
-                Map.entry(Blocks.SOUL_CAMPFIRE, (w, pos) -> new DamageCausingMinecartEntity(MRMinecarts.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 2f, MRMinecarts.SOUL_CAMPFIRE_MINECART.item().get(), DamageTypes.CAMPFIRE)),
-                Map.entry(Blocks.REDSTONE_BLOCK, (w, pos) -> new RedstoneBlockMinecartEntity(MRMinecarts.POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.REDSTONE_MINECART.item().get())),
-                Map.entry(Blocks.REPEATER, (w, pos) -> new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRMinecarts.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.REPEATER_MINECART.item().get())),
-                Map.entry(Blocks.SPONGE, (w, pos) -> new SpongeMinecartEntity(MRMinecarts.SPONGE_MINECART.entity().get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, MRMinecarts.SPONGE_MINECART.item().get())),
-                Map.entry(Blocks.WET_SPONGE, (w, pos) -> new SpongeMinecartEntity(MRMinecarts.SPONGE_MINECART.entity().get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, MRMinecarts.WET_SPONGE_MINECART.item().get())),
-                Map.entry(Blocks.WATER, (w, pos) -> new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Blocks.WATER)),
-                Map.entry(Blocks.LAVA, (w, pos) -> new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Blocks.LAVA)),
-                Map.entry(Blocks.AIR, (w, pos) -> {
-                           Minecart minecart = new Minecart(EntityType.MINECART, w);
-                           minecart.setInitialPos(pos.x,pos.y,pos.z);
-                           return minecart;
-                }),
-                Map.entry(Blocks.BARREL, (w, pos) -> new BarrelMinecartEntity(MRMinecarts.BARREL_MINECART.entity().get(), w, pos.x, pos.y, pos.z)),
-                Map.entry(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.GOLDEN_PRESHER_PLATE_MINECART.item().get())),
-                Map.entry(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.IRON_PRESHER_PLATE_MINECART.item().get())),
-                Map.entry(Blocks.JUKEBOX, (w, pos) -> new JukeboxMinecartEntity(MRMinecarts.JUKEBOX_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.JUKEBOX_MINECART.item().get())),
-                Map.entry(Blocks.DISPENSER, (w, pos) -> {
-                    AbstractMinecart abstractMinecart = new DispenserMinecartEntity(EntityType.CHEST_MINECART, w);
-                    abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-                    return abstractMinecart;
-                })
-        ));
-        factoryMap.putAll(PRESSURE_PLATE_ENTITY_MAP);
-        factoryMap.putAll(SHULKER_ENTITY_MAP);
-        factoryMap.putAll(NON_INVENTORY_WORKING);
+        register(Blocks.TNT, (w, pos) -> {
+            AbstractMinecart abstractMinecart = new MinecartTNT(EntityType.TNT_MINECART, w);
+            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+            return abstractMinecart;
+        });
+        register(Blocks.SPAWNER, (w, pos) -> {
+            AbstractMinecart abstractMinecart = new MinecartSpawner(EntityType.SPAWNER_MINECART, w);
+            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+            return abstractMinecart;
+        });
+        register(Blocks.HOPPER, (w, pos) -> {
+            MinecartHopper hopperMinecartEntity = new MinecartHopper(EntityType.HOPPER_MINECART, w);
+            hopperMinecartEntity.setInitialPos(pos.x, pos.y, pos.z);
+            hopperMinecartEntity.setDisplayOffset(1);
+            hopperMinecartEntity.setCustomDisplayBlockState(Optional.of(Blocks.HOPPER.defaultBlockState()));
+            return hopperMinecartEntity;
+        });
+        register(Blocks.DRAGON_EGG, (w, pos) -> new DragonEggMinecart(MRMinecarts.DRAGON_EGG_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.DRAGON_EGG_MINECART.item().get()));
+        register(Blocks.COBWEB, (w, pos) -> new CobwebMinecartEntity(MRMinecarts.COBWEB_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.COBWEB_MINECART.item().get()));
+        register(Blocks.COMMAND_BLOCK, (w, pos) -> {
+            AbstractMinecart abstractMinecart = new MinecartCommandBlock(EntityType.COMMAND_BLOCK_MINECART, w);
+            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+            return abstractMinecart;
+        });
+        register(Blocks.CACTUS, (w, pos) -> new DamageCausingMinecartEntity(MRMinecarts.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, MRMinecarts.CACTUS_MINECART.item().get(), DamageTypes.CACTUS));
+        register(Blocks.MAGMA_BLOCK, (w, pos) -> new DamageCausingMinecartEntity(MRMinecarts.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, MRMinecarts.MAGMA_BLOCK_MINECART.item().get(), DamageTypes.HOT_FLOOR));
+        register(Blocks.CAMPFIRE, (w, pos) -> new DamageCausingMinecartEntity(MRMinecarts.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 1f, MRMinecarts.CAMPFIRE_MINECART.item().get(), DamageTypes.CAMPFIRE));
+        register(Blocks.SOUL_CAMPFIRE, (w, pos) -> new DamageCausingMinecartEntity(MRMinecarts.DAMAGE_CAUSING_MINECART.get(), w, pos.x, pos.y, pos.z, 2f, MRMinecarts.SOUL_CAMPFIRE_MINECART.item().get(), DamageTypes.CAMPFIRE));
+        register(Blocks.REDSTONE_BLOCK, (w, pos) -> new RedstoneBlockMinecartEntity(MRMinecarts.POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.REDSTONE_MINECART.item().get()));
+        register(Blocks.REPEATER, (w, pos) -> new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRMinecarts.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.REPEATER_MINECART.item().get()));
+        register(Blocks.SPONGE, (w, pos) -> new SpongeMinecartEntity(MRMinecarts.SPONGE_MINECART.entity().get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, MRMinecarts.SPONGE_MINECART.item().get()));
+        register(Blocks.WET_SPONGE, (w, pos) -> new SpongeMinecartEntity(MRMinecarts.SPONGE_MINECART.entity().get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, MRMinecarts.WET_SPONGE_MINECART.item().get()));
+        register(Items.WATER_BUCKET, (w, pos) -> new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Items.WATER_BUCKET));
+        register(Items.LAVA_BUCKET, (w, pos) -> new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Items.LAVA_BUCKET));
+        register(Blocks.AIR, (w, pos) -> {
+            Minecart minecart = new Minecart(EntityType.MINECART, w);
+            minecart.setInitialPos(pos.x, pos.y, pos.z);
+            return minecart;
+        });
+        register(Blocks.BARREL, (w, pos) -> new BarrelMinecartEntity(MRMinecarts.BARREL_MINECART.entity().get(), w, pos.x, pos.y, pos.z));
+        register(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.GOLDEN_PRESHER_PLATE_MINECART.item().get()));
+        register(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.IRON_PRESHER_PLATE_MINECART.item().get()));
+        register(Blocks.JUKEBOX, (w, pos) -> new JukeboxMinecartEntity(MRMinecarts.JUKEBOX_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.JUKEBOX_MINECART.item().get()));
+        register(Blocks.DISPENSER, (w, pos) -> {
+            AbstractMinecart abstractMinecart = new DispenserMinecartEntity(EntityType.CHEST_MINECART, w);
+            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
+            return abstractMinecart;
+        });
+        PRESSURE_PLATE_ENTITY_MAP.forEach((block, func) -> factoryMap.put(block.asItem(), func));
+        SHULKER_ENTITY_MAP.forEach((block, func) -> factoryMap.put(block.asItem(), func));
+        NON_INVENTORY_WORKING.forEach((block, func) -> factoryMap.put(block.asItem(), func));
+        register(Items.AIR, (w, pos) -> {
+            Minecart m = new Minecart(EntityType.MINECART, w);
+            m.setInitialPos(pos.x, pos.y, pos.z);
+            return m;
+        });
     }
 
-    public static AbstractMinecart getTransform(Level world, Vec3 pos, Block block, ItemStack handStack) {
+    private static void register(Block block, BiFunction<Level, Vec3, AbstractMinecart> factory) {
+        Item item = block.asItem();
+        if (item != Items.AIR) {
+            factoryMap.put(item, factory);
+        }
+    }
+
+    private static void register(Item item, BiFunction<Level, Vec3, AbstractMinecart> factory) {
+        factoryMap.put(item, factory);
+    }
+
+    public static AbstractMinecart getTransform(Level world, Vec3 pos, Item item, ItemStack handStack) {
         return doExtraCheck(factoryMap
-                .getOrDefault(block, (w, p) -> new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, pos.x, pos.y, pos.z, block))
+                .getOrDefault(item, (w, p) -> new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, pos.x, pos.y, pos.z, item))
                 .apply(world, pos), handStack);
     }
 
@@ -181,15 +211,16 @@ public class MinecartTransformManager {
         return abstractMinecartEntity;
     }
 
-    public static AbstractMinecart getTransform(Level world, MinecartWithBlockItem corrospondingItem, Block blockInside, Vec3 pos, AdvancedMinecartEntityTypes.Type type) {
+    public static AbstractMinecart getTransform(Level world, MinecartWithBlockItem corrospondingItem, Item item, Vec3 pos, AdvancedMinecartEntityTypes.Type type) {
+        Block block = Block.byItem(item);
         return switch (type) {
-            case SHULKER -> blockInside instanceof ShulkerBoxBlock shulkerBoxBlock ?
+            case SHULKER -> block instanceof ShulkerBoxBlock shulkerBoxBlock ?
                     new ShulkerMinecartEntity(MRMinecarts.SHULKER_MINECART.entity().get(), world, pos.x, pos.y, pos.z, shulkerBoxBlock) :
-                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
+                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, item);
             case DRAGON_EGG ->
                     new DragonEggMinecart(MRMinecarts.DRAGON_EGG_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case PRESSER_PLATE ->
-                    new PresherPlateMinecartEntity(MRMinecarts.PRESHER_PLATE_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
+                    new PresherPlateMinecartEntity(MRMinecarts.PRESHER_PLATE_MINECART.get(), world, pos.x, pos.y, pos.z, item);
             case WEIGHT_PRESSER_PLATE ->
                     new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case SPONGE ->
@@ -197,7 +228,7 @@ public class MinecartTransformManager {
             case EMITTING_POWER_DIRECTIONAL ->
                     new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRMinecarts.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case REGULAR ->
-                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
+                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, item);
             case EMITTING_POWER ->
                     new RedstoneBlockMinecartEntity(MRMinecarts.POWER_PROVIDER_MINECART.get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case CAUSING_DAMAGE ->
@@ -209,22 +240,21 @@ public class MinecartTransformManager {
             case TRAPPED_CHEST -> new TrappedChestMinecartEntity(world, pos.x, pos.y, pos.z);
             case FURNACE -> {
                 MinecartFurnace minecartFurnace = new MinecartFurnace(EntityType.FURNACE_MINECART, world);
-                minecartFurnace.setCustomDisplayBlockState(Optional.of(blockInside.defaultBlockState()));
+                minecartFurnace.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
                 minecartFurnace.setInitialPos(pos.x, pos.y, pos.z);
                 yield minecartFurnace;
             }
-            case DISPENSER -> new DispenserMinecartEntity(MRMinecarts.DISPENSER_MINECART.entity().get(), world, pos.x, pos.y, pos.z);
+            case DISPENSER ->
+                    new DispenserMinecartEntity(MRMinecarts.DISPENSER_MINECART.entity().get(), world, pos.x, pos.y, pos.z);
             case COBWEB ->
                     new CobwebMinecartEntity(MRMinecarts.COBWEB_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case WORKING_NON_INVENTORY ->
-                    new NonInventoryWorkingBlockMinecartEntity(MRMinecarts.NON_INVENTORY_WORKING_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
+                    new NonInventoryWorkingBlockMinecartEntity(MRMinecarts.NON_INVENTORY_WORKING_MINECART.get(), world, pos.x, pos.y, pos.z, item);
             case BEACON ->
-                    new BeaconMinecartEntity(MRMinecarts.BEACON_MINECART.entity().get(), world, pos.x, pos.y, pos.z, blockInside);
-            case FLUID -> blockInside == Blocks.WATER ?
-                    new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), world, pos.x, pos.y, pos.z, blockInside) :
-                    new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), world, pos.x, pos.y, pos.z, blockInside);
-            default ->
-                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, blockInside);
+                    new BeaconMinecartEntity(MRMinecarts.BEACON_MINECART.entity().get(), world, pos.x, pos.y, pos.z, item);
+            case FLUID -> block == Blocks.WATER ?
+                    new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), world, pos.x, pos.y, pos.z, item) :
+                    new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), world, pos.x, pos.y, pos.z, item);
         };
     }
 }

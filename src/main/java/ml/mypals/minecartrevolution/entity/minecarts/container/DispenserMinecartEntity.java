@@ -16,7 +16,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
-import net.minecraft.world.entity.vehicle.minecart.AbstractMinecartContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.DispenserMenu;
 import net.minecraft.world.item.Item;
@@ -31,8 +30,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 import java.awt.*;
+import java.util.Optional;
 
-public class DispenserMinecartEntity extends AbstractMinecartContainer implements ContainerEntity, IMinecartContainer {
+public class DispenserMinecartEntity extends BaseMinecartContainer implements ContainerEntity, IMinecartContainer {
 
     private boolean activated = false; // 用于检测红石边沿信号（从无电到有电）
     private int dispenseCooldown = 0;
@@ -48,8 +48,11 @@ public class DispenserMinecartEntity extends AbstractMinecartContainer implement
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide() && this.dispenseCooldown > 0) {
-            this.dispenseCooldown--;
+        if (!this.level().isClientSide()) {
+            updateDispenserFacing();
+            if (this.dispenseCooldown > 0) {
+                this.dispenseCooldown--;
+            }
         }
         if(activated && level() instanceof ServerLevel serverLevel &&
                 !(this.level().getBlockState(BlockPos.containing(this.position())).getBlock()
@@ -57,6 +60,18 @@ public class DispenserMinecartEntity extends AbstractMinecartContainer implement
                         && poweredRailBlock.isActivatorRail())
         ){
             activateMinecart(serverLevel,this.blockPosition().getX(),this.blockPosition().getY(),this.blockPosition().getZ(),false);
+        }
+    }
+
+    private void updateDispenserFacing() {
+        float minecartYaw = this.getYRot();
+        float baseOffset = 90.0F;
+        float targetYaw = (minecartYaw + baseOffset) % 360.0F;
+        if (targetYaw < 0) targetYaw += 360.0F;
+        Direction finalFacing = Direction.fromYRot(targetYaw);
+        BlockState state = this.getDisplayBlockState();
+        if (state.getValue(DispenserBlock.FACING) != finalFacing) {
+            this.setCustomDisplayBlockState(Optional.of(state.setValue(DispenserBlock.FACING, finalFacing)));
         }
     }
 
@@ -170,7 +185,10 @@ public class DispenserMinecartEntity extends AbstractMinecartContainer implement
 
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
-        return this.interactWithContainerVehicle(player);
+        if (!player.isSecondaryUseActive()) {
+            return this.interactWithContainerVehicle(player);
+        }
+        return super.interact(player, hand, location);
     }
 
     @Override

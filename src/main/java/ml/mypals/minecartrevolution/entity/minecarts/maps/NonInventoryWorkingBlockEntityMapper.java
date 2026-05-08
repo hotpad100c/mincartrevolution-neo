@@ -4,6 +4,7 @@ import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecart
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -25,7 +26,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.CRAFTING_TABLE
+                        Items.CRAFTING_TABLE
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -36,7 +37,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.STONECUTTER
+                        Items.STONECUTTER
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -47,7 +48,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.LOOM
+                        Items.LOOM
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -58,7 +59,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.CARTOGRAPHY_TABLE
+                        Items.CARTOGRAPHY_TABLE
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -69,7 +70,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.GRINDSTONE
+                        Items.GRINDSTONE
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -80,7 +81,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.SMITHING_TABLE
+                        Items.SMITHING_TABLE
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -91,7 +92,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.ANVIL
+                        Items.ANVIL
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -102,7 +103,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.CHIPPED_ANVIL
+                        Items.CHIPPED_ANVIL
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -113,7 +114,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.DAMAGED_ANVIL
+                        Items.DAMAGED_ANVIL
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -124,7 +125,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.ENCHANTING_TABLE
+                        Items.ENCHANTING_TABLE
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -135,7 +136,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.ENDER_CHEST
+                        Items.ENDER_CHEST
                 )
         );
         NON_INVENTORY_WORKING.put(
@@ -146,7 +147,7 @@ public class NonInventoryWorkingBlockEntityMapper {
                         pos.x(),
                         pos.y(),
                         pos.z(),
-                        Blocks.BEACON
+                        Items.BEACON
                 )
         );
     }

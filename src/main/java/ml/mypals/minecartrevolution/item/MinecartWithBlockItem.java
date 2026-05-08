@@ -2,7 +2,9 @@ package ml.mypals.minecartrevolution.item;
 
 import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
+import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartWithBlockItem;
+import ml.mypals.minecartrevolution.registeries.MRModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -21,15 +23,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseRailBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+
+import java.util.Optional;
 
 public class MinecartWithBlockItem extends Item implements IMinecartWithBlockItem {
     final Item corrospondingItem;
@@ -90,7 +91,7 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
 
     public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem corrospondingItem, ItemStack stack) {
         return MinecartTransformManager.getTransform(
-                serverWorld, corrospondingItem, corrospondingItem.blockInside, new Vec3(x, y, z),
+                serverWorld, corrospondingItem, Item.byBlock(corrospondingItem.blockInside), new Vec3(x, y, z),
                 type
         );
     }
@@ -156,6 +157,13 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
                 AbstractMinecart abstractMinecartEntity = getCart(
                         serverWorld, blockPos.getX() + 0.5, blockPos.getY() + 0.0625 + d, blockPos.getZ() + 0.5, this.type, this, itemStack
                 );
+                if (abstractMinecartEntity instanceof FluidMinecartEntity entity) {
+                    if (this.blockInside.equals(Blocks.WATER)) {
+                        entity.setCustomDisplayBlockState(Optional.of(Blocks.WATER.defaultBlockState()));
+                    } else if (this.blockInside.equals(Blocks.LAVA)) {
+                        entity.setCustomDisplayBlockState(Optional.of(Blocks.LAVA.defaultBlockState()));
+                    }
+                }
                 abstractMinecartEntity.setYRot(railShape == RailShape.EAST_WEST ? 0 : 90.0F);
                 serverWorld.addFreshEntity(abstractMinecartEntity);
                 serverWorld.gameEvent(GameEvent.ENTITY_PLACE, blockPos, GameEvent.Context.of(context.getPlayer(), serverWorld.getBlockState(blockPos.below())));

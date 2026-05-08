@@ -30,7 +30,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
-public class BarrelMinecartEntity extends AbstractMinecartContainer implements ContainerEntity, IMinecartContainer {
+public class BarrelMinecartEntity extends BaseMinecartContainer implements ContainerEntity, IMinecartContainer {
     private int openCount = 0;
 
     public BarrelMinecartEntity(EntityType<? extends AbstractMinecartContainer> entityType, Level world) {
@@ -74,23 +74,25 @@ public class BarrelMinecartEntity extends AbstractMinecartContainer implements C
 
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
-        InteractionResult actionResult = this.interactWithContainerVehicle(player);
-        if (actionResult.consumesAction()) {
-            this.openCount++;
-            if (this.openCount >= 1) {
-                this.level().playSound(this, this.blockPosition(),
-                        SoundEvents.BARREL_OPEN, SoundSource.BLOCKS);
+        if (!player.isSecondaryUseActive()) {
+            InteractionResult actionResult = this.interactWithContainerVehicle(player);
+            if (actionResult.consumesAction()) {
+                this.openCount++;
+                if (this.openCount >= 1) {
+                    this.level().playSound(this, this.blockPosition(),
+                            SoundEvents.BARREL_OPEN, SoundSource.BLOCKS);
+                }
+                this.level().broadcastEntityEvent(this, (byte) 10);
+                this.gameEvent(GameEvent.CONTAINER_OPEN, player);
+                this.setCustomDisplayBlockState(Optional.of(Blocks.BARREL.defaultBlockState().setValue(BarrelBlock.FACING, Direction.UP).setValue(BarrelBlock.OPEN, true)));
+                player.awardStat(Stats.OPEN_BARREL);
+                this.playSound(SoundEvents.BARREL_OPEN);
+                if (player.level() instanceof ServerLevel serverLevel)
+                    PiglinAi.angerNearbyPiglins(serverLevel, player, true);
             }
-            this.level().broadcastEntityEvent(this, (byte) 10);
-            this.gameEvent(GameEvent.CONTAINER_OPEN, player);
-            this.setCustomDisplayBlockState(Optional.of(Blocks.BARREL.defaultBlockState().setValue(BarrelBlock.FACING, Direction.UP).setValue(BarrelBlock.OPEN, true)));
-            player.awardStat(Stats.OPEN_BARREL);
-            this.playSound(SoundEvents.BARREL_OPEN);
-            if (player.level() instanceof ServerLevel serverLevel)
-                PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+            return actionResult;
         }
-
-        return actionResult;
+        return super.interact(player, hand, location);
     }
 
     @Override

@@ -49,8 +49,8 @@ public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlo
         super(entityType, world);
     }
 
-    public NonInventoryWorkingBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Block blockInside) {
-        super(minecart, world, x, y, z, blockInside);
+    public NonInventoryWorkingBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
+        super(minecart, world, x, y, z, item);
     }
 
     private Item getItem() {

@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
@@ -29,7 +30,7 @@ public class ShulkerMinecartItem extends MultiVariantMinecartWithBlockItem {
             block = Block.stateById(nbtCompound.copyTag().getInt("block_in_minecart").orElse(1)).getBlock();
         }
         AbstractMinecart abstractMinecartEntity = MinecartTransformManager.getTransform(
-                serverWorld, corrospondingItem, block, new Vec3(x, y, z),
+                serverWorld, corrospondingItem, Item.byBlock(block), new Vec3(x, y, z),
                 type
         );
         if (abstractMinecartEntity instanceof ShulkerMinecartEntity shulkerMinecartEntity) {
