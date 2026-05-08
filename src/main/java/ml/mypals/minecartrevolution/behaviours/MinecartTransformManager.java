@@ -54,13 +54,6 @@ public class MinecartTransformManager {
 
     public static AbstractMinecart checkForTransform(Level world, Vec3 pos, Item item, AbstractMinecart original, ItemStack handStack) {
         AbstractMinecart minecart = getTransform(world, pos, item, handStack);
-        if (original instanceof FluidMinecartEntity entity) {
-            if (item.equals(Items.WATER_BUCKET)) {
-                entity.setCustomDisplayBlockState(Optional.of(Blocks.WATER.defaultBlockState()));
-            } else if (item.equals(Items.LAVA_BUCKET)) {
-                entity.setCustomDisplayBlockState(Optional.of(Blocks.LAVA.defaultBlockState()));
-            }
-        }
         if (minecart != null) {
 
             ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(PATH_ELEMENT, LOGGER);
@@ -88,6 +81,13 @@ public class MinecartTransformManager {
             minecart.setDeltaMovement(original.getDeltaMovement());
             minecart.absSnapRotationTo(original.getYRot(), original.getXRot());
             original.remove(Entity.RemovalReason.DISCARDED);
+            if (minecart instanceof FluidMinecartEntity) {
+                if (item.equals(Items.WATER_BUCKET)) {
+                    minecart.setCustomDisplayBlockState(Optional.of(Blocks.WATER.defaultBlockState()));
+                } else if (item.equals(Items.LAVA_BUCKET)) {
+                    minecart.setCustomDisplayBlockState(Optional.of(Blocks.LAVA.defaultBlockState()));
+                }
+            }
 
             world.addFreshEntity(minecart);
 

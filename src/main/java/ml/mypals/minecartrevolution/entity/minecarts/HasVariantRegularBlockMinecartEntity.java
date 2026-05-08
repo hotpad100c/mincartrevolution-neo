@@ -142,21 +142,13 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
                         transformTo(blockItem);
                         stackInHand.consume(1, player);
                     }
-                }else if (stackInHand.is(Items.WATER_BUCKET)) {
+                }else if (stackInHand.is(Items.WATER_BUCKET) || stackInHand.is(Items.LAVA_BUCKET)) {
                     if (!level().isClientSide()) {
                         stackInHand.consume(1, player);
                         player.getInventory().add(new ItemStack(Items.BUCKET));
                         transformTo(stackInHand.getItem());
                     }
                     playBucketSound(Blocks.WATER);
-                    return InteractionResult.SUCCESS;
-                } else if (stackInHand.is(Items.LAVA_BUCKET)) {
-                    if (!level().isClientSide()) {
-                        stackInHand.consume(1, player);
-                        player.getInventory().add(new ItemStack(Items.BUCKET));
-                        transformTo(stackInHand.getItem());
-                    }
-                    playBucketSound(Blocks.LAVA);
                     return InteractionResult.SUCCESS;
                 }
                 return InteractionResult.SUCCESS;

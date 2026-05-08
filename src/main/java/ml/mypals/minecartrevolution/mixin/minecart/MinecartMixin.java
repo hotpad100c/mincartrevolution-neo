@@ -105,7 +105,7 @@ public abstract class MinecartMixin extends AbstractMinecart {
 
                     cir.setReturnValue(InteractionResult.SUCCESS);
                     return;
-                } else if (stackInHand.is(Items.WATER_BUCKET)) {
+                } else if (stackInHand.is(Items.WATER_BUCKET) || stackInHand.is(Items.LAVA_BUCKET)) {
                     if (!this.level().isClientSide()) {
                         MinecartTransformManager.checkForTransform(level(), this.position(), stackInHand.getItem(), this, stackInHand);
                         stackInHand.split(1);
@@ -113,30 +113,6 @@ public abstract class MinecartMixin extends AbstractMinecart {
                     }
                     playBucketSound(Blocks.WATER);
 
-                } else if (stackInHand.is(Items.LAVA_BUCKET)) {
-
-                    if (!this.level().isClientSide()) {
-                        MinecartTransformManager.checkForTransform(level(), this.position(), stackInHand.getItem(), this, stackInHand);
-                        stackInHand.split(1);
-                        player.getInventory().add(new ItemStack(Items.BUCKET));
-                    }
-                    playBucketSound(Blocks.LAVA);
-                }
-                if (!this.level().isClientSide()) {
-                    MinecartTransformManager.checkForTransform(level(), this.position(), null, this, stackInHand);
-                    if ((AbstractMinecart) this instanceof FluidMinecartEntity && stackInHand.is(Items.BUCKET)) {
-                        if (this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).get().is(Blocks.WATER)) {
-                            cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(new ItemStack(Items.WATER_BUCKET)));
-                            this.level().gameEvent(player, GameEvent.FLUID_PICKUP, this.position());
-                            level().playSound(null, blockPosition(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        } else if (this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).get().is(Blocks.LAVA)) {
-                            cir.setReturnValue(InteractionResult.SUCCESS.heldItemTransformedTo(new ItemStack(Items.WATER_BUCKET)));
-                            this.level().gameEvent(player, GameEvent.FLUID_PICKUP, this.position());
-                            level().playSound(null, blockPosition(), SoundEvents.BUCKET_FILL_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        }
-                    } else {
-                        stackInHand.consume(1, player);
-                    }
                 }
                 cir.setReturnValue(InteractionResult.SUCCESS);
                 return;
