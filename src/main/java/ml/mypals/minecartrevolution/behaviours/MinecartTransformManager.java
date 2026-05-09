@@ -41,6 +41,7 @@ import java.util.function.BiFunction;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.LOGGER;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.ChestEntityMapper.CHEST_MINECARTS;
+import static ml.mypals.minecartrevolution.entity.minecarts.maps.MobHeadEntityMapper.HEAD_MINECARTS;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.NonInventoryWorkingBlockEntityMapper.NON_INVENTORY_WORKING;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.PressurePlateEntityMapper.PRESSURE_PLATE_ENTITY_MAP;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.ShulkerBoxEntityMapper.SHULKER_ENTITY_MAP;
@@ -155,9 +156,12 @@ public class MinecartTransformManager {
             return minecart;
         });
         register(Blocks.BARREL, (w, pos) -> new BarrelMinecartEntity(MRMinecarts.BARREL_MINECART.entity().get(), w, pos.x, pos.y, pos.z));
+        register(Blocks.LODESTONE, (w, pos) -> new MagnetMinecartEntity(MRMinecarts.LOOM_MINECART.entity().get(), w, pos.x, pos.y, pos.z,MRMinecarts.MAGNET_MINECART.item().get()));
         register(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.GOLDEN_PRESHER_PLATE_MINECART.item().get()));
         register(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, (w, pos) -> new WeightPresherPlateMinecartEntity(MRMinecarts.WEIGHT_PRESHER_PLATE_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.IRON_PRESHER_PLATE_MINECART.item().get()));
         register(Blocks.JUKEBOX, (w, pos) -> new JukeboxMinecartEntity(MRMinecarts.JUKEBOX_MINECART.entity().get(), w, pos.x, pos.y, pos.z, MRMinecarts.JUKEBOX_MINECART.item().get()));
+
+
         register(Blocks.DISPENSER, (w, pos) -> {
             AbstractMinecart abstractMinecart = new DispenserMinecartEntity(EntityType.CHEST_MINECART, w);
             abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
@@ -167,7 +171,7 @@ public class MinecartTransformManager {
         SHULKER_ENTITY_MAP.forEach((block, func) -> factoryMap.put(block.asItem(), func));
         NON_INVENTORY_WORKING.forEach((block, func) -> factoryMap.put(block.asItem(), func));
         CHEST_MINECARTS.forEach((block, func) -> factoryMap.put(block.asItem(), func));
-
+        HEAD_MINECARTS.forEach((block, func) -> factoryMap.put(block.asItem(), func));
         register(Items.AIR, (w, pos) -> {
             Minecart m = new Minecart(EntityType.MINECART, w);
             m.setInitialPos(pos.x, pos.y, pos.z);
