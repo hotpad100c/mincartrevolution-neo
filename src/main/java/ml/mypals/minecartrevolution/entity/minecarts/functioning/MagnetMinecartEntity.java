@@ -2,13 +2,19 @@ package ml.mypals.minecartrevolution.entity.minecarts.functioning;
 
 import ml.mypals.minecartrevolution.entity.minecarts.SingleBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PoweredRailBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -27,12 +33,18 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide() && this.activated) {
+        BlockState block = level().getBlockState(blockPosition());
+        if(!block.is(Blocks.ACTIVATOR_RAIL) || (block.is(Blocks.ACTIVATOR_RAIL) && !block.getValue(PoweredRailBlock.POWERED))){
             attractItems();
             repelOtherMagnets();
         }
     }
 
+    @Override
+    public void activateMinecart(@NonNull ServerLevel level, int x, int y, int z, boolean powered) {
+
+        handleActive( level, x, y, z, powered);
+    }
     private void attractItems() {
         double radius = 8.0;
         List<ItemEntity> items = this.level().getEntitiesOfClass(
@@ -45,7 +57,8 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
                 net.minecraft.world.phys.Vec3 vec3 = this.position().subtract(itemEntity.position());
                 double distanceSq = vec3.lengthSqr();
                 if (distanceSq > 0.01) {
-                    double force = 0.05;
+                    double distance = Math.sqrt(distanceSq);
+                    double force = 0.1 * (1.0 - distance / radius);
                     itemEntity.setDeltaMovement(itemEntity.getDeltaMovement().add(vec3.normalize().scale(force)));
                 }
             }
@@ -61,7 +74,8 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
                 Vec3 vec3 = this.position().subtract(livingEntity.position());
                 double distanceSq = vec3.lengthSqr();
                 if (distanceSq > 0.01) {
-                    double force = 0.02;
+                    double distance = Math.sqrt(distanceSq);
+                    double force = 0.1 * (1.0 - distance / radius);
                     livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().add(vec3.normalize().scale(force)));
                     livingEntity.hurtMarked = true;
                 }
@@ -78,14 +92,22 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
                 Vec3 vec3 = this.position().subtract(minecart.position());
                 double distanceSq = vec3.lengthSqr();
                 if (distanceSq > 0.01) {
-                    double force = 0.02;
+                    double distance = Math.sqrt(distanceSq);
+                    double force = 0.05 /* (1.0 - distance / radius)*/;
                     minecart.setDeltaMovement(minecart.getDeltaMovement().add(vec3.normalize().scale(force)));
                     minecart.hurtMarked = true;
                 }
             }
         }
     }
-
+    @Override
+    public boolean canCollideWith(@NonNull Entity other) {
+        return true;
+    }
+    @Override
+    public boolean canBeCollidedWith(Entity entity) {
+        return true;
+    }
     private boolean hasIron(LivingEntity entity) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (isIronItem(entity.getItemBySlot(slot))) {
@@ -107,7 +129,8 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
                 net.minecraft.world.phys.Vec3 vec3 = other.position().subtract(this.position());
                 double distanceSq = vec3.lengthSqr();
                 if (distanceSq > 0.01) {
-                    double force = 0.02;
+                    double distance = Math.sqrt(distanceSq);
+                    double force = 0.6 * (1.0 - distance / radius);
                     net.minecraft.world.phys.Vec3 repulsion = vec3.normalize().scale(force);
                     other.setDeltaMovement(other.getDeltaMovement().add(repulsion));
                     this.setDeltaMovement(this.getDeltaMovement().subtract(repulsion));
@@ -118,28 +141,8 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
 
     private boolean isIronItem(net.minecraft.world.item.ItemStack stack) {
         net.minecraft.world.item.Item item = stack.getItem();
-        return item == net.minecraft.world.item.Items.IRON_INGOT ||
-               item == net.minecraft.world.item.Items.IRON_NUGGET ||
-               item == net.minecraft.world.item.Items.IRON_BLOCK ||
-               item == net.minecraft.world.item.Items.RAW_IRON ||
-               item == net.minecraft.world.item.Items.IRON_ORE ||
-               item == net.minecraft.world.item.Items.DEEPSLATE_IRON_ORE ||
-               item == net.minecraft.world.item.Items.IRON_SWORD ||
-               item == net.minecraft.world.item.Items.IRON_PICKAXE ||
-               item == net.minecraft.world.item.Items.IRON_AXE ||
-               item == net.minecraft.world.item.Items.IRON_SHOVEL ||
-               item == net.minecraft.world.item.Items.IRON_HOE ||
-               item == net.minecraft.world.item.Items.IRON_HELMET ||
-               item == net.minecraft.world.item.Items.IRON_CHESTPLATE ||
-               item == net.minecraft.world.item.Items.IRON_LEGGINGS ||
-               item == net.minecraft.world.item.Items.IRON_BOOTS ||
-               item == net.minecraft.world.item.Items.IRON_HORSE_ARMOR ||
+        return item.getDescriptionId().contains("iron")||
                item == net.minecraft.world.item.Items.ANVIL ||
-               item == net.minecraft.world.item.Items.CHIPPED_ANVIL ||
-               item == net.minecraft.world.item.Items.DAMAGED_ANVIL ||
-               item == net.minecraft.world.item.Items.HOPPER ||
-               item == net.minecraft.world.item.Items.IRON_DOOR ||
-               item == net.minecraft.world.item.Items.IRON_TRAPDOOR ||
-               item == net.minecraft.world.item.Items.IRON_BARS;
+               item == net.minecraft.world.item.Items.HOPPER;
     }
 }
