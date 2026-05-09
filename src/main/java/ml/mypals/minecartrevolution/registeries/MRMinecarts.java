@@ -4,6 +4,7 @@ import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.*;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulationBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.*;
@@ -12,12 +13,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.MinecartFurnace;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -34,7 +35,7 @@ public class MRMinecarts {
     public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(MODID);
     public static final List<MinecartEntry<?, ?>> MINECARTS = new ArrayList<>();
 
-    public record MinecartEntry<E extends AbstractMinecart, I extends Item>(
+    public record MinecartEntry<E extends Entity, I extends Item>(
             String itemName,
             DeferredHolder<EntityType<?>, EntityType<E>> entity,
             DeferredItem<I> item,
@@ -42,7 +43,7 @@ public class MRMinecarts {
     ) {
     }
 
-    public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> register(
+    public static <E extends Entity, I extends Item> MinecartEntry<E, I> register(
             String baseName,
             EntityType.EntityFactory<E> entityFactory,
             Function<Item.Properties, I> itemFactory
@@ -50,7 +51,7 @@ public class MRMinecarts {
         return register(baseName, entityFactory, itemFactory, MinecartWithBlockItem.DISPENSER_BEHAVIOR);
     }
 
-    public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> register(
+    public static <E extends Entity, I extends Item> MinecartEntry<E, I> register(
             String baseName,
             EntityType.EntityFactory<E> entityFactory,
             Function<Item.Properties, I> itemFactory,
@@ -71,7 +72,7 @@ public class MRMinecarts {
         return entry;
     }
 
-    public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> registerItemOnly(
+    public static <E extends Entity, I extends Item> MinecartEntry<E, I> registerItemOnly(
             String itemName,
             DeferredHolder<EntityType<?>, EntityType<E>> existingEntity,
             Function<Item.Properties, I> itemFactory
@@ -79,7 +80,7 @@ public class MRMinecarts {
         return registerItemOnly(itemName, existingEntity, itemFactory, MinecartWithBlockItem.DISPENSER_BEHAVIOR);
     }
 
-    public static <E extends AbstractMinecart, I extends Item> MinecartEntry<E, I> registerItemOnly(
+    public static <E extends Entity, I extends Item> MinecartEntry<E, I> registerItemOnly(
             String itemName,
             DeferredHolder<EntityType<?>, EntityType<E>> existingEntity,
             Function<Item.Properties, I> itemFactory,
@@ -91,7 +92,7 @@ public class MRMinecarts {
         return entry;
     }
 
-    public static <E extends AbstractMinecart> DeferredHolder<EntityType<?>, EntityType<E>> registerEntityOnly(
+    public static <E extends Entity> DeferredHolder<EntityType<?>, EntityType<E>> registerEntityOnly(
             String entityName,
             EntityType.EntityFactory<E> entityFactory
     ) {
@@ -112,8 +113,9 @@ public class MRMinecarts {
     public static final DeferredHolder<EntityType<?>, EntityType<HorizontalDirectionalRedstoneEmitterPowerMinecartEntity>> DIRECTIONAL_POWER_PROVIDER_MINECART = registerEntityOnly(
             "power_minecart_directional", HorizontalDirectionalRedstoneEmitterPowerMinecartEntity::new);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<HasVariantRegularBlockMinecartEntity>> BLOCK_MINECART = registerEntityOnly(
-            "block_minecart", HasVariantRegularBlockMinecartEntity::new);
+    /*
+    public static final DeferredHolder<EntityType<?>, EntityType<SimulationBlockMinecartEntity>> BLOCK_MINECART = registerEntityOnly(
+            "block_minecart", SimulationBlockMinecartEntity::new);*/
 
     public static final DeferredHolder<EntityType<?>, EntityType<PresherPlateMinecartEntity>> PRESHER_PLATE_MINECART = registerEntityOnly(
             "presher_plate_minecart", PresherPlateMinecartEntity::new);
@@ -154,8 +156,8 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.EMITTING_POWER_DIRECTIONAL, p.stacksTo(1), Blocks.REPEATER),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
-    public static final MinecartEntry<HasVariantRegularBlockMinecartEntity, MultiVariantMinecartWithBlockItem> BLOCK_MINECART_ITEM = registerItemOnly(
-            "minecart_with_block", BLOCK_MINECART,
+    public static final MinecartEntry<SimulationBlockMinecartEntity, MultiVariantMinecartWithBlockItem> BLOCK_MINECART = register(
+            "minecart_with_block", SimulationBlockMinecartEntity::new,
             p -> new MultiVariantMinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.REGULAR, p.stacksTo(1), Blocks.GRASS_BLOCK),
             MultiVariantMinecartWithBlockItem.DISPENSER_BEHAVIOR);
 

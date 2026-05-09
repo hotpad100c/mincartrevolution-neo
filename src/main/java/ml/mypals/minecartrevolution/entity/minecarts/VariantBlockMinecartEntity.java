@@ -3,7 +3,6 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
-import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -11,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -39,16 +37,14 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
-import static ml.mypals.minecartrevolution.client.light.DynamicLightsSpread.clearFromCenter;
-
-public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
+public class VariantBlockMinecartEntity extends AbstractMinecart {
     public boolean activated = false;
     public boolean keepUpdatingLight = false;
-    public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
+    public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
     }
 
-    public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
+    public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z);
         Block block = Block.byItem(item);
         this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
@@ -128,7 +124,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
                     player.swing(hand);
                     if (!this.level().isClientSide()) {
                         clear();
-                        ItemStack stack = block.asItem().getDefaultInstance();
+                        ItemStack stack = getBlockStack(block);
                         player.setItemInHand(hand, addDataToStack(stack));
                     }
                 }
@@ -161,6 +157,9 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
         }
     }
 
+    public ItemStack getBlockStack(Block block){
+        return block.asItem().getDefaultInstance();
+    }
     public void transformTo(Item item) {
         MinecartTransformManager.checkForTransform(level(), position(), item, this, ItemStack.EMPTY);
     }
@@ -201,7 +200,7 @@ public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public @NonNull Item getDropItem() {
-        return MRMinecarts.BLOCK_MINECART_ITEM.item().get();
+        return MRMinecarts.BLOCK_MINECART.item().get();
     }
 
     @Override

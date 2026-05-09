@@ -1,6 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.redstone;
 
-import ml.mypals.minecartrevolution.entity.minecarts.ItemBoundBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.SingleBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-public class WeightPresherPlateMinecartEntity extends ItemBoundBlockMinecartEntity implements PowerEmitterMinecartEntity {
+public class WeightPresherPlateMinecartEntity extends SingleBlockMinecartEntity implements PowerEmitterMinecartEntity {
     private static final int MAX_BOUNDING_BOX = 64; // Ghast
 
     public WeightPresherPlateMinecartEntity(EntityType<? extends WeightPresherPlateMinecartEntity> entityType, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {

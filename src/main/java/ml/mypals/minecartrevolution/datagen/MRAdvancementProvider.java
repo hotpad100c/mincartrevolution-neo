@@ -43,7 +43,7 @@ public class MRAdvancementProvider {
                 .addCriterion("craft_block_minecart",
                         MRModCriteria.BLOCK_CART_CRAFTED.get().createCriterion(
                                 new BlockCartCraftedCriterion.Conditions(Optional.empty(),
-                                        MRMinecarts.BLOCK_MINECART.get().getDescriptionId(),
+                                        MRMinecarts.BLOCK_MINECART.entity().get().getDescriptionId(),
                                         true
                                 ))
                 )

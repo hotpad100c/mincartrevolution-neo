@@ -1,6 +1,5 @@
 package ml.mypals.minecartrevolution.mixin.minecart;
 
-import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
@@ -25,8 +24,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -52,7 +49,7 @@ public abstract class MinecartMixin extends AbstractMinecart {
 
     @Unique
     public Item minecartrevolution_neo$asBlockMinecartItem() {
-        return (MinecartWithBlockItem) MRMinecarts.BLOCK_MINECART_ITEM.item().get().getDefaultInstance().getItem();
+        return (MinecartWithBlockItem) MRMinecarts.BLOCK_MINECART.item().get().getDefaultInstance().getItem();
     }
 
     @Unique
@@ -66,7 +63,7 @@ public abstract class MinecartMixin extends AbstractMinecart {
             method = "getPickResult", cancellable = true)
     public void getPickResult(CallbackInfoReturnable<ItemStack> cir) {
         if (!minecartrevolution_neo$hasBlock()) return;
-        ItemStack stack = MRMinecarts.BLOCK_MINECART_ITEM.item().get().getDefaultInstance();
+        ItemStack stack = MRMinecarts.BLOCK_MINECART.item().get().getDefaultInstance();
         CompoundTag nbt = new CompoundTag();
         int stateId = Block.getId(this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElseGet(Blocks.AIR::defaultBlockState));
         nbt.putInt("block_in_minecart", stateId);

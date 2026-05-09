@@ -1,10 +1,9 @@
 package ml.mypals.minecartrevolution.registeries;
 
-import ml.mypals.minecartrevolution.client.renderer.BeaconMinecartRenderer;
-import ml.mypals.minecartrevolution.client.renderer.FluidMinecartRenderer;
-import ml.mypals.minecartrevolution.client.renderer.ShulkerMinecartRenderer;
-import ml.mypals.minecartrevolution.client.renderer.WorkingMinecartRenderer;
+import ml.mypals.minecartrevolution.client.renderer.*;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulationBlockMinecartEntity;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
@@ -49,6 +48,10 @@ public class MRModEntityRenderers {
         registerRenderers.registerEntityRenderer(
                 MRMinecarts.LAVA_MINECART.entity().get(),
                 FluidMinecartRenderer::new
+        );
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.BLOCK_MINECART.entity().get(),
+                SimulateBlockMinecartRenderer::new
         );
     }
 }

@@ -10,6 +10,7 @@ import ml.mypals.minecartrevolution.entity.minecarts.redstone.HorizontalDirectio
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.WeightPresherPlateMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulationBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -198,7 +200,7 @@ public class MinecartTransformManager {
 
     public static AbstractMinecart getTransform(Level world, Vec3 pos, Item item, ItemStack handStack) {
         return doExtraCheck(factoryMap
-                .getOrDefault(item, (w, p) -> new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, pos.x, pos.y, pos.z, item))
+                .getOrDefault(item, (w, p) -> new SimulationBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.entity().get(), w, pos.x, pos.y, pos.z, item))
                 .apply(world, pos), handStack);
     }
 
@@ -216,7 +218,7 @@ public class MinecartTransformManager {
         return switch (type) {
             case SHULKER -> block instanceof ShulkerBoxBlock shulkerBoxBlock ?
                     new ShulkerMinecartEntity(MRMinecarts.SHULKER_MINECART.entity().get(), world, pos.x, pos.y, pos.z, shulkerBoxBlock) :
-                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, item);
+                    new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.entity().get(), world, pos.x, pos.y, pos.z, item);
             case DRAGON_EGG ->
                     new DragonEggMinecart(MRMinecarts.DRAGON_EGG_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case PRESSER_PLATE ->
@@ -228,7 +230,7 @@ public class MinecartTransformManager {
             case EMITTING_POWER_DIRECTIONAL ->
                     new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRMinecarts.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case REGULAR ->
-                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, item);
+                    new SimulationBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.entity().get(), world, pos.x, pos.y, pos.z, item);
             case EMITTING_POWER ->
                     new RedstoneBlockMinecartEntity(MRMinecarts.POWER_PROVIDER_MINECART.get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case CAUSING_DAMAGE ->

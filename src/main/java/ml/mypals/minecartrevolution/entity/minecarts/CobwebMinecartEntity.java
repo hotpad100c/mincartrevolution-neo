@@ -3,11 +3,8 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -15,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
-public class CobwebMinecartEntity extends ItemBoundBlockMinecartEntity {
+public class CobwebMinecartEntity extends SingleBlockMinecartEntity {
     private static int MAX_PASSENGERS_COUNT = 25;
 
     public CobwebMinecartEntity(EntityType<CobwebMinecartEntity> entityType, Level world) {

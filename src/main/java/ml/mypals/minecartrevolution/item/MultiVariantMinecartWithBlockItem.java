@@ -13,8 +13,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+
+import java.util.Optional;
 
 public class MultiVariantMinecartWithBlockItem extends MinecartWithBlockItem {
     public MultiVariantMinecartWithBlockItem(AdvancedMinecartEntityTypes.Type type, Properties settings, Block blockInside) {
@@ -51,9 +54,14 @@ public class MultiVariantMinecartWithBlockItem extends MinecartWithBlockItem {
         if (nbtCompound != null && nbtCompound.contains("block_in_minecart")) {
             block = Block.stateById(nbtCompound.copyTag().getInt("block_in_minecart").orElse(1)).getBlock();
         }
-        return MinecartTransformManager.getTransform(
-                serverWorld, corrospondingItem, Item.byBlock(block), new Vec3(x, y, z),
+        AbstractMinecart minecart = MinecartTransformManager.getTransform(
+                serverWorld, corrospondingItem, Item.byBlock(corrospondingItem.blockInside), new Vec3(x, y, z),
                 type
         );
+        BlockState blockState = corrospondingItem.getBlockInside(stack);
+        if(blockState != null){
+            minecart.setCustomDisplayBlockState(Optional.of(blockState));
+        }
+        return minecart;
     }
 }

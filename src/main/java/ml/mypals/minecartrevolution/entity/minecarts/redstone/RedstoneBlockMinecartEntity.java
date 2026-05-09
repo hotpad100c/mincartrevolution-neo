@@ -1,6 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.redstone;
 
-import ml.mypals.minecartrevolution.entity.minecarts.ItemBoundBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.SingleBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,12 +13,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-public class RedstoneBlockMinecartEntity extends ItemBoundBlockMinecartEntity implements PowerEmitterMinecartEntity {
+public class RedstoneBlockMinecartEntity extends SingleBlockMinecartEntity implements PowerEmitterMinecartEntity {
     public RedstoneBlockMinecartEntity(EntityType<? extends @NotNull RedstoneBlockMinecartEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public RedstoneBlockMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> entityType, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
+    public RedstoneBlockMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> entityType, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(entityType, world, x, y, z, correspondingItem);
         this.setPreviousBlockPos(this.blockPosition());
     }
