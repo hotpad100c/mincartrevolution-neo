@@ -62,7 +62,7 @@ public class FluidMinecartEntity extends HasVariantRegularBlockMinecartEntity {
                     return InteractionResult.SUCCESS;
                 } else if (currentBlock.is(Blocks.LAVA)) {
                     if (!level().isClientSide()) {
-                        stack.consume(1, player);
+                        stack.split(1);
                         player.getInventory().add(new ItemStack(Items.LAVA_BUCKET));
                         transformTo(Items.AIR);
                     }

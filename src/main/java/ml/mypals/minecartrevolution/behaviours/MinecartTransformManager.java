@@ -81,14 +81,6 @@ public class MinecartTransformManager {
             minecart.setDeltaMovement(original.getDeltaMovement());
             minecart.absSnapRotationTo(original.getYRot(), original.getXRot());
             original.remove(Entity.RemovalReason.DISCARDED);
-            if (minecart instanceof FluidMinecartEntity) {
-                if (item.equals(Items.WATER_BUCKET)) {
-                    minecart.setCustomDisplayBlockState(Optional.of(Blocks.WATER.defaultBlockState()));
-                } else if (item.equals(Items.LAVA_BUCKET)) {
-                    minecart.setCustomDisplayBlockState(Optional.of(Blocks.LAVA.defaultBlockState()));
-                }
-            }
-
             world.addFreshEntity(minecart);
 
             minecart.setHurtDir(-minecart.getHurtDir());
@@ -159,8 +151,8 @@ public class MinecartTransformManager {
         register(Blocks.REPEATER, (w, pos) -> new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRMinecarts.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), w, pos.x, pos.y, pos.z, MRMinecarts.REPEATER_MINECART.item().get()));
         register(Blocks.SPONGE, (w, pos) -> new SpongeMinecartEntity(MRMinecarts.SPONGE_MINECART.entity().get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, MRMinecarts.SPONGE_MINECART.item().get()));
         register(Blocks.WET_SPONGE, (w, pos) -> new SpongeMinecartEntity(MRMinecarts.SPONGE_MINECART.entity().get(), w, pos.x, pos.y, pos.z, SpongeMinecartEntity.ABSORB_RADIUS, SpongeMinecartEntity.ABSORB_LIMIT, MRMinecarts.WET_SPONGE_MINECART.item().get()));
-        register(Items.WATER_BUCKET, (w, pos) -> new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Items.WATER_BUCKET));
-        register(Items.LAVA_BUCKET, (w, pos) -> new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Items.LAVA_BUCKET));
+        register(Items.WATER_BUCKET, Blocks.WATER, (w, pos) -> new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Items.WATER_BUCKET));
+        register(Items.LAVA_BUCKET, Blocks.LAVA, (w, pos) -> new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), w, pos.x, pos.y, pos.z, Items.LAVA_BUCKET));
         register(Blocks.AIR, (w, pos) -> {
             Minecart minecart = new Minecart(EntityType.MINECART, w);
             minecart.setInitialPos(pos.x, pos.y, pos.z);
@@ -190,6 +182,14 @@ public class MinecartTransformManager {
         if (item != Items.AIR) {
             factoryMap.put(item, factory);
         }
+    }
+
+    private static void register(Item item, Block displayBlock, BiFunction<Level, Vec3, AbstractMinecart> factory) {
+        factoryMap.put(item, (world, pos) -> {
+            AbstractMinecart minecart = factory.apply(world, pos);
+            minecart.setCustomDisplayBlockState(Optional.of(displayBlock.defaultBlockState()));
+            return minecart;
+        });
     }
 
     private static void register(Item item, BiFunction<Level, Vec3, AbstractMinecart> factory) {

@@ -112,7 +112,6 @@ public abstract class MinecartMixin extends AbstractMinecart {
                         player.getInventory().add(new ItemStack(Items.BUCKET));
                     }
                     playBucketSound(Blocks.WATER);
-
                 }
                 cir.setReturnValue(InteractionResult.SUCCESS);
                 return;
