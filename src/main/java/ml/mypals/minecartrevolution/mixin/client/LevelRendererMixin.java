@@ -2,7 +2,7 @@ package ml.mypals.minecartrevolution.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;

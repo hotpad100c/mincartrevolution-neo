@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import ml.mypals.minecartrevolution.client.renderer.state.BeaconMinecartRenderState;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
@@ -16,8 +16,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.jspecify.annotations.NonNull;
-
-import java.util.List;
 
 public class BeaconMinecartRenderer extends AbstractMinecartRenderer<BeaconMinecartEntity, BeaconMinecartRenderState> {
     public static final Identifier BEAM_LOCATION = Identifier.withDefaultNamespace("textures/entity/beacon/beacon_beam.png");

@@ -1,7 +1,7 @@
-package ml.mypals.minecartrevolution.entity.minecarts.workingcarts;
+package ml.mypals.minecartrevolution.entity.minecarts.functioning;
 
 import net.minecraft.world.item.ItemStack;
-import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -28,7 +28,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BeaconBeamOwner;
@@ -46,7 +45,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BeaconMinecartEntity extends HasVariantRegularBlockMinecartEntity implements MenuProvider, BeaconBeamOwner {
+public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements MenuProvider, BeaconBeamOwner {
     public static final List<List<Holder<MobEffect>>> BEACON_EFFECTS = List.of(
             List.of(MobEffects.SPEED, MobEffects.HASTE),
             List.of(MobEffects.RESISTANCE, MobEffects.JUMP_BOOST),

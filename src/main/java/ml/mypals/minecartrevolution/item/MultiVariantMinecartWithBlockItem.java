@@ -43,7 +43,7 @@ public class MultiVariantMinecartWithBlockItem extends MinecartWithBlockItem {
         return Component.nullToEmpty(String.format(prompt, blockName, cartName));
     }
 
-    @Override
+    /*@Override
     public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem corrospondingItem, ItemStack stack) {
 
         CustomData nbtCompound = stack.get(DataComponents.CUSTOM_DATA);
@@ -55,5 +55,5 @@ public class MultiVariantMinecartWithBlockItem extends MinecartWithBlockItem {
                 serverWorld, corrospondingItem, Item.byBlock(block), new Vec3(x, y, z),
                 type
         );
-    }
+    }*/
 }

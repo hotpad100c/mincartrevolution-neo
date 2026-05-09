@@ -20,7 +20,7 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-public class DragonEggMinecart extends ItemBoundBlockMinecartEntity {
+public class DragonEggMinecart extends SingleBlockMinecartEntity {
     public DragonEggMinecart(EntityType<DragonEggMinecart> entityType, Level world) {
         super(entityType, world);
     }

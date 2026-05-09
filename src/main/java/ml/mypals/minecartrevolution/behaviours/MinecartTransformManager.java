@@ -1,17 +1,16 @@
 package ml.mypals.minecartrevolution.behaviours;
 
 import ml.mypals.minecartrevolution.entity.minecarts.*;
-import ml.mypals.minecartrevolution.entity.minecarts.container.BarrelMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.container.DispenserMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.container.TrappedChestMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.MagnetMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.HorizontalDirectionalRedstoneEmitterPowerMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.WeightPresherPlateMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
@@ -34,12 +33,14 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.LOGGER;
+import static ml.mypals.minecartrevolution.entity.minecarts.maps.ChestEntityMapper.CHEST_MINECARTS;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.NonInventoryWorkingBlockEntityMapper.NON_INVENTORY_WORKING;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.PressurePlateEntityMapper.PRESSURE_PLATE_ENTITY_MAP;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.ShulkerBoxEntityMapper.SHULKER_ENTITY_MAP;
@@ -91,15 +92,10 @@ public class MinecartTransformManager {
         return minecart;
     }
 
-    public static final Map<Item, BiFunction<Level, Vec3, AbstractMinecart>> factoryMap = new java.util.HashMap<>();
+    public static final Map<Item, BiFunction<Level, Vec3, AbstractMinecart>> factoryMap = new HashMap<>();
 
     static {
         register(Blocks.TRAPPED_CHEST, (Level w, Vec3 pos) -> new TrappedChestMinecartEntity(w, pos.x, pos.y, pos.z));
-        register(Blocks.CHEST, (w, pos) -> {
-            AbstractMinecart abstractMinecart = new MinecartChest(EntityType.CHEST_MINECART, w);
-            abstractMinecart.setInitialPos(pos.x, pos.y, pos.z);
-            return abstractMinecart;
-        });
 
         register(Blocks.FURNACE, (w, pos) -> {
             AbstractMinecart abstractMinecart = new MinecartFurnace(EntityType.FURNACE_MINECART, w);
@@ -170,6 +166,8 @@ public class MinecartTransformManager {
         PRESSURE_PLATE_ENTITY_MAP.forEach((block, func) -> factoryMap.put(block.asItem(), func));
         SHULKER_ENTITY_MAP.forEach((block, func) -> factoryMap.put(block.asItem(), func));
         NON_INVENTORY_WORKING.forEach((block, func) -> factoryMap.put(block.asItem(), func));
+        CHEST_MINECARTS.forEach((block, func) -> factoryMap.put(block.asItem(), func));
+
         register(Items.AIR, (w, pos) -> {
             Minecart m = new Minecart(EntityType.MINECART, w);
             m.setInitialPos(pos.x, pos.y, pos.z);
@@ -198,7 +196,7 @@ public class MinecartTransformManager {
 
     public static AbstractMinecart getTransform(Level world, Vec3 pos, Item item, ItemStack handStack) {
         return doExtraCheck(factoryMap
-                .getOrDefault(item, (w, p) -> new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, pos.x, pos.y, pos.z, item))
+                .getOrDefault(item, (w, p) -> new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, pos.x, pos.y, pos.z, item))
                 .apply(world, pos), handStack);
     }
 
@@ -216,7 +214,7 @@ public class MinecartTransformManager {
         return switch (type) {
             case SHULKER -> block instanceof ShulkerBoxBlock shulkerBoxBlock ?
                     new ShulkerMinecartEntity(MRMinecarts.SHULKER_MINECART.entity().get(), world, pos.x, pos.y, pos.z, shulkerBoxBlock) :
-                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, item);
+                    new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, item);
             case DRAGON_EGG ->
                     new DragonEggMinecart(MRMinecarts.DRAGON_EGG_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case PRESSER_PLATE ->
@@ -228,7 +226,7 @@ public class MinecartTransformManager {
             case EMITTING_POWER_DIRECTIONAL ->
                     new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(MRMinecarts.DIRECTIONAL_POWER_PROVIDER_MINECART.get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case REGULAR ->
-                    new HasVariantRegularBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, item);
+                    new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), world, pos.x, pos.y, pos.z, item);
             case EMITTING_POWER ->
                     new RedstoneBlockMinecartEntity(MRMinecarts.POWER_PROVIDER_MINECART.get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case CAUSING_DAMAGE ->
@@ -238,6 +236,7 @@ public class MinecartTransformManager {
             case JUKEBOX ->
                     new JukeboxMinecartEntity(MRMinecarts.JUKEBOX_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
             case TRAPPED_CHEST -> new TrappedChestMinecartEntity(world, pos.x, pos.y, pos.z);
+            case COPPER_CHEST -> new CopperChestMinecartEntity(world, pos.x, pos.y, pos.z);
             case FURNACE -> {
                 MinecartFurnace minecartFurnace = new MinecartFurnace(EntityType.FURNACE_MINECART, world);
                 minecartFurnace.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
@@ -255,6 +254,8 @@ public class MinecartTransformManager {
             case FLUID -> block == Blocks.WATER ?
                     new FluidMinecartEntity(MRMinecarts.WATER_MINECART.entity().get(), world, pos.x, pos.y, pos.z, item) :
                     new FluidMinecartEntity(MRMinecarts.LAVA_MINECART.entity().get(), world, pos.x, pos.y, pos.z, item);
+            case MAGNET -> new MagnetMinecartEntity(MRMinecarts.MAGNET_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
+            case MOB_HEAD -> new MobHeadMinecartEntity(MRMinecarts.MOB_HEAD_MINECART.entity().get(), world, pos.x, pos.y, pos.z, corrospondingItem);
         };
     }
 }

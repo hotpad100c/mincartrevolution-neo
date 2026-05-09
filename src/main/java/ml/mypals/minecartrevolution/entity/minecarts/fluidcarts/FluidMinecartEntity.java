@@ -1,15 +1,9 @@
 package ml.mypals.minecartrevolution.entity.minecarts.fluidcarts;
 
-import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
-import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -17,13 +11,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
-import net.minecraft.world.entity.vehicle.minecart.Minecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -32,9 +23,7 @@ import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-
-public class FluidMinecartEntity extends HasVariantRegularBlockMinecartEntity {
+public class FluidMinecartEntity extends VariantBlockMinecartEntity {
     private static final Logger log = LoggerFactory.getLogger(FluidMinecartEntity.class);
 
     public FluidMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {

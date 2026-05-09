@@ -13,12 +13,15 @@ public class AdvancedMinecartEntityTypes {
         JUKEBOX,
         SHULKER,
         TRAPPED_CHEST,
+        COPPER_CHEST,
         DRAGON_EGG,
         FURNACE,
         WORKING_NON_INVENTORY,
         COBWEB,
         DISPENSER,
         BEACON,
-        FLUID
+        FLUID,
+        MAGNET,
+        MOB_HEAD
     }
 }

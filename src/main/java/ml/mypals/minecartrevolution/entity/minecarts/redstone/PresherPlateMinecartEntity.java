@@ -1,7 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.redstone;
 
-import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
-import ml.mypals.minecartrevolution.registeries.MRModItems;
+import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,13 +11,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-public class PresherPlateMinecartEntity extends HasVariantRegularBlockMinecartEntity implements PowerEmitterMinecartEntity {
+public class PresherPlateMinecartEntity extends VariantBlockMinecartEntity implements PowerEmitterMinecartEntity {
 
     public PresherPlateMinecartEntity(EntityType<? extends PresherPlateMinecartEntity> entityType, Level world, double x, double y, double z, Item item) {
         super(entityType, world, x, y, z, item);

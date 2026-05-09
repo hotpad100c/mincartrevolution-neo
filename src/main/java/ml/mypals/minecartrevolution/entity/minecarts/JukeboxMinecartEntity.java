@@ -2,7 +2,6 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
-import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.manager.MovingJukeboxManager;
@@ -47,7 +46,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
+public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
         implements PowerEmitterMinecartEntity, Clearable {
     private MovingJukeboxManager jukeboxManager = new MovingJukeboxManager(this::onManagerChange, this.blockPosition());
     protected static final EntityDataAccessor<ItemStack> DISC =
@@ -63,7 +62,7 @@ public class JukeboxMinecartEntity extends ItemBoundBlockMinecartEntity
         this.level().updateNeighborsAt(this.blockPosition(), Blocks.JUKEBOX);
     }
 
-    public JukeboxMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
+    public JukeboxMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
         disc = Items.AIR.getDefaultInstance();
     }

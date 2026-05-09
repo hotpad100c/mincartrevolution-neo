@@ -4,6 +4,7 @@ import ml.mypals.minecartrevolution.interfaces.IMinecartRenderStateExtension;
 import net.minecraft.client.renderer.entity.state.MinecartRenderState;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -12,7 +13,7 @@ public class MinecartRenderStateMixin implements IMinecartRenderStateExtension {
     @Unique
     private float minecartrevolution$openess = 0;
     @Unique
-    private Block minecartrevolution$displayBlock = Blocks.AIR;
+    private BlockState minecartrevolution$displayBlock = Blocks.AIR.defaultBlockState();
 
     @Override
     public float minecartrevolution$getOpenness() {
@@ -25,12 +26,12 @@ public class MinecartRenderStateMixin implements IMinecartRenderStateExtension {
     }
 
     @Override
-    public Block minecartrevolution$getDisplayBlock() {
+    public BlockState minecartrevolution$getDisplayBlock() {
         return minecartrevolution$displayBlock;
     }
 
     @Override
-    public void minecartrevolution$setDisplayBlock(Block block) {
+    public void minecartrevolution$setDisplayBlock(BlockState block) {
         minecartrevolution$displayBlock = block;
     }
 }

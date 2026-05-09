@@ -1,6 +1,5 @@
 package ml.mypals.minecartrevolution.client.menu;
 
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;

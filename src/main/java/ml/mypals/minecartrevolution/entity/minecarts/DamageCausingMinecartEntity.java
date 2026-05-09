@@ -13,13 +13,13 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NonNull;
 
-public class DamageCausingMinecartEntity extends ItemBoundBlockMinecartEntity {
+public class DamageCausingMinecartEntity extends SingleBlockMinecartEntity {
 
     private float damageAmount;
     private DamageSource damageSource;
     private ResourceKey<DamageType> damageType;
 
-    public DamageCausingMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> entityType, Level world) {
+    public DamageCausingMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> entityType, Level world) {
         super(entityType, world);
         this.damageAmount = 0;
         this.damageSource = this.damageSources().source(DamageTypes.GENERIC);
@@ -30,7 +30,7 @@ public class DamageCausingMinecartEntity extends ItemBoundBlockMinecartEntity {
         this.damageAmount = damageAmount;
     }
 
-    public DamageCausingMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> minecart, Level world, double x, double y, double z, float damageAmount, MinecartWithBlockItem correspondingItem, ResourceKey<DamageType> damageType) {
+    public DamageCausingMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> minecart, Level world, double x, double y, double z, float damageAmount, MinecartWithBlockItem correspondingItem, ResourceKey<DamageType> damageType) {
         super(minecart, world, x, y, z, correspondingItem);
         this.damageAmount = damageAmount;
         this.damageSource = this.damageSources().source(damageType);

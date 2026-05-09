@@ -1,13 +1,10 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import com.mojang.logging.LogUtils;
-import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -36,25 +33,25 @@ import org.slf4j.Logger;
 
 import java.util.Optional;
 
-public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecartEntity {
+public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
     protected static final EntityDataAccessor<String> CORRESPONDING_ITEM =
-            SynchedEntityData.defineId(ItemBoundBlockMinecartEntity.class, EntityDataSerializers.STRING);
+            SynchedEntityData.defineId(SingleBlockMinecartEntity.class, EntityDataSerializers.STRING);
     private Item correspondingItem;
 
-    public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
+    public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
         this.correspondingItem = MRMinecarts.BLOCK_MINECART_ITEM.item().get();
     }
 
-    public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
+    public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, Item.byBlock(correspondingItem.getBlockInside()));
         this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
         this.correspondingItem = correspondingItem;
     }
 
-    public ItemBoundBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {
+    public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {
         super(entityType, world);
         this.correspondingItem = correspondingItem;
         this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
@@ -120,15 +117,7 @@ public class ItemBoundBlockMinecartEntity extends HasVariantRegularBlockMinecart
 
     @Override
     public @NonNull ItemStack getPickResult() {
-        ItemStack stack =
-                this.correspondingItem != null ? correspondingItem.getDefaultInstance() : Items.MINECART.getDefaultInstance();
-        BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-/*
-        String blockName = blockState.getBlock().getName().getString();
-        String cartName = Items.MINECART.getDefaultInstance().getDisplayName().getString();
-        stack.set(DataComponents.ITEM_NAME, Component.nullToEmpty(String.format(stack.getHoverName().getString(),blockName,cartName)));
-  */
-        return stack;
+        return this.correspondingItem != null ? correspondingItem.getDefaultInstance() : Items.MINECART.getDefaultInstance();
     }
 
 

@@ -3,7 +3,6 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
-import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -11,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -39,26 +37,18 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
-import static ml.mypals.minecartrevolution.client.light.DynamicLightsSpread.clearFromCenter;
-
-public class HasVariantRegularBlockMinecartEntity extends AbstractMinecart {
+public class VariantBlockMinecartEntity extends AbstractMinecart {
     public boolean activated = false;
     public boolean keepUpdatingLight = false;
-    public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
+    public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
     }
 
-    public HasVariantRegularBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
+    public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z);
         Block block = Block.byItem(item);
         this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
     }
-
-    /*
-    @Override
-    public Type getMinecartType() {
-        return Type.RIDEABLE;
-    }*/
 
     @Override
     public void destroy(@NonNull ServerLevel serverLevel, DamageSource source) {

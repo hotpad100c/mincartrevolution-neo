@@ -1,6 +1,5 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
-import ml.mypals.minecartrevolution.registeries.MRModItems;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.core.BlockPos;
@@ -30,7 +29,7 @@ import java.util.Optional;
 
 import static net.minecraft.world.level.block.Block.dropResources;
 
-public class SpongeMinecartEntity extends ItemBoundBlockMinecartEntity {
+public class SpongeMinecartEntity extends SingleBlockMinecartEntity {
     public static final int ABSORB_RADIUS = 6;
     public static final int ABSORB_LIMIT = 64;
     private static final Direction[] DIRECTIONS = Direction.values();
@@ -38,13 +37,13 @@ public class SpongeMinecartEntity extends ItemBoundBlockMinecartEntity {
     private int absorbRadius = ABSORB_RADIUS;
     private int absorbLimit = ABSORB_RADIUS;
 
-    protected SpongeMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> entityType, Level world, int absorbRadius, int absorbLimit) {
+    protected SpongeMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> entityType, Level world, int absorbRadius, int absorbLimit) {
         super(entityType, world);
         this.absorbRadius = absorbRadius;
         this.absorbLimit = absorbLimit;
     }
 
-    public SpongeMinecartEntity(EntityType<? extends ItemBoundBlockMinecartEntity> minecart, Level world, double x, double y, double z, int absorbRadius, int absorbLimit, MinecartWithBlockItem correspondingItem) {
+    public SpongeMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> minecart, Level world, double x, double y, double z, int absorbRadius, int absorbLimit, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
         this.absorbRadius = absorbRadius;
         this.absorbLimit = absorbLimit;

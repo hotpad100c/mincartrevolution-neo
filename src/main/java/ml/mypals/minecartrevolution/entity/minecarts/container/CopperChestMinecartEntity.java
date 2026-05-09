@@ -1,11 +1,13 @@
 package ml.mypals.minecartrevolution.entity.minecarts.container;
 
 import ml.mypals.minecartrevolution.client.menu.MinecartChestMenu;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,7 +23,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.ChestLidController;
@@ -31,30 +35,34 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Unique;
 
-public class TrappedChestMinecartEntity extends BaseMinecartContainer implements PowerEmitterMinecartEntity, IMinecartContainer {
+public class CopperChestMinecartEntity extends BaseMinecartContainer implements IMinecartContainer {
     private int openCount = 0;
     @Unique
     public final ChestLidController chestLidController = new ChestLidController();
 
-    public TrappedChestMinecartEntity(EntityType<? extends AbstractMinecartContainer> entityType, Level world) {
+    public CopperChestMinecartEntity(EntityType<? extends AbstractMinecartContainer> entityType, Level world) {
         super(entityType, world);
     }
 
-    public TrappedChestMinecartEntity(Level world, double x, double y, double z) {
+    public CopperChestMinecartEntity(Level world, double x, double y, double z) {
         super(MRMinecarts.TRAPPED_CHEST_MINECART.entity().get(), world);
         this.setInitialPos(x, y, z);
     }
 
     @Override
-    public @NonNull ItemStack getPickResult() {
-        return MRMinecarts.TRAPPED_CHEST_MINECART.item().get().getDefaultInstance();
+    public @NonNull Item getDropItem() {
+        return MRMinecarts.BLOCK_MINECART_ITEM.item().get();
     }
 
     @Override
-    public @NonNull Item getDropItem() {
-        return MRMinecarts.TRAPPED_CHEST_MINECART.item().get();
+    public @NonNull ItemStack getPickResult() {
+        ItemStack stack = getDropItem().getDefaultInstance();
+        CompoundTag nbt = new CompoundTag();
+        BlockState blockState = getDisplayBlockState();
+        nbt.putInt("block_in_minecart", Block.getId(blockState));
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+        return stack;
     }
-
     @Override
     public int getContainerSize() {
         return 27;
@@ -77,19 +85,6 @@ public class TrappedChestMinecartEntity extends BaseMinecartContainer implements
 
     @Override
     public void tick() {
-        this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
-            if (!updatedBlocks || !this.isAlive()) {
-                if (getPreviousBlockPos() != null)
-                    updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
-                updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
-            }
-            if (this.getPreviousBlockPos() == null || !this.getPreviousBlockPos().equals(this.blockPosition())) {
-                if (this.getPreviousBlockPos() == null) this.setPreviousBlockPos(this.blockPosition());
-                updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
-                this.setPreviousBlockPos(this.blockPosition());
-                updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
-            }
-        });
         this.chestLidController.shouldBeOpen(this.openCount > 0);
         this.chestLidController.tickLid();
         super.tick();
@@ -109,27 +104,17 @@ public class TrappedChestMinecartEntity extends BaseMinecartContainer implements
     }
 
     @Override
-    public int getPowerStrength(Direction direction, BlockPos pos) {
-        return direction == Direction.UP ? 0 :
-                Mth.clamp(openCount, 0, 15);
-    }
-
-    @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         if (!player.isSecondaryUseActive()) {
             InteractionResult actionResult = this.interactWithContainerVehicle(player);
             if (actionResult.consumesAction()) {
                 this.openCount++;
                 if (this.openCount >= 1) {
-                    this.level().playSound(this, this.blockPosition(), SoundEvents.CHEST_OPEN, SoundSource.BLOCKS);
+                    this.level().playSound(this, this.blockPosition(), SoundEvents.COPPER_CHEST_OPEN, SoundSource.BLOCKS);
                 }
                 this.level().broadcastEntityEvent(this, (byte) 11);
                 this.gameEvent(GameEvent.CONTAINER_OPEN, player);
-                if (player.level() instanceof ServerLevel serverLevel)
-                    PiglinAi.angerNearbyPiglins(serverLevel, player, true);
-                this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).ifPresent(blockState -> {
-                    updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
-                });
+                if (player.level() instanceof ServerLevel serverLevel) PiglinAi.angerNearbyPiglins(serverLevel, player, true);
             }
             return actionResult;
         }
@@ -151,9 +136,8 @@ public class TrappedChestMinecartEntity extends BaseMinecartContainer implements
     public void minecartrevolution$OnContainerClosed(Level level, Player player) {
         this.openCount = Math.max(0, this.openCount - 1);
         if (this.openCount == 0) {
-            this.level().playSound(this, this.blockPosition(), SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS);
+            this.level().playSound(this, this.blockPosition(), SoundEvents.COPPER_CHEST_OPEN, SoundSource.BLOCKS);
         }
         this.level().broadcastEntityEvent(this, (byte) 11);
-        updateNeighbors(this.level(), this.blockPosition(), Blocks.TRAPPED_CHEST);
     }
 }

@@ -27,7 +27,7 @@ public abstract class ChestMinecartMixin extends AbstractMinecart implements IMi
     @Unique
     private final ChestLidController minecartrevolution$chestLidController = new ChestLidController();
     @Unique
-    private float minecartrevolution$viewers = 0;
+    private int minecartrevolution$viewers = 0;
 
     protected ChestMinecartMixin(EntityType<?> type, Level level) {
         super(type, level);

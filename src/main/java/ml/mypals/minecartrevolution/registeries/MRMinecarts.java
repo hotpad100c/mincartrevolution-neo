@@ -2,10 +2,12 @@ package ml.mypals.minecartrevolution.registeries;
 
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.MagnetMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.*;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.*;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
@@ -17,7 +19,6 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.MinecartFurnace;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -112,8 +113,8 @@ public class MRMinecarts {
     public static final DeferredHolder<EntityType<?>, EntityType<HorizontalDirectionalRedstoneEmitterPowerMinecartEntity>> DIRECTIONAL_POWER_PROVIDER_MINECART = registerEntityOnly(
             "power_minecart_directional", HorizontalDirectionalRedstoneEmitterPowerMinecartEntity::new);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<HasVariantRegularBlockMinecartEntity>> BLOCK_MINECART = registerEntityOnly(
-            "block_minecart", HasVariantRegularBlockMinecartEntity::new);
+    public static final DeferredHolder<EntityType<?>, EntityType<VariantBlockMinecartEntity>> BLOCK_MINECART = registerEntityOnly(
+            "block_minecart", VariantBlockMinecartEntity::new);
 
     public static final DeferredHolder<EntityType<?>, EntityType<PresherPlateMinecartEntity>> PRESHER_PLATE_MINECART = registerEntityOnly(
             "presher_plate_minecart", PresherPlateMinecartEntity::new);
@@ -154,7 +155,7 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.EMITTING_POWER_DIRECTIONAL, p.stacksTo(1), Blocks.REPEATER),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
-    public static final MinecartEntry<HasVariantRegularBlockMinecartEntity, MultiVariantMinecartWithBlockItem> BLOCK_MINECART_ITEM = registerItemOnly(
+    public static final MinecartEntry<VariantBlockMinecartEntity, MultiVariantMinecartWithBlockItem> BLOCK_MINECART_ITEM = registerItemOnly(
             "minecart_with_block", BLOCK_MINECART,
             p -> new MultiVariantMinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.REGULAR, p.stacksTo(1), Blocks.GRASS_BLOCK),
             MultiVariantMinecartWithBlockItem.DISPENSER_BEHAVIOR);
@@ -181,7 +182,7 @@ public class MRMinecarts {
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<SpongeMinecartEntity, MinecartWithBlockItem> WET_SPONGE_MINECART = registerItemOnly(
-            "minecart_wet_sponge", SPONGE_MINECART.entity(),
+            "wet_sponge", SPONGE_MINECART.entity(),
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.SPONGE, p.stacksTo(1), Blocks.WET_SPONGE),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
@@ -193,6 +194,11 @@ public class MRMinecarts {
     public static final MinecartEntry<TrappedChestMinecartEntity, MinecartWithBlockItem> TRAPPED_CHEST_MINECART = register(
             "trapped_chest", TrappedChestMinecartEntity::new,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.TRAPPED_CHEST, p.stacksTo(1), Blocks.TRAPPED_CHEST),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR);
+
+    public static final MinecartEntry<CopperChestMinecartEntity, MinecartWithBlockItem> COPPER_CHEST_MINECART = register(
+            "copper_chest", CopperChestMinecartEntity::new,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.COPPER_CHEST, p.stacksTo(1), Blocks.COPPER_CHEST),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<JukeboxMinecartEntity, MinecartWithBlockItem> JUKEBOX_MINECART = register(
@@ -227,57 +233,57 @@ public class MRMinecarts {
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> CRAFTING_TABLE_MINECART = registerItemOnly(
-            "minecart_crafting_table", NON_INVENTORY_WORKING_MINECART,
+            "crafting_table", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.CRAFTING_TABLE),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> STONECUTTER_MINECART = registerItemOnly(
-            "minecart_stonecutter", NON_INVENTORY_WORKING_MINECART,
+            "stonecutter", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.STONECUTTER),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> LOOM_MINECART = registerItemOnly(
-            "minecart_loom", NON_INVENTORY_WORKING_MINECART,
+            "loom", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.LOOM),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> CARTOGRAPHY_TABLE_MINECART = registerItemOnly(
-            "minecart_cartography_table", NON_INVENTORY_WORKING_MINECART,
+            "cartography_table", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.CARTOGRAPHY_TABLE),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> GRINDSTONE_MINECART = registerItemOnly(
-            "minecart_grindstone", NON_INVENTORY_WORKING_MINECART,
+            "grindstone", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.GRINDSTONE),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> SMITHING_TABLE_MINECART = registerItemOnly(
-            "minecart_smithing_table", NON_INVENTORY_WORKING_MINECART,
+            "smithing_table", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.SMITHING_TABLE),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ANVIL_MINECART = registerItemOnly(
-            "minecart_anvil", NON_INVENTORY_WORKING_MINECART,
+            "anvil", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ANVIL),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ENCHANTING_TABLE_MINECART = registerItemOnly(
-            "minecart_enchanting_table", NON_INVENTORY_WORKING_MINECART,
+            "enchanting_table", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ENCHANTING_TABLE),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ENDER_CHEST_MINECART = registerItemOnly(
-            "minecart_ender_chest", NON_INVENTORY_WORKING_MINECART,
+            "ender_chest", NON_INVENTORY_WORKING_MINECART,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.WORKING_NON_INVENTORY, p.stacksTo(1), Blocks.ENDER_CHEST),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<BeaconMinecartEntity, MinecartWithBlockItem> BEACON_MINECART = register(
-            "minecart_beacon", BeaconMinecartEntity::new,
+            "beacon", BeaconMinecartEntity::new,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.BEACON, p.stacksTo(1), Blocks.BEACON),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
     public static final MinecartEntry<DispenserMinecartEntity, MinecartWithBlockItem> DISPENSER_MINECART = register(
-            "minecart_dispenser", DispenserMinecartEntity::new,
+            "dispenser", DispenserMinecartEntity::new,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.DISPENSER, p.stacksTo(1), Blocks.DISPENSER),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR);
 
@@ -289,6 +295,14 @@ public class MRMinecarts {
     public static final MinecartEntry<FluidMinecartEntity, MinecartWithBlockItem> LAVA_MINECART = register(
             "lava", FluidMinecartEntity::new,
             p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.FLUID, p.stacksTo(1), Blocks.LAVA));
+
+    public static final MinecartEntry<MagnetMinecartEntity, MinecartWithBlockItem> MAGNET_MINECART = register(
+            "magnet", MagnetMinecartEntity::new,
+            p -> new MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.MAGNET, p.stacksTo(1), Blocks.LODESTONE));
+
+    public static final MinecartEntry<MobHeadMinecartEntity, MultiVariantMinecartWithBlockItem> MOB_HEAD_MINECART = register(
+            "head", MobHeadMinecartEntity::new,
+            p -> new MultiVariantMinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.MOB_HEAD, p.stacksTo(1), Blocks.DRAGON_HEAD));
 
 
     public static void init() {

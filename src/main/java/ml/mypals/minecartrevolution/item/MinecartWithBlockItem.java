@@ -90,10 +90,15 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
     };
 
     public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem corrospondingItem, ItemStack stack) {
-        return MinecartTransformManager.getTransform(
+        AbstractMinecart minecart = MinecartTransformManager.getTransform(
                 serverWorld, corrospondingItem, Item.byBlock(corrospondingItem.blockInside), new Vec3(x, y, z),
                 type
         );
+        BlockState blockState = corrospondingItem.getBlockInside(stack);
+        if(blockState != null){
+            minecart.setCustomDisplayBlockState(Optional.of(blockState));
+        }
+        return minecart;
     }
 
     final AdvancedMinecartEntityTypes.Type type;

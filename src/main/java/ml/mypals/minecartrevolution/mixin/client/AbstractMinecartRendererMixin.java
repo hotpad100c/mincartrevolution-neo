@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import ml.mypals.minecartrevolution.entity.minecarts.container.CopperChestMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.TrappedChestMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartChestExtension;
@@ -61,11 +62,15 @@ public class AbstractMinecartRendererMixin {
             IMinecartRenderStateExtension stateExt = (IMinecartRenderStateExtension) state;
             stateExt.minecartrevolution$setOpenness(((IMinecartChestExtension) minecartChest)
                     .minecartrevolution$getChestLidController().getOpenness(partialTicks));
-            stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState().getBlock());
+            stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState());
         } else if (entity instanceof TrappedChestMinecartEntity minecartChest) {
             IMinecartRenderStateExtension stateExt = (IMinecartRenderStateExtension) state;
             stateExt.minecartrevolution$setOpenness(minecartChest.getOpenness(partialTicks));
-            stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState().getBlock());
+            stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState());
+        } else if (entity instanceof CopperChestMinecartEntity minecartChest) {
+            IMinecartRenderStateExtension stateExt = (IMinecartRenderStateExtension) state;
+            stateExt.minecartrevolution$setOpenness(minecartChest.getOpenness(partialTicks));
+            stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState());
         } else if (entity instanceof ShulkerMinecartEntity shulker) {
             ((BlockModelRenderStateAccessor) state.displayBlockModel).setSpecialRenderer(null);
         }
@@ -74,7 +79,7 @@ public class AbstractMinecartRendererMixin {
     @WrapMethod(method = "submitMinecartContents")
     private void submitMinecartContents(MinecartRenderState minecartRenderState, BlockModelRenderState blockModel, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, Operation<Void> original) {
         IMinecartRenderStateExtension state = (IMinecartRenderStateExtension) minecartRenderState;
-        if (state.minecartrevolution$getDisplayBlock() instanceof AbstractChestBlock) {
+        if (state.minecartrevolution$getDisplayBlock().getBlock() instanceof AbstractChestBlock) {
             poseStack.pushPose();
             poseStack.translate(0F, (float) (minecartRenderState.displayOffset - 8) / 16.0F, 1F);
             poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
@@ -83,8 +88,22 @@ public class AbstractMinecartRendererMixin {
             open = 1.0F - open * open * open;
             ChestModel model = this.minecartrevolution$chestModels.select(ChestType.SINGLE);
 
-            SpriteId location = switch (state.minecartrevolution$getDisplayBlock()) {
+            SpriteId location = switch (state.minecartrevolution$getDisplayBlock().getBlock()) {
                 case TrappedChestBlock ignored -> Sheets.CHEST_TRAPPED.single();
+                case WeatheringCopperChestBlock ignored -> {
+                    if(state.minecartrevolution$getDisplayBlock().is(Blocks.COPPER_CHEST)
+                    || state.minecartrevolution$getDisplayBlock().is(Blocks.WAXED_COPPER_BLOCK)){
+                        yield Sheets.CHEST_COPPER_UNAFFECTED.single();
+                    }else if(state.minecartrevolution$getDisplayBlock().is(Blocks.EXPOSED_COPPER_CHEST)
+                    || state.minecartrevolution$getDisplayBlock().is(Blocks.WAXED_EXPOSED_COPPER_CHEST)){
+                        yield Sheets.CHEST_COPPER_EXPOSED.single();
+                    }else if(state.minecartrevolution$getDisplayBlock().is(Blocks.WEATHERED_COPPER_CHEST)
+                    ||state.minecartrevolution$getDisplayBlock().is(Blocks.WAXED_WEATHERED_COPPER_CHEST)){
+                        yield Sheets.CHEST_COPPER_WEATHERED.single();
+                    }else{
+                        yield Sheets.CHEST_COPPER_OXIDIZED.single();
+                    }
+                }
                 case EnderChestBlock ignored -> Sheets.ENDER_CHEST_LOCATION;
                 default -> Sheets.CHEST_REGULAR.single();
             };

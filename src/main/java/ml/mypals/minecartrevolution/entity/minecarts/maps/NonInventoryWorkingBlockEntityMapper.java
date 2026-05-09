@@ -1,7 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.BeaconMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.workingcarts.NonInventoryWorkingBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Items;

@@ -1,7 +1,7 @@
-package ml.mypals.minecartrevolution.entity.minecarts.workingcarts;
+package ml.mypals.minecartrevolution.entity.minecarts.functioning;
 
 import ml.mypals.minecartrevolution.client.menu.MinecartChestMenu;
-import ml.mypals.minecartrevolution.entity.minecarts.HasVariantRegularBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.network.chat.Component;
@@ -29,7 +29,7 @@ import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nullable;
 
-public class NonInventoryWorkingBlockMinecartEntity extends HasVariantRegularBlockMinecartEntity implements IMinecartContainer {
+public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecartEntity implements IMinecartContainer {
     public int time;
     public float flip;
     public float oFlip;
