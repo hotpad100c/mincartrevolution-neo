@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -19,9 +20,14 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
+import net.minecraft.world.entity.vehicle.minecart.NewMinecartBehavior;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,12 +35,16 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 public class VariantBlockMinecartEntity extends AbstractMinecart {
@@ -226,6 +236,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     @Override
     public void tick() {
         super.tick();
+        moveEntitiesAbove();
         if (this.level().isClientSide()) {
             tickDynamicLight((ClientLevel) this.level());
         }
@@ -236,6 +247,13 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         ){
             activateMinecart(serverLevel,this.blockPosition().getX(),this.blockPosition().getY(),this.blockPosition().getZ(),false);
         }
+
+
+    }
+    @Override
+    protected void moveAlongTrack(ServerLevel level) {
+        super.moveAlongTrack(level);
+        moveEntitiesAbove();
     }
 
     public int getLightLevel(){
@@ -330,6 +348,72 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
         if (dynamicLight >= vanillaLight) {
             world.getChunkSource().getLightEngine().checkBlock(pos);
+        }
+    }
+
+    @Override
+    public boolean canCollideWith(Entity entity) {
+        return Block.isShapeFullBlock(getDisplayBlockState().getOcclusionShape()) && canVehicleCollide(this, entity);
+    }
+
+    public static boolean canVehicleCollide(Entity vehicle, Entity entity) {
+        return (entity.canBeCollidedWith(vehicle) || entity.isPushable()) && !vehicle.isPassengerOfSameVehicle(entity);
+    }
+
+    @Override
+    public boolean canBeCollidedWith(@Nullable Entity other) {
+        return true;
+    }
+    public void moveEntitiesAbove() {
+
+        Vec3 movement = this.position().subtract(this.xOld, this.yOld, this.zOld);
+
+        double moveLength = movement.length();
+
+        AABB aabb = this.getBoundingBox().inflate(0.0, 0.25, 0.0);
+
+        if (getDisplayBlockState().is(Blocks.HONEY_BLOCK)) {
+            aabb = aabb.inflate(0.3, 0.0, 0.3);
+        }
+
+        for (Entity entity : level().getEntitiesOfClass(Entity.class, aabb)) {
+
+            if (moveLength < 1.0E-7) {
+                continue;
+            }
+
+            if (entity == this || entity.getVehicle() != null) {
+                continue;
+            }
+
+            if (!(entity instanceof Player || entity instanceof ItemEntity)
+                    && level().isClientSide()) {
+                continue;
+            }
+
+            Vec3 previousPos = entity.position();
+            entity.move(MoverType.PISTON, movement);
+
+            Vec3 velocity = entity.getDeltaMovement();
+
+            float slipperiness = getDisplayBlockState().getBlock().getFriction();
+
+            float friction = slipperiness * 0.91F;
+
+            double x = velocity.x * friction;
+            double z = velocity.z * friction;
+
+            double y = velocity.y;
+
+            if (Math.abs(x) < 0.003) x = 0;
+            if (Math.abs(z) < 0.003) z = 0;
+
+            entity.setDeltaMovement(x, y, z);
+            entity.setOnGround(true);
+
+            entity.applyEffectsFromBlocks(previousPos, entity.position());
+
+            entity.removeLatestMovementRecording();
         }
     }
 }

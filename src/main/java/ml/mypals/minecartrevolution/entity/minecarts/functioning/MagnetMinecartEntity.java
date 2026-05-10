@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
-
 import java.util.List;
 
 public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
@@ -93,20 +92,12 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
                 double distanceSq = vec3.lengthSqr();
                 if (distanceSq > 0.01) {
                     double distance = Math.sqrt(distanceSq);
-                    double force = 0.05 /* (1.0 - distance / radius)*/;
+                    double force = 0.05 * (1.0 - distance / radius);
                     minecart.setDeltaMovement(minecart.getDeltaMovement().add(vec3.normalize().scale(force)));
                     minecart.hurtMarked = true;
                 }
             }
         }
-    }
-    @Override
-    public boolean canCollideWith(@NonNull Entity other) {
-        return true;
-    }
-    @Override
-    public boolean canBeCollidedWith(Entity entity) {
-        return true;
     }
     private boolean hasIron(LivingEntity entity) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -119,7 +110,7 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
 
     private void repelOtherMagnets() {
         double radius = 4.0;
-        java.util.List<MagnetMinecartEntity> others = this.level().getEntitiesOfClass(
+        List<MagnetMinecartEntity> others = this.level().getEntitiesOfClass(
                 MagnetMinecartEntity.class,
                 this.getBoundingBox().inflate(radius)
         );
@@ -130,8 +121,8 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
                 double distanceSq = vec3.lengthSqr();
                 if (distanceSq > 0.01) {
                     double distance = Math.sqrt(distanceSq);
-                    double force = 0.6 * (1.0 - distance / radius);
-                    net.minecraft.world.phys.Vec3 repulsion = vec3.normalize().scale(force);
+                    double force = Math.max(0,0.6 * (1.0 - distance / radius));
+                    Vec3 repulsion = vec3.normalize().scale(force);
                     other.setDeltaMovement(other.getDeltaMovement().add(repulsion));
                     this.setDeltaMovement(this.getDeltaMovement().subtract(repulsion));
                 }

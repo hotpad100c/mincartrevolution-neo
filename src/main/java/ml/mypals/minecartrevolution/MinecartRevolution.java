@@ -1,21 +1,22 @@
 package ml.mypals.minecartrevolution;
 
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
+import ml.mypals.minecartrevolution.entity.others.AttackMonsterMinecartGoal;
+import ml.mypals.minecartrevolution.entity.others.FearDragonHeadMinecartGoal;
+import ml.mypals.minecartrevolution.entity.others.FearMonsterMinecartGoal;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import net.minecraft.data.advancements.AdvancementProvider;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.*;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.server.packs.resources.Resource;
-import net.neoforged.fml.ModList;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforgespi.locating.IModFile;
-import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -28,9 +29,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ITEMS;
@@ -103,12 +102,31 @@ public class MinecartRevolution {
                 ));
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
+
     }
 
+    @SubscribeEvent
+    public void onEntityJoin(EntityJoinLevelEvent event) {
 
+
+        if (event.getEntity() instanceof Villager villager) {
+            villager.goalSelector.addGoal(
+                    1,
+                    new FearMonsterMinecartGoal(villager, 0.9)
+            );
+        }else if (event.getEntity() instanceof Monster monster){
+            monster.goalSelector.addGoal(
+                    1,
+                    new FearDragonHeadMinecartGoal(monster, 1.5)
+            );
+        };
+        if(event.getEntity() instanceof IronGolem ironGolem){
+            ironGolem.goalSelector.addGoal(
+                    1,
+                    new AttackMonsterMinecartGoal(ironGolem, MobHeadMinecartEntity.class,5)
+            );
+        }
+    }
 }
