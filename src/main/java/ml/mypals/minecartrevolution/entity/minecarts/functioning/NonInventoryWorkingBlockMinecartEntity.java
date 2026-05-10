@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.entity.minecarts.functioning;
 import ml.mypals.minecartrevolution.client.menu.MinecartChestMenu;
 import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
+import ml.mypals.minecartrevolution.inventory.ContainerEntityAccess;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -168,21 +169,21 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
     @Nullable
     private MenuProvider getMenuProvider(BlockState state) {
         if (state.is(Blocks.CRAFTING_TABLE)) {
-            return new SimpleMenuProvider((id, inv, _) -> new CraftingMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.crafting"));
+            return new SimpleMenuProvider((id, inv, _) -> new CraftingMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.crafting"));
         } else if (state.is(Blocks.STONECUTTER)) {
-            return new SimpleMenuProvider((id, inv, _) -> new StonecutterMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.stonecutter"));
+            return new SimpleMenuProvider((id, inv, _) -> new StonecutterMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.stonecutter"));
         } else if (state.is(Blocks.LOOM)) {
-            return new SimpleMenuProvider((id, inv, _) -> new LoomMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.loom"));
+            return new SimpleMenuProvider((id, inv, _) -> new LoomMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.loom"));
         } else if (state.is(Blocks.CARTOGRAPHY_TABLE)) {
-            return new SimpleMenuProvider((id, inv, _) -> new CartographyTableMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.cartography_table"));
+            return new SimpleMenuProvider((id, inv, _) -> new CartographyTableMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.cartography_table"));
         } else if (state.is(Blocks.GRINDSTONE)) {
-            return new SimpleMenuProvider((id, inv, _) -> new GrindstoneMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.grindstone_title"));
+            return new SimpleMenuProvider((id, inv, _) -> new GrindstoneMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.grindstone_title"));
         } else if (state.is(Blocks.SMITHING_TABLE)) {
-            return new SimpleMenuProvider((id, inv, _) -> new SmithingMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.upgrade"));
+            return new SimpleMenuProvider((id, inv, _) -> new SmithingMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.upgrade"));
         } else if (state.is(BlockTags.ANVIL)) {
-            return new SimpleMenuProvider((id, inv, _) -> new AnvilMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.repair"));
+            return new SimpleMenuProvider((id, inv, _) -> new AnvilMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.repair"));
         } else if (state.is(Blocks.ENCHANTING_TABLE)) {
-            return new SimpleMenuProvider((id, inv, _) -> new EnchantmentMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.enchant"));
+            return new SimpleMenuProvider((id, inv, _) -> new EnchantmentMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.enchant"));
         } else if (state.is(Blocks.ENDER_CHEST)) {
             this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS);
             return new SimpleMenuProvider((id, inv, p) -> new MinecartChestMenu(MenuType.GENERIC_9x3, id, inv, p.getEnderChestInventory(), 3, this), Component.translatable("container.enderchest"));
