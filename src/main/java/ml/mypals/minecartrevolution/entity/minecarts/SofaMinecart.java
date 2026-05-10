@@ -33,8 +33,17 @@ public class SofaMinecart extends SingleBlockMinecartEntity {
             if (hasPassenger(e -> e instanceof Player)) {
                 this.getPassengers().forEach(entity -> {
                     if (entity instanceof Player player) {
-                        if (movingTicks >= 100 && this.getDeltaMovement().horizontalDistanceSqr() > 0.3) {
+                        boolean isFastEnough = this.getDeltaMovement().horizontalDistanceSqr() > 0.3;
+                        if (movingTicks >= 100 && isFastEnough) {
                             MRModCriteria.SOFA_AWAY.get().trigger((ServerPlayer) player);
+                        }
+                        if (isFastEnough) {
+                            movingTicks++;
+                            if (movingTicks >= 100) {
+                                movingTicks = 100;
+                            }
+                        } else {
+                            movingTicks = 0;
                         }
                     }
                 });
@@ -52,6 +61,7 @@ public class SofaMinecart extends SingleBlockMinecartEntity {
             if (movingTicks >= 100) {
                 ensureMusicPlaying();
                 updateMusicPosition();
+                movingTicks = 100;
             }
         } else {
             stopAndResetMusic();
