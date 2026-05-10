@@ -148,7 +148,7 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
     }
 
     @Override
-    public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+    public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         if (!player.isSecondaryUseActive() && !player.isSprinting()) {
             BlockState blockState = this.getDisplayBlockState();
             if (this.level().isClientSide()) {

@@ -32,7 +32,7 @@ public class PresherPlateMinecartEntity extends VariantBlockMinecartEntity imple
     }
 
     @Override
-    public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+    public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         super.interact(player, hand, pos);
         if (this.isVehicle()) {
             return InteractionResult.PASS;

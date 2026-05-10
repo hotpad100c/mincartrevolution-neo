@@ -441,7 +441,7 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
         ContainerHelper.loadAllItems(input, this.mincartrevolution$items);
         this.mincartrevolution$cookingTimer = input.getShortOr("SmeltingProgress", (short) 0);
         this.mincartrevolution$cookingTotalTime = input.getShortOr("SmeltingTime", (short) 200);
-        if (this.entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).isEmpty())
+        if (getDisplayBlockState().isEmpty())
             this.setCustomDisplayBlockState(Optional.of(Block.stateById(input.getIntOr("BlockInside", Block.getId(Blocks.FURNACE.defaultBlockState())))));
     }
 

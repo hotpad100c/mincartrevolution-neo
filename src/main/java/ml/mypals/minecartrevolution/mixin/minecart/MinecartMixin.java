@@ -76,7 +76,9 @@ public abstract class MinecartMixin extends AbstractMinecart {
 
 
     @Inject(
-            at = @At("HEAD"),
+            at = @At(target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/InteractionResult;",
+                    value = "INVOKE",
+                    shift = At.Shift.AFTER),
             method = "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/InteractionResult;",
             cancellable = true
     )

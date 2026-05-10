@@ -39,7 +39,7 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
     }
 
     @Override
-    public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+    public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         ItemStack stack = player.getItemInHand(hand);
         BlockState currentBlock = getDisplayBlockState();
 

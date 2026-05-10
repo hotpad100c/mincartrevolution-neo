@@ -306,7 +306,7 @@ public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements 
     }
 
     @Override
-    public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+    public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         if (!player.isSecondaryUseActive() && !player.isSprinting()) {
             if (!this.level().isClientSide()) {
                 player.openMenu(this);

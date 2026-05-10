@@ -9,7 +9,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -20,14 +19,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
-import net.minecraft.world.entity.vehicle.minecart.NewMinecartBehavior;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +31,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gamerules.GameRules;
@@ -44,7 +39,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class VariantBlockMinecartEntity extends AbstractMinecart {
@@ -122,7 +116,10 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     @Override
-    public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+    public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+
+        InteractionResult interactionResult = super.interact(player, hand, pos);
+        if(interactionResult.consumesAction())return interactionResult;
         ItemStack stackInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (player.isSecondaryUseActive()) {
             if (this.hasCustomDisplay()) {
@@ -421,4 +418,21 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
             entity.removeLatestMovementRecording();
         }
     }
+    @Override
+    public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
+        if(source.getEntity() instanceof Player player){
+            this.addDeltaMovement(this.position().subtract(player.position()));
+        }
+        return super.hurtServer(level, source, damage);
+    }
+
+    @Override
+    public boolean hurtClient(DamageSource source) {
+        if(source.getEntity() instanceof Player player){
+            this.addDeltaMovement(this.position().subtract(player.position()));
+        }
+        return super.hurtClient(source);
+    }
+
 }
+

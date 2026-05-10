@@ -11,6 +11,7 @@
     "blocks.UnrenderableBlocksMixin",
     "entity.EntityMixin",
     "light.LevelChunkMixin",
+    "minecart.AbstractMinecartMixin",
     "minecart.ChestMinecartMixin",
     "minecart.MinecartMixin",
     "minecart.furnace.FurnaceMinecartMixin"
