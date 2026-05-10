@@ -121,8 +121,9 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
 
     public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
-        if(correspondingItem == null){
-            this.correspondingItem = Item.byId(nbt.getIntOr("correspondingItem",0));
+        int item = nbt.getIntOr("correspondingItem",-1);
+        if(item != -1){
+            this.correspondingItem = Item.byId(item);
         }
         this.getEntityData().set(CORRESPONDING_ITEM, Item.getId(correspondingItem));
     }
