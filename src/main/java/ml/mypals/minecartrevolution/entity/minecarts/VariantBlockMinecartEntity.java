@@ -54,6 +54,12 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         super(entityType, world);
     }
 
+    public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, Item item) {
+        super(entityType, world);
+        Block block = Block.byItem(item);
+        this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
+    }
+
     public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z);
         Block block = Block.byItem(item);
@@ -208,15 +214,14 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     public @NonNull ItemStack getPickResult() {
         ItemStack stack = getDropItem().getDefaultInstance();
         CompoundTag nbt = new CompoundTag();
-        BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+        BlockState blockState = getDisplayBlockState();
         nbt.putInt("block_in_minecart", Block.getId(blockState));
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
         return stack;
     }
 
     public boolean hasCustomDisplay() {
-        BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        return !(blockState.getBlock() instanceof AirBlock);
+        return !(getDisplayBlockState().getBlock() instanceof AirBlock);
     }
 
     public void handleActive( ServerLevel level, int x, int y, int z, boolean powered) {

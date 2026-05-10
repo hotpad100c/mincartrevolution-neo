@@ -79,7 +79,7 @@ public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NonNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DISC, Items.AIR.getDefaultInstance());
     }

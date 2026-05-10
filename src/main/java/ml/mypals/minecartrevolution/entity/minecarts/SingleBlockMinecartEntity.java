@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
-import net.minecraft.world.item.AirItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -36,8 +35,8 @@ import java.util.Optional;
 public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
-    protected static final EntityDataAccessor<String> CORRESPONDING_ITEM =
-            SynchedEntityData.defineId(SingleBlockMinecartEntity.class, EntityDataSerializers.STRING);
+    protected static final EntityDataAccessor<Integer> CORRESPONDING_ITEM =
+            SynchedEntityData.defineId(SingleBlockMinecartEntity.class, EntityDataSerializers.INT);
     private Item correspondingItem;
 
     public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
@@ -47,21 +46,21 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
 
     public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, Item.byBlock(correspondingItem.getBlockInside()));
-        this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
         this.correspondingItem = correspondingItem;
+        this.getEntityData().set(CORRESPONDING_ITEM, Item.getId(correspondingItem));
     }
 
     public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {
         super(entityType, world);
         this.correspondingItem = correspondingItem;
-        this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
+        this.getEntityData().set(CORRESPONDING_ITEM, Item.getId(correspondingItem));
         this.setCustomDisplayBlockState(Optional.of(correspondingItem.getBlockInside().defaultBlockState()));
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NonNull Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(this.correspondingItem).toString());
+        builder.define(CORRESPONDING_ITEM, Item.getId(correspondingItem));
     }
 
     @Override
@@ -82,7 +81,7 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
                 } else {
                     ItemStack stack = Items.MINECART.getDefaultInstance();
                     spawnAtLocation(serverLevel, stack);
-                    BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+                    BlockState blockState = getDisplayBlockState();
                     ItemStack stack2 = blockState.getBlock().asItem().getDefaultInstance();
                     Containers.dropItemStack(this.level(), this.getX(), this.getY(), this.getZ(), stack2);
                 }
@@ -94,7 +93,7 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
 
     @Override
     public @NonNull Item getDropItem() {
-        if (this.correspondingItem != null && !(this.correspondingItem instanceof AirItem)) {
+        if (this.correspondingItem != null && !(this.correspondingItem.getDefaultInstance().isEmpty())) {
             return this.correspondingItem;
         } else {
             return this.getCorrespondingItem();
@@ -108,37 +107,34 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
 
         this.saveWithoutId(valueOutput);
         CompoundTag nbt = valueOutput.buildResult();
-        this.correspondingItem = BuiltInRegistries.ITEM.get(
-                        Identifier.parse(String.valueOf(nbt.getString("correspondingItem"))))
-                .orElse(MRMinecarts.BLOCK_MINECART_ITEM.item().get().builtInRegistryHolder()).value();
-
+        this.correspondingItem = Item.byId(nbt.getIntOr("correspondingItem",0));
         return this.correspondingItem;
     }
 
     @Override
     public @NonNull ItemStack getPickResult() {
-        return this.correspondingItem != null ? correspondingItem.getDefaultInstance() : Items.MINECART.getDefaultInstance();
+        return this.correspondingItem != null ?
+                correspondingItem.getDefaultInstance()
+                : Items.MINECART.getDefaultInstance();
     }
 
 
     public void load(@NonNull ValueInput nbt) {
         super.load(nbt);
-        Optional<String> itemIdOpt = nbt.getString("correspondingItem");
-        this.correspondingItem = itemIdOpt.map(s -> BuiltInRegistries.ITEM.get(
-                        Identifier.parse(s))
-                .orElse(Items.AIR.builtInRegistryHolder())
-                .value()).orElse(Items.MINECART);
-        this.getEntityData().set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
+        if(correspondingItem == null){
+            this.correspondingItem = Item.byId(nbt.getIntOr("correspondingItem",0));
+        }
+        this.getEntityData().set(CORRESPONDING_ITEM, Item.getId(correspondingItem));
     }
 
     @Override
     public void saveWithoutId(ValueOutput nbt) {
-        nbt.putString("correspondingItem", BuiltInRegistries.ITEM.getKey(this.correspondingItem).toString());
+        nbt.putInt("correspondingItem", Item.getId(this.correspondingItem));
         super.saveWithoutId(nbt);
     }
 
     public void setCorrespondingItem(Item correspondingItem) {
         this.correspondingItem = correspondingItem;
-        this.entityData.set(CORRESPONDING_ITEM, BuiltInRegistries.ITEM.getKey(correspondingItem).toString());
+        this.entityData.set(CORRESPONDING_ITEM, Item.getId(correspondingItem));
     }
 }

@@ -1,6 +1,5 @@
 package ml.mypals.minecartrevolution.item;
 
-import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import ml.mypals.minecartrevolution.entity.minecarts.DamageCausingMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,8 +32,8 @@ public class DamageCausingMinecartItem extends MinecartWithBlockItem {
     final MinecartWithBlockItem correspondingItem;
     final ResourceKey<DamageType> damageType;
 
-    public DamageCausingMinecartItem(AdvancedMinecartEntityTypes.Type type, Properties settings, float damageAmount, Block blockInside, ResourceKey<DamageType> damageType) {
-        super(type, settings, blockInside);
+    public DamageCausingMinecartItem(Properties settings, float damageAmount, Block blockInside, ResourceKey<DamageType> damageType) {
+        super(settings, blockInside);
         this.damageAmount = damageAmount;
         this.damageType = damageType;
         this.correspondingItem = this;

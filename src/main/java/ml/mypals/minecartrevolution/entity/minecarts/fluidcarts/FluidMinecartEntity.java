@@ -30,6 +30,10 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
         super(entityType, world);
     }
 
+    public FluidMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, Item item) {
+        super(entityType, world, item);
+    }
+
     public FluidMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z, item);
     }
@@ -80,22 +84,18 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
         BlockState blockState = getDisplayBlockState();
         AABB aabb = getBoundingBox().inflate(0.2);
         for (Entity entity : level().getEntities(this, aabb)) {
-            if (entity instanceof LivingEntity living) {
-                if (blockState.is(Blocks.LAVA)) {
-                    living.igniteForSeconds(5);
-                } else if (blockState.is(Blocks.WATER)) {
-                    living.clearFire();
-                }
+            if (blockState.is(Blocks.LAVA)) {
+                entity.igniteForSeconds(5);
+            } else if (blockState.is(Blocks.WATER)) {
+                entity.clearFire();
             }
         }
 
         for (Entity passenger : getPassengers()) {
-            if (passenger instanceof LivingEntity living) {
-                if (blockState.is(Blocks.LAVA)) {
-                    living.igniteForSeconds(5);
-                } else if (blockState.is(Blocks.WATER)) {
-                    living.clearFire();
-                }
+            if (blockState.is(Blocks.LAVA)) {
+                passenger.igniteForSeconds(5);
+            } else if (blockState.is(Blocks.WATER)) {
+                passenger.clearFire();
             }
         }
     }

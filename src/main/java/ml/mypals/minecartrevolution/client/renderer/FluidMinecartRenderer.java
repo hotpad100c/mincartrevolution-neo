@@ -43,12 +43,10 @@ public class FluidMinecartRenderer extends AbstractMinecartRenderer<FluidMinecar
         super.extractRenderState(entity, state, partialTicks);
         state.fluidBlock = entity.getDisplayBlockState();
 
-        // Calculate wobble based on movement
         double speed = entity.getDeltaMovement().horizontalDistance();
         float time = (entity.level().getGameTime() + partialTicks) * 0.2F;
-        state.wobble = (float) (Math.sin(time) * speed * 0.2F);
+        state.wobble = (float) (Math.sin(time) * speed * 0.05F);
 
-        // Shake effect if on activator rail or hurt
         if (entity.activated || entity.getHurtTime() > 0) {
             float shakeTime = (entity.level().getGameTime() + partialTicks) * 0.8F;
             state.shake = (float) (Math.sin(shakeTime) * 0.05F);
@@ -89,7 +87,6 @@ public class FluidMinecartRenderer extends AbstractMinecartRenderer<FluidMinecar
             poseStack.translate(-0.5F, (float)(state.displayOffset - 8) / 16.0F, -0.5F);
             poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
 
-            // Custom Fluid Animation: Wobble and Shake
             poseStack.translate(0.5F, 0.5F, 0.5F);
             if (state.wobble != 0) {
                 poseStack.mulPose(Axis.XP.rotation(state.wobble));
@@ -99,7 +96,6 @@ public class FluidMinecartRenderer extends AbstractMinecartRenderer<FluidMinecar
             }
             poseStack.translate(-0.5F, -0.5F, -0.5F);
 
-            // Render the fluid plane
             renderFluidPlane(fluidState, poseStack, submitNodeCollector, state.lightCoords);
 
             poseStack.popPose();

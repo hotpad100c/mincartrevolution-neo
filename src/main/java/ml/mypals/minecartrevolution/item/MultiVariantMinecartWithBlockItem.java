@@ -1,6 +1,5 @@
 package ml.mypals.minecartrevolution.item;
 
-import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
@@ -17,8 +16,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 public class MultiVariantMinecartWithBlockItem extends MinecartWithBlockItem {
-    public MultiVariantMinecartWithBlockItem(AdvancedMinecartEntityTypes.Type type, Properties settings, Block blockInside) {
-        super(type, settings, blockInside);
+    public MultiVariantMinecartWithBlockItem(Properties settings, Block blockInside) {
+        super(settings, blockInside);
     }
 
     @Override

@@ -45,13 +45,13 @@ public class CopperChestMinecartEntity extends BaseMinecartContainer implements 
     }
 
     public CopperChestMinecartEntity(Level world, double x, double y, double z) {
-        super(MRMinecarts.TRAPPED_CHEST_MINECART.entity().get(), world);
+        super(MRMinecarts.COPPER_CHEST_MINECART.entity().get(), world);
         this.setInitialPos(x, y, z);
     }
 
     @Override
     public @NonNull Item getDropItem() {
-        return MRMinecarts.BLOCK_MINECART_ITEM.item().get();
+        return MRMinecarts.COPPER_CHEST_MINECART.item().get();
     }
 
     @Override

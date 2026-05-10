@@ -1,6 +1,5 @@
 package ml.mypals.minecartrevolution.item;
 
-import ml.mypals.minecartrevolution.entity.minecarts.AdvancedMinecartEntityTypes;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartWithBlockItem;
@@ -77,7 +76,7 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
             MinecartWithBlockItem minecartWithBlockItem = ((MinecartWithBlockItem) stack.getItem());
 
             AbstractMinecart abstractMinecartEntity = minecartWithBlockItem.getCart(serverWorld, d, e + g, f,
-                    minecartWithBlockItem.type, minecartWithBlockItem, stack);
+                    minecartWithBlockItem, stack);
             serverWorld.addFreshEntity(abstractMinecartEntity);
             stack.shrink(1);
             return stack;
@@ -89,10 +88,9 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
         }
     };
 
-    public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem correspondingItem, ItemStack stack) {
-        AbstractMinecart minecart = MinecartTransformManager.getTransform(
-                serverWorld, correspondingItem, Item.byBlock(correspondingItem.blockInside), new Vec3(x, y, z),
-                type
+    public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, MinecartWithBlockItem correspondingItem, ItemStack stack) {
+        AbstractMinecart minecart = MinecartTransformManager.spawnFromItem(
+                serverWorld, correspondingItem, new Vec3(x, y, z), stack
         );
         BlockState blockState = correspondingItem.getBlockInside(stack);
         if (blockState != null) {
@@ -101,11 +99,8 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
         return minecart;
     }
 
-    final AdvancedMinecartEntityTypes.Type type;
-
-    public MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type type, Properties settings, Block blockInside) {
+    public MinecartWithBlockItem(Properties settings, Block blockInside) {
         super(settings);
-        this.type = type;
         this.correspondingItem = this;
         this.blockInside = blockInside;
     }
@@ -160,7 +155,7 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
                 }
 
                 AbstractMinecart abstractMinecartEntity = getCart(
-                        serverWorld, blockPos.getX() + 0.5, blockPos.getY() + 0.0625 + d, blockPos.getZ() + 0.5, this.type, this, itemStack
+                        serverWorld, blockPos.getX() + 0.5, blockPos.getY() + 0.0625 + d, blockPos.getZ() + 0.5, this, itemStack
                 );
                 if (abstractMinecartEntity instanceof FluidMinecartEntity entity) {
                     if (this.blockInside.equals(Blocks.WATER)) {
