@@ -13,6 +13,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import java.util.List;
@@ -53,7 +56,7 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
 
         for (ItemEntity itemEntity : items) {
             if (isIronItem(itemEntity.getItem())) {
-                net.minecraft.world.phys.Vec3 vec3 = this.position().subtract(itemEntity.position());
+                Vec3 vec3 = this.position().subtract(itemEntity.position());
                 double distanceSq = vec3.lengthSqr();
                 if (distanceSq > 0.01) {
                     double distance = Math.sqrt(distanceSq);
@@ -130,10 +133,10 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
         }
     }
 
-    private boolean isIronItem(net.minecraft.world.item.ItemStack stack) {
-        net.minecraft.world.item.Item item = stack.getItem();
-        return item.getDescriptionId().contains("iron")||
-               item == net.minecraft.world.item.Items.ANVIL ||
-               item == net.minecraft.world.item.Items.HOPPER;
+    private boolean isIronItem(ItemStack stack) {
+        Item item = stack.getItem();
+        return item.getDescriptionId().contains("iron") ||
+               item == Items.ANVIL ||
+               item == Items.HOPPER;
     }
 }

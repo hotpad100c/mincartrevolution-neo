@@ -20,57 +20,42 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
-public class BaseMinecartContainer extends AbstractMinecartContainer {
+public abstract class BaseMinecartContainer extends AbstractMinecartContainer {
+
     protected BaseMinecartContainer(EntityType<?> type, Level level) {
         super(type, level);
     }
 
-    @Override
-    protected @NonNull AbstractContainerMenu createMenu(int i, @NonNull Inventory inventory) {
-        return null;
-    }
+    // ── Subclasses must implement these ─────────────────────────────────────
 
     @Override
-    public @NonNull ItemStack getPickResult() {
-        return null;
-    }
+    protected abstract @NonNull AbstractContainerMenu createMenu(int i, @NonNull Inventory inventory);
 
     @Override
-    protected @NonNull Item getDropItem() {
-        return null;
-    }
+    public abstract @NonNull ItemStack getPickResult();
 
     @Override
-    public int getContainerSize() {
-        return 0;
-    }
+    protected abstract @NonNull Item getDropItem();
 
     @Override
-    public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
-        if (player.isSecondaryUseActive()) {
-            if (this.hasCustomDisplay()) {
-                BlockState blockState = getDisplayBlockState();
+    public abstract int getContainerSize();
 
-                if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
-                    Block block = blockState.getBlock();
-                    playSound(block.defaultBlockState().getSoundType().getBreakSound(), 1, 1);
-                    player.swing(hand);
-                    if (!this.level().isClientSide()) {
-                        clear();
-                        ItemStack stack = block.asItem().getDefaultInstance();
-                        player.setItemInHand(hand, stack);
-                    }
-                }
-                return InteractionResult.SUCCESS;
-            }
-        }
-        return super.interact(player, hand, location);
+    // ── Shared utilities ─────────────────────────────────────────────────────
+
+    /** Returns {@code true} when a non-air block is set as the display block. */
+    public boolean hasCustomDisplay() {
+        BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK)
+                .orElse(Blocks.AIR.defaultBlockState());
+        return !(blockState.getBlock() instanceof AirBlock);
     }
 
-    private void clear() {
+    /**
+     * Converts this minecart back into a plain {@link Minecart}, dropping the display block in
+     * the player's hand and discarding the original entity.
+     */
+    protected void clearToMinecart() {
         setCustomDisplayBlockState(Optional.of(Blocks.AIR.defaultBlockState()));
         Minecart minecartEntity = new Minecart(EntityType.MINECART, level());
-
         minecartEntity.restoreFrom(this);
         minecartEntity.copyPosition(this);
         minecartEntity.setDeltaMovement(this.getDeltaMovement());
@@ -79,11 +64,25 @@ public class BaseMinecartContainer extends AbstractMinecartContainer {
         minecartEntity.setHurtDir(-minecartEntity.getHurtDir());
         minecartEntity.setHurtTime(10);
         minecartEntity.setDamage(50.0F);
-
     }
 
-    public boolean hasCustomDisplay() {
-        BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        return !(blockState.getBlock() instanceof AirBlock);
+    @Override
+    public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
+        if (player.isSecondaryUseActive()) {
+            if (this.hasCustomDisplay()) {
+                BlockState blockState = getDisplayBlockState();
+                if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
+                    Block block = blockState.getBlock();
+                    playSound(block.defaultBlockState().getSoundType().getBreakSound(), 1, 1);
+                    player.swing(hand);
+                    if (!this.level().isClientSide()) {
+                        clearToMinecart();
+                        player.setItemInHand(hand, block.asItem().getDefaultInstance());
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return super.interact(player, hand, location);
     }
 }

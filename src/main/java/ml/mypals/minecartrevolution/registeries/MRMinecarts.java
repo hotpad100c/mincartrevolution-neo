@@ -305,8 +305,5 @@ public class MRMinecarts {
             p -> new MultiVariantMinecartWithBlockItem(AdvancedMinecartEntityTypes.Type.MOB_HEAD, p.stacksTo(1), Blocks.DRAGON_HEAD));
 
 
-    public static void init() {
-        System.out.println("MRMinecarts loaded");
-    }
 }
 

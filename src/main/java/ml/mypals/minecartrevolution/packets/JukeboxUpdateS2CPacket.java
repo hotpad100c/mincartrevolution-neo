@@ -8,7 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
-public record JukeboxUpdateS2CPacket(int uuid, int dickID, boolean play) implements CustomPacketPayload {
+public record JukeboxUpdateS2CPacket(int uuid, int discId, boolean play) implements CustomPacketPayload {
 
     public static final Identifier JUKEBOX_MINECART_UPDATE_ID = JUKEBOX_MINECART_UPDATE;
 
@@ -20,7 +20,7 @@ public record JukeboxUpdateS2CPacket(int uuid, int dickID, boolean play) impleme
                     ByteBufCodecs.VAR_INT,
                     JukeboxUpdateS2CPacket::uuid,
                     ByteBufCodecs.VAR_INT,
-                    JukeboxUpdateS2CPacket::dickID,
+                    JukeboxUpdateS2CPacket::discId,
                     ByteBufCodecs.BOOL,
                     JukeboxUpdateS2CPacket::play,
                     JukeboxUpdateS2CPacket::new

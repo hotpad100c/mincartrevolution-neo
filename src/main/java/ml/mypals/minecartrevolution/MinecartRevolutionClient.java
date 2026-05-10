@@ -68,7 +68,7 @@ public class MinecartRevolutionClient {
     private static void jukeboxEntityPlayUpdate(
             final JukeboxUpdateS2CPacket payload, final IPayloadContext context) {
         int entityId = payload.uuid();
-        int discId = payload.dickID();
+        int discId = payload.discId();
         boolean play = payload.play();
         Minecraft client = Minecraft.getInstance();
         client.execute(() -> {
@@ -85,7 +85,7 @@ public class MinecartRevolutionClient {
 
             if (instance.get() != null && soundSystem.isActive(instance.get()) || !play) {
                 soundSystem.stop(instance.get());
-                songs.remove(instance);
+                songs.remove(jukeboxMinecartEntity);
                 instance.set(null);
                 notifyNearbyEntities(client.level, jukeboxMinecartEntity.blockPosition(), true);
             } else {

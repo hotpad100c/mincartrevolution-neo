@@ -154,10 +154,6 @@ public class ShulkerMinecartEntity extends BaseMinecartContainer implements IMin
         }
     }
 
-    /*
-    @Override
-    public void chestVehicleDestroyed(DamageSource source, Level world, Entity vehicle) {
-    }*/
     @Override
     public @NonNull ItemStack getPickResult() {
         ItemStack stack = MRMinecarts.SHULKER_MINECART.item().get().getDefaultInstance();
@@ -228,7 +224,7 @@ public class ShulkerMinecartEntity extends BaseMinecartContainer implements IMin
 
     @Override
     public @NonNull Item getDropItem() {
-        return MRMinecarts.BARREL_MINECART.item().get();
+        return MRMinecarts.SHULKER_MINECART.item().get();
     }
 
     @Override

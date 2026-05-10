@@ -45,8 +45,6 @@ public class MinecartRevolution {
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    // Creates a creative tab with the id "minecartrevolution:example_tab" for the example item, that is placed after the combat tab
-
 
     public static Identifier id(String path) {
         return Identifier.fromNamespaceAndPath(MODID, path);
@@ -69,12 +67,6 @@ public class MinecartRevolution {
         CREATIVE_MODE_TABS.register(modEventBus);
         MRDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
-
-
-        /*
-        MRModCriteria.init();
-        MRModItems.init();
-        MRModEntities.init();*/
     }
 
 
@@ -109,23 +101,21 @@ public class MinecartRevolution {
 
     @SubscribeEvent
     public void onEntityJoin(EntityJoinLevelEvent event) {
-
-
         if (event.getEntity() instanceof Villager villager) {
             villager.goalSelector.addGoal(
                     1,
                     new FearMonsterMinecartGoal(villager, 0.9)
             );
-        }else if (event.getEntity() instanceof Monster monster){
+        } else if (event.getEntity() instanceof Monster monster) {
             monster.goalSelector.addGoal(
                     1,
                     new FearDragonHeadMinecartGoal(monster, 1.5)
             );
-        };
-        if(event.getEntity() instanceof IronGolem ironGolem){
+        }
+        if (event.getEntity() instanceof IronGolem ironGolem) {
             ironGolem.goalSelector.addGoal(
                     1,
-                    new AttackMonsterMinecartGoal(ironGolem, MobHeadMinecartEntity.class,5)
+                    new AttackMonsterMinecartGoal(ironGolem, MobHeadMinecartEntity.class, 5)
             );
         }
     }

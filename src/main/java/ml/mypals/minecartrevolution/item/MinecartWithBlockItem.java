@@ -33,7 +33,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
 public class MinecartWithBlockItem extends Item implements IMinecartWithBlockItem {
-    final Item corrospondingItem;
+    final Item correspondingItem;
     Block blockInside;
     public static final DispenseItemBehavior DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior() {
         private final DefaultDispenseItemBehavior defaultBehavior = new DefaultDispenseItemBehavior();
@@ -89,13 +89,13 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
         }
     };
 
-    public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem corrospondingItem, ItemStack stack) {
+    public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem correspondingItem, ItemStack stack) {
         AbstractMinecart minecart = MinecartTransformManager.getTransform(
-                serverWorld, corrospondingItem, Item.byBlock(corrospondingItem.blockInside), new Vec3(x, y, z),
+                serverWorld, correspondingItem, Item.byBlock(correspondingItem.blockInside), new Vec3(x, y, z),
                 type
         );
-        BlockState blockState = corrospondingItem.getBlockInside(stack);
-        if(blockState != null){
+        BlockState blockState = correspondingItem.getBlockInside(stack);
+        if (blockState != null) {
             minecart.setCustomDisplayBlockState(Optional.of(blockState));
         }
         return minecart;
@@ -106,7 +106,7 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
     public MinecartWithBlockItem(AdvancedMinecartEntityTypes.Type type, Properties settings, Block blockInside) {
         super(settings);
         this.type = type;
-        this.corrospondingItem = this;
+        this.correspondingItem = this;
         this.blockInside = blockInside;
     }
 

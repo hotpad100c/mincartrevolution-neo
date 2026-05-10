@@ -72,7 +72,7 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
             sourceIsPlayer = true;
             playerEntity = player;
         }
-        boolean shouldDrop = !serverLevel.getGameRules().get(GameRules.ENTITY_DROPS) ||
+        boolean shouldDrop = serverLevel.getGameRules().get(GameRules.ENTITY_DROPS) ||
                 (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
         if (shouldDrop) {
             if (playerEntity != null) {
@@ -97,11 +97,12 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
         if (this.correspondingItem != null && !(this.correspondingItem instanceof AirItem)) {
             return this.correspondingItem;
         } else {
-            return this.getCorrospondingItem();
+            return this.getCorrespondingItem();
         }
     }
 
-    public Item getCorrospondingItem() {
+    /** Recovers the corresponding item from saved NBT when the in-memory field is null/air. */
+    public Item getCorrespondingItem() {
         ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(this.problemPath(), LOGGER);
         TagValueOutput valueOutput = TagValueOutput.createWithContext(reporter, this.registryAccess());
 
@@ -110,7 +111,6 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
         this.correspondingItem = BuiltInRegistries.ITEM.get(
                         Identifier.parse(String.valueOf(nbt.getString("correspondingItem"))))
                 .orElse(MRMinecarts.BLOCK_MINECART_ITEM.item().get().builtInRegistryHolder()).value();
-
 
         return this.correspondingItem;
     }

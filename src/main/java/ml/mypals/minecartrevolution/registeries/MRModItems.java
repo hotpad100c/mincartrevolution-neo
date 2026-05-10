@@ -43,9 +43,6 @@ public class MRModItems {
                 itemGroup.accept(Items.TNT_MINECART);
             }).build());
 
-    public static void init() {
-        System.out.println("MRModItems loaded");
-    }
 
     public static void registerDispenserBehaviors() {
         for (MRMinecarts.MinecartEntry<?, ?> entry : MRMinecarts.MINECARTS) {
