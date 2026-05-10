@@ -7,17 +7,16 @@ import net.minecraft.core.particles.PowerParticleOption;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RailBlock;
 import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 public class DragonEggMinecart extends SingleBlockMinecartEntity {
@@ -39,7 +38,7 @@ public class DragonEggMinecart extends SingleBlockMinecartEntity {
         if (this.level().isClientSide()) {
             return;
         }
-        ;
+
         ServerChunkCache chunkManager = ((ServerLevel) this.level()).getChunkSource();
 
         chunkManager.addTicketAndLoadWithRadius(TicketType.DRAGON, ChunkPos.containing(this.blockPosition()), 2);
@@ -73,38 +72,17 @@ public class DragonEggMinecart extends SingleBlockMinecartEntity {
                         );
                     }
                 }
-
-                if (Math.abs(dz) == 1) {
-                    double z = (dz == -1) ? baseZ : baseZ + 16;
-                    for (int i = 0; i < 16; i += 2) {
-                        double x = baseX + i + random.nextDouble();
-                        world.sendParticles(
-                                PowerParticleOption.create(ParticleTypes.DRAGON_BREATH, 0F),
-                                x, pos.getY() + 0.2, z, 1, 0.0, 0.02 + random.nextDouble() * 0.18, 0.0, 0.002
-                        );
-                    }
-                }
             }
         }
     }
 
     @Override
-    public void move(@NonNull MoverType moverType, @NonNull Vec3 delta) {
-        Vec3 target = this.position().add(delta);
-        double td = target.horizontalDistance();
-        super.move(moverType, delta);
-        Vec3 actual = this.position();
-        double ad = actual.horizontalDistance();
-        if (horizontalCollision && td - ad > 0.05) {
-            runAway();
-        }
-    }
-
-    @Override
     public boolean hurtServer(@NonNull ServerLevel level, @NonNull DamageSource source, float damage) {
-        boolean bl = super.hurtServer(level, source, damage);
-        if (this.isAlive()) runAway();
-        return bl;
+        if (source.is(DamageTypeTags.IS_PROJECTILE)) {
+            this.runAway();
+            return true;
+        }
+        return super.hurtServer(level, source, damage);
     }
 
     private void runAway() {
@@ -119,11 +97,7 @@ public class DragonEggMinecart extends SingleBlockMinecartEntity {
                     random.nextInt(8) - random.nextInt(8),
                     random.nextInt(16) - random.nextInt(16)
             );
-
-            boolean railWanted = i < 500 && level.getBlockState(testPos.below()).getBlock() instanceof RailBlock;
-
             if (level.getBlockState(testPos).isAir()
-                    && railWanted
                     && !level.getBlockState(testPos.below()).isAir()
                     && worldBorder.isWithinBounds(testPos)
                     && level.isInsideBuildHeight(testPos)) {

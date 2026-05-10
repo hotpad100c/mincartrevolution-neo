@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.entity.minecarts.functioning;
 import ml.mypals.minecartrevolution.entity.minecarts.SingleBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import java.util.List;
@@ -126,17 +128,27 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
                     double distance = Math.sqrt(distanceSq);
                     double force = Math.max(0,0.6 * (1.0 - distance / radius));
                     Vec3 repulsion = vec3.normalize().scale(force);
-                    other.setDeltaMovement(other.getDeltaMovement().add(repulsion));
-                    this.setDeltaMovement(this.getDeltaMovement().subtract(repulsion));
+                    Vec3 currentVec = new Vec3(repulsion.x(), 0, repulsion.z());
+                    other.setDeltaMovement(other.getDeltaMovement().add(currentVec));
+                    if (!isBlockedBehind()) {
+                        this.setDeltaMovement(this.getDeltaMovement().subtract(currentVec));
+                    } else {
+                        this.setDeltaMovement(Vec3.ZERO);
+                    }
                 }
             }
         }
     }
 
+    private boolean isBlockedBehind() {
+        AABB predictedBox = this.getBoundingBox().inflate(0.1);
+        return this.level().getBlockCollisions(this, predictedBox).iterator().hasNext();
+    }
+
     private boolean isIronItem(ItemStack stack) {
         Item item = stack.getItem();
-        return item.getDescriptionId().contains("iron") ||
-               item == Items.ANVIL ||
-               item == Items.HOPPER;
+        return item.getDescriptionId().contains("iron")||
+                stack.is(ItemTags.ANVIL) ||
+                item == Items.HOPPER;
     }
 }
