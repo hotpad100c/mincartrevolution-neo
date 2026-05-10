@@ -10,7 +10,7 @@
   },
   "display": {
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
-    "description": "那个版本更新的？？",
+    "description": "哪个版本更新的？？",
     "frame": "goal",
     "icon": {
       "id": "minecraft:minecart"

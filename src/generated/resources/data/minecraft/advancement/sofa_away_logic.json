@@ -1,0 +1,23 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "sofa_away_criterion": {
+      "trigger": "minecartrevolution:sofa_away"
+    }
+  },
+  "display": {
+    "description": "坐在移动的沙发矿车上5秒并享受音乐",
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "id": "minecartrevolution:minecart_sofa"
+    },
+    "title": "Sofa Away!!!"
+  },
+  "requirements": [
+    [
+      "sofa_away_criterion"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

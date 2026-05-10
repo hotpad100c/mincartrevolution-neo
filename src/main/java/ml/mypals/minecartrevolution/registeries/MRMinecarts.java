@@ -389,4 +389,10 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.DRAGON_HEAD),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new MobHeadMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+
+    public static final MinecartEntry<SofaMinecart, MinecartWithBlockItem> SOFA_MINECART = register(
+            "sofa", SofaMinecart::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.BEDROCK),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new SofaMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 }

@@ -4,6 +4,7 @@ import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCrite
 import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import ml.mypals.minecartrevolution.advancements.criterion.SofaAwayCriterion;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -33,7 +34,7 @@ public class MRAdvancementProvider {
                 .display(
                         Items.MINECART,
                         Component.literal("矿车革命"),
-                        Component.literal("那个版本更新的？？"),
+                        Component.literal("哪个版本更新的？？"),
                         Identifier.withDefaultNamespace("textures/gui/advancements/backgrounds/adventure.png"),
                         AdvancementType.GOAL,
                         true,
@@ -157,5 +158,20 @@ public class MRAdvancementProvider {
                                 ))
                 )
                 .save(saver, "move_on_jukebox_minecart");
+
+        AdvancementHolder sofaAway = Advancement.Builder.advancement()
+                .parent(getBlockMinecart)
+                .display(
+                        MRMinecarts.SOFA_MINECART.item().get(),
+                        Component.literal("Sofa Away!!!"),
+                        Component.literal("坐在移动的沙发矿车上5秒并享受音乐"),
+                        null,
+                        AdvancementType.CHALLENGE,
+                        true,
+                        true,
+                        true
+                )
+                .addCriterion("sofa_away_criterion", SofaAwayCriterion.TriggerInstance.sofaAway())
+                .save(saver, "sofa_away_logic");
     }
 }

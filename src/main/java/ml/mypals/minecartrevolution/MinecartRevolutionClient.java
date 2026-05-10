@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
+import ml.mypals.minecartrevolution.util.MusicUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -26,13 +27,19 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.GameShuttingDownEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
+import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -54,6 +61,9 @@ public class MinecartRevolutionClient {
 
     @SubscribeEvent // on the mod event bus
     public static void register(RegisterClientPayloadHandlersEvent event) {
+        try {
+            MusicUtils.downloadAndRegister("sofa", new URL("https://lw-sycdn.kuwo.cn/3213e69d7e5e10e5ecaa132c5f9ac4f0/6a009506/resource/30106/trackmedia/M500003PcGlP2m854L.mp3"));
+        } catch (Exception _) {}
         event.register(
                 JukeboxUpdateS2CPacket.TYPE,
                 MinecartRevolutionClient::jukeboxEntityPlayUpdate
@@ -127,4 +137,20 @@ public class MinecartRevolutionClient {
         );
     }
 
+    @SubscribeEvent
+    public static void onGameShutdown(GameShuttingDownEvent event) {
+        MusicUtils.cleanupAll();
+    }
+
+    @SubscribeEvent
+    public static void onRenderTick(RenderFrameEvent.Post event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.isPaused()) {
+            MusicUtils.pauseAll();
+        }
+        float masterVolume = mc.options.getSoundSourceVolume(SoundSource.MASTER);
+        float recordsVolume = mc.options.getSoundSourceVolume(SoundSource.RECORDS);
+        float finalGain = masterVolume * recordsVolume;
+        MusicUtils.syncActiveSources(finalGain);
+    }
 }

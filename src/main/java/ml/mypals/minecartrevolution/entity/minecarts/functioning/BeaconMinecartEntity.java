@@ -173,9 +173,9 @@ public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements 
             }
 
             if (this.onBase) {
-                this.chargeTicks++;
+                this.chargeTicks = this.chargeTicks + 20;
             } else if (this.chargeTicks > 0) {
-                if(chargeTicks-1<=0){
+                if(chargeTicks - 1 <= 0){
                     updateLevels();
                     updateBeam();
                 }
@@ -241,7 +241,7 @@ public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements 
         int oldLevel = this.levels;
         int newLevel = 0;
 
-        BlockPos basePos = this.blockPosition().below();
+        BlockPos basePos = this.blockPosition();
 
         for (int level = 1; level <= 4; level++) {
             int y = basePos.getY() - level;
@@ -277,7 +277,6 @@ public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements 
 
     private void applyEffects() {
         if (this.level().isClientSide()) return;
-
         Holder<MobEffect> primary = getPrimaryEffect();
         Holder<MobEffect> secondary = getSecondaryEffect();
 
