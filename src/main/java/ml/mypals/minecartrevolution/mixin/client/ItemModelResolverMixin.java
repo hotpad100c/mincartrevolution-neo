@@ -14,6 +14,7 @@ import net.minecraft.client.resources.model.cuboid.ItemTransform;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
@@ -128,6 +129,9 @@ public class ItemModelResolverMixin {
         ItemStackRenderState tempBlockState = new ItemStackRenderState();
         tempBlockState.displayContext = displayContext;
 
+        if (blockInside.is(BlockTags.SHULKER_BOXES) && blockInside.hasProperty(net.minecraft.world.level.block.ShulkerBoxBlock.FACING)) {
+            blockInside = blockInside.setValue(net.minecraft.world.level.block.ShulkerBoxBlock.FACING, Direction.DOWN);
+        }
         ItemStack blockStack = new ItemStack(blockInside.getBlock());
         Identifier blockModelId = blockStack.get(DataComponents.ITEM_MODEL);
 

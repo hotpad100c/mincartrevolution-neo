@@ -62,7 +62,7 @@ public class MinecartRevolutionClient {
     @SubscribeEvent // on the mod event bus
     public static void register(RegisterClientPayloadHandlersEvent event) {
         try {
-            MusicUtils.downloadAndRegister("sofa", new URL("https://lw-sycdn.kuwo.cn/3213e69d7e5e10e5ecaa132c5f9ac4f0/6a009506/resource/30106/trackmedia/M500003PcGlP2m854L.mp3"));
+            MusicUtils.prepareMusic("sofa", new URL("https://lw-sycdn.kuwo.cn/3213e69d7e5e10e5ecaa132c5f9ac4f0/6a009506/resource/30106/trackmedia/M500003PcGlP2m854L.mp3"));
         } catch (Exception _) {}
         event.register(
                 JukeboxUpdateS2CPacket.TYPE,
@@ -135,22 +135,5 @@ public class MinecartRevolutionClient {
                 true,
                 Pack.Position.TOP
         );
-    }
-
-    @SubscribeEvent
-    public static void onGameShutdown(GameShuttingDownEvent event) {
-        MusicUtils.cleanupAll();
-    }
-
-    @SubscribeEvent
-    public static void onRenderTick(RenderFrameEvent.Post event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.isPaused()) {
-            MusicUtils.pauseAll();
-        }
-        float masterVolume = mc.options.getSoundSourceVolume(SoundSource.MASTER);
-        float recordsVolume = mc.options.getSoundSourceVolume(SoundSource.RECORDS);
-        float finalGain = masterVolume * recordsVolume;
-        MusicUtils.syncActiveSources(finalGain);
     }
 }

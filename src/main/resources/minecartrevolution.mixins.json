@@ -30,6 +30,8 @@
     "client.ItemModelResolverMixin",
     "client.LevelRendererMixin",
     "client.MinecartRenderStateMixin",
+    "client.SoundBufferLibraryMixin",
+    "client.SoundManagerMixin",
     "light.LevelRendererMixin"
   ]
 }
