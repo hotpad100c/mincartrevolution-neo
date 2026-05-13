@@ -150,11 +150,11 @@ public class MRMinecarts {
     public static final DeferredHolder<EntityType<?>, EntityType<HorizontalDirectionalRedstoneEmitterPowerMinecartEntity>> DIRECTIONAL_POWER_PROVIDER_MINECART = registerEntityOnly(
             "power_minecart_directional", HorizontalDirectionalRedstoneEmitterPowerMinecartEntity::new);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<PresherPlateMinecartEntity>> PRESHER_PLATE_MINECART = registerEntityOnly(
-            "presher_plate_minecart", PresherPlateMinecartEntity::new);
+    public static final DeferredHolder<EntityType<?>, EntityType<PressurePlateMinecartEntity>> PRESHER_PLATE_MINECART = registerEntityOnly(
+            "pressure_plate_minecart", PressurePlateMinecartEntity::new);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<WeightPresherPlateMinecartEntity>> WEIGHT_PRESHER_PLATE_MINECART = registerEntityOnly(
-            "weight_presher_plate_minecart", WeightPresherPlateMinecartEntity::new);
+    public static final DeferredHolder<EntityType<?>, EntityType<WeightPressurePlateMinecartEntity>> WEIGHT_PRESHER_PLATE_MINECART = registerEntityOnly(
+            "weight_pressure_plate_minecart", WeightPressurePlateMinecartEntity::new);
 
     public static final DeferredHolder<EntityType<?>, EntityType<VariantBlockMinecartEntity>> BLOCK_MINECART = registerEntityOnly(
             "block_minecart", VariantBlockMinecartEntity::new);
@@ -204,23 +204,23 @@ public class MRMinecarts {
             MultiVariantMinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new VariantBlockMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-    public static final MinecartEntry<PresherPlateMinecartEntity, MultiVariantMinecartWithBlockItem> PRESHER_PLATE_MINECART_ITEM = registerItemOnly(
+    public static final MinecartEntry<PressurePlateMinecartEntity, MultiVariantMinecartWithBlockItem> PRESHER_PLATE_MINECART_ITEM = registerItemOnly(
             "minecart_presher_plate", PRESHER_PLATE_MINECART,
             p -> new MultiVariantMinecartWithBlockItem(p.stacksTo(1), Blocks.OAK_PRESSURE_PLATE),
             null,
-            (entity, item) -> (w, pos) -> new PresherPlateMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+            (entity, item) -> (w, pos) -> new PressurePlateMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-    public static final MinecartEntry<WeightPresherPlateMinecartEntity, MinecartWithBlockItem> IRON_PRESHER_PLATE_MINECART = registerItemOnly(
+    public static final MinecartEntry<WeightPressurePlateMinecartEntity, MinecartWithBlockItem> IRON_PRESHER_PLATE_MINECART = registerItemOnly(
             "minecart_iron_presher_plate", WEIGHT_PRESHER_PLATE_MINECART,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE),
             null,
-            (entity, item) -> (w, pos) -> new WeightPresherPlateMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+            (entity, item) -> (w, pos) -> new WeightPressurePlateMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-    public static final MinecartEntry<WeightPresherPlateMinecartEntity, MinecartWithBlockItem> GOLDEN_PRESHER_PLATE_MINECART = registerItemOnly(
+    public static final MinecartEntry<WeightPressurePlateMinecartEntity, MinecartWithBlockItem> GOLDEN_PRESHER_PLATE_MINECART = registerItemOnly(
             "minecart_golden_presher_plate", WEIGHT_PRESHER_PLATE_MINECART,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE),
             null,
-            (entity, item) -> (w, pos) -> new WeightPresherPlateMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+            (entity, item) -> (w, pos) -> new WeightPressurePlateMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
 
     public static final MinecartEntry<SpongeMinecartEntity, MinecartWithBlockItem> SPONGE_MINECART = register(
@@ -395,4 +395,9 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.BEDROCK),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new SofaMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+    public static final MinecartEntry<WoolMinecartEntity, MinecartWithBlockItem> WOOL_MINECART = register(
+            "wool", WoolMinecartEntity::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WHITE_WOOL),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new WoolMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 }

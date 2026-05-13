@@ -2,21 +2,10 @@ package ml.mypals.minecartrevolution.behaviours;
 
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
-import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.functioning.MagnetMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.HorizontalDirectionalRedstoneEmitterPowerMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.PresherPlateMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneBlockMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.redstone.WeightPresherPlateMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.functioning.NonInventoryWorkingBlockMinecartEntity;
-import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.*;
@@ -26,12 +15,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -46,6 +33,7 @@ import static ml.mypals.minecartrevolution.entity.minecarts.maps.MobHeadEntityMa
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.NonInventoryWorkingBlockEntityMapper.NON_INVENTORY_WORKING;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.PressurePlateEntityMapper.PRESSURE_PLATE_ENTITY_MAP;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.ShulkerBoxEntityMapper.SHULKER_ENTITY_MAP;
+import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.WOOL_ENTITY_MAP;
 
 public class MinecartTransformManager {
     public static final Map<Item, BiFunction<Level, Vec3, AbstractMinecart>> factoryMap = new HashMap<>();
@@ -103,10 +91,11 @@ public class MinecartTransformManager {
 
         // ── Bulk mappers (shulker colours, pressure plates, heads, etc.) ──
         PRESSURE_PLATE_ENTITY_MAP.forEach((block, f) -> factoryMap.put(block.asItem(), f));
-        SHULKER_ENTITY_MAP.forEach(      (block, f) -> factoryMap.put(block.asItem(), f));
-        NON_INVENTORY_WORKING.forEach(   (block, f) -> factoryMap.put(block.asItem(), f));
-        CHEST_MINECARTS.forEach(         (block, f) -> factoryMap.put(block.asItem(), f));
-        HEAD_MINECARTS.forEach(          (block, f) -> factoryMap.put(block.asItem(), f));
+        SHULKER_ENTITY_MAP.forEach(       (block, f) -> factoryMap.put(block.asItem(), f));
+        NON_INVENTORY_WORKING.forEach(    (block, f) -> factoryMap.put(block.asItem(), f));
+        CHEST_MINECARTS.forEach(          (block, f) -> factoryMap.put(block.asItem(), f));
+        HEAD_MINECARTS.forEach(           (block, f) -> factoryMap.put(block.asItem(), f));
+        WOOL_ENTITY_MAP.forEach(          (block, f) -> factoryMap.put(block.asItem(), f));
 
         // ── Auto-register from MRMinecarts.MINECARTS ─────────────────────
         for (MRMinecarts.MinecartEntry<?, ?> entry : MRMinecarts.MINECARTS) {

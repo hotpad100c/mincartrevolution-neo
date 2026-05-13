@@ -16,13 +16,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-public class PresherPlateMinecartEntity extends VariantBlockMinecartEntity implements PowerEmitterMinecartEntity {
+public class PressurePlateMinecartEntity extends VariantBlockMinecartEntity implements PowerEmitterMinecartEntity {
 
-    public PresherPlateMinecartEntity(EntityType<? extends PresherPlateMinecartEntity> entityType, Level world, double x, double y, double z, Item item) {
+    public PressurePlateMinecartEntity(EntityType<? extends PressurePlateMinecartEntity> entityType, Level world, double x, double y, double z, Item item) {
         super(entityType, world, x, y, z, item);
     }
 
-    public PresherPlateMinecartEntity(EntityType<? extends PresherPlateMinecartEntity> presherPlateMinecartEntityEntityType, Level world) {
+    public PressurePlateMinecartEntity(EntityType<? extends PressurePlateMinecartEntity> presherPlateMinecartEntityEntityType, Level world) {
         super(presherPlateMinecartEntityEntityType, world);
     }
 

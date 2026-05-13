@@ -15,14 +15,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-public class WeightPresherPlateMinecartEntity extends SingleBlockMinecartEntity implements PowerEmitterMinecartEntity {
+public class WeightPressurePlateMinecartEntity extends SingleBlockMinecartEntity implements PowerEmitterMinecartEntity {
     private static final int MAX_BOUNDING_BOX = 64; // Ghast
 
-    public WeightPresherPlateMinecartEntity(EntityType<? extends WeightPresherPlateMinecartEntity> entityType, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
+    public WeightPressurePlateMinecartEntity(EntityType<? extends WeightPressurePlateMinecartEntity> entityType, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(entityType, world, x, y, z, correspondingItem);
     }
 
-    public WeightPresherPlateMinecartEntity(EntityType<WeightPresherPlateMinecartEntity> weightPresherPlateMinecartEntityEntityType, Level world) {
+    public WeightPressurePlateMinecartEntity(EntityType<WeightPressurePlateMinecartEntity> weightPresherPlateMinecartEntityEntityType, Level world) {
         super(weightPresherPlateMinecartEntityEntityType, world);
     }
 
