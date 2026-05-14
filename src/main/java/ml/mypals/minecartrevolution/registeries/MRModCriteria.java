@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.registeries;
 import ml.mypals.minecartrevolution.MinecartRevolution;
 import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.NoGravityCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.SofaAwayCriterion;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +26,8 @@ public class MRModCriteria {
 
     public static final DeferredHolder<CriterionTrigger<?>, SofaAwayCriterion> SOFA_AWAY = TRIGGERS.
             register("sofa_away", SofaAwayCriterion::new);
-
+    public static final DeferredHolder<CriterionTrigger<?>, NoGravityCriterion> NO_GRAVITY = TRIGGERS.
+            register("no_gravity", NoGravityCriterion::new);
     public static void init() {
         System.out.println("MRModCriteria loaded");
     }

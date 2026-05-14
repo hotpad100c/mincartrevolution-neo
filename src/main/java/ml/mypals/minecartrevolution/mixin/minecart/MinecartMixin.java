@@ -1,6 +1,6 @@
 package ml.mypals.minecartrevolution.mixin.minecart;
 
-import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
+import ml.mypals.minecartrevolution.advancements.criterion.NoGravityCriterion;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
@@ -16,17 +16,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,6 +31,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
+
+import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.byColor;
 
 @Mixin(Minecart.class)
 public abstract class MinecartMixin extends AbstractMinecart {
@@ -103,6 +100,14 @@ public abstract class MinecartMixin extends AbstractMinecart {
 
                     if (player instanceof ServerPlayer serverPlayerEntity) {
                         MRModCriteria.BLOCK_CART_CRAFTED.get().trigger(serverPlayerEntity, this);
+                        boolean flag = false;
+                        for (DyeColor color : DyeColor.values()) {
+                            Block block = byColor(color);
+                            flag |= blockItem.getBlock().equals(block);
+                        }
+                        if (flag) {
+                            MRModCriteria.NO_GRAVITY.get().trigger(serverPlayerEntity);
+                        }
                     }
 
                     cir.setReturnValue(InteractionResult.SUCCESS);

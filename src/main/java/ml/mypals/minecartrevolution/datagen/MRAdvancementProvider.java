@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution.datagen;
 
 import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.NoGravityCriterion;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.advancements.criterion.SofaAwayCriterion;
@@ -173,5 +174,20 @@ public class MRAdvancementProvider {
                 )
                 .addCriterion("sofa_away_criterion", SofaAwayCriterion.TriggerInstance.sofaAway())
                 .save(saver, "sofa_away_logic");
+
+        AdvancementHolder noGravity = Advancement.Builder.advancement()
+                .parent(getBlockMinecart)
+                .display(
+                        MRMinecarts.WOOL_MINECART.item().get(),
+                        Component.literal("反重力！"),
+                        Component.literal("放置一个无重力矿车"),
+                        null,
+                        AdvancementType.CHALLENGE,
+                        true,
+                        true,
+                        true
+                )
+                .addCriterion("no_gravity_criterion", NoGravityCriterion.TriggerInstance.noGravity())
+                .save(saver, "no_gravity_logic");
     }
 }
