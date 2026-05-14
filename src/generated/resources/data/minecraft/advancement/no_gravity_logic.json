@@ -1,0 +1,23 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "no_gravity_criterion": {
+      "trigger": "minecartrevolution:no_gravity"
+    }
+  },
+  "display": {
+    "description": "放置一个无重力矿车",
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "id": "minecartrevolution:minecart_wool"
+    },
+    "title": "反重力！"
+  },
+  "requirements": [
+    [
+      "no_gravity_criterion"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
