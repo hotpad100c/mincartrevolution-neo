@@ -1,10 +1,11 @@
 {
   "item.minecartrevolution.minecart_with_block": "%s%s",
+  "entity.minecartrevolution.cobweb_minecart": "蛛网矿车",
+  "entity.minecartrevolution.dragon_egg_minecart": "龙蛋矿车",
   "entity.minecartrevolution.minecart_with_block": "带方块的矿车",
   "entity.minecartrevolution.harmful_minecart": "危险矿车",
   "entity.minecartrevolution.barrel_minecart": "桶矿车",
-  "entity.minecartrevolution.cobweb_minecart": "蛛网矿车",
-  "entity.minecartrevolution.dragon_egg_minecart": "龙蛋矿车",
   "entity.minecartrevolution.working_minecart": "工作矿车",
+  "entity.minecartrevolution.white_wool_minecart": "羊毛矿车",
   "itemGroup.minecartrevolution": "矿车革命"
 }
