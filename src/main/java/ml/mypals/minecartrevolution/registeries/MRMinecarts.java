@@ -400,4 +400,10 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WHITE_WOOL),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new WoolMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+
+    public static final MinecartEntry<ObsidianMinecart, MinecartWithBlockItem> OBSIDIAN_MINECART = register(
+            "obsidian", ObsidianMinecart::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OBSIDIAN),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new ObsidianMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 }
