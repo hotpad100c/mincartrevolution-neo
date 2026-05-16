@@ -8,9 +8,11 @@
     "LevelMixin",
     "RedstoneViewMixin",
     "blocks.BlockSourceMixin",
+    "blocks.PistonBlockInvoker",
     "blocks.ProjectileDispenseBehaviorMixin",
     "blocks.UnrenderableBlocksMixin",
     "entity.EntityMixin",
+    "level.ServerLevelMixin",
     "light.LevelChunkMixin",
     "minecart.AbstractMinecartMixin",
     "minecart.ChestMinecartMixin",
@@ -32,6 +34,7 @@
     "client.MinecartRenderStateMixin",
     "client.SoundBufferLibraryMixin",
     "client.SoundManagerMixin",
+    "level.ClientLevelMixin",
     "light.LevelRendererMixin"
   ]
 }

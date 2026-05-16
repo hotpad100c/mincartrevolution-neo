@@ -1,20 +1,27 @@
 package ml.mypals.minecartrevolution;
 
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
+import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.PortalMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
 import ml.mypals.minecartrevolution.entity.others.AttackMonsterMinecartGoal;
 import ml.mypals.minecartrevolution.entity.others.FearDragonHeadMinecartGoal;
 import ml.mypals.minecartrevolution.entity.others.FearMonsterMinecartGoal;
+import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
+import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
+import ml.mypals.minecartrevolution.mixin.level.ServerLevelMixin;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.level.entity.EntitySectionStorage;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
@@ -117,6 +124,19 @@ public class MinecartRevolution {
                     1,
                     new AttackMonsterMinecartGoal(ironGolem, MobHeadMinecartEntity.class, 5)
             );
+        }
+        if(event.getEntity() instanceof PortalMinecartEntity portalMinecartEntity){
+            PortalMinecartStorage storage = ((IServerLevelExt)event.getLevel()).mincartrevolution_neo$getPortalMinecartStorage();
+            storage.add(portalMinecartEntity);
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityLeave(EntityLeaveLevelEvent event) {
+
+        if(event.getEntity() instanceof PortalMinecartEntity portalMinecartEntity){
+            PortalMinecartStorage storage = ((IServerLevelExt)event.getLevel()).mincartrevolution_neo$getPortalMinecartStorage();
+            storage.remove(portalMinecartEntity);
         }
     }
 }

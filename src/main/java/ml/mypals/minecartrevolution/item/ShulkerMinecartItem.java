@@ -11,7 +11,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Optional;
 
 public class ShulkerMinecartItem extends MultiVariantMinecartWithBlockItem {
 
@@ -22,15 +25,8 @@ public class ShulkerMinecartItem extends MultiVariantMinecartWithBlockItem {
     @Override
     public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, MinecartWithBlockItem corrospondingItem, ItemStack stack) {
 
-        CustomData nbtCompound = stack.get(DataComponents.CUSTOM_DATA);
         ItemContainerContents inventoryNbt = stack.get(DataComponents.CONTAINER);
-        Block block = corrospondingItem.blockInside;
-        if (nbtCompound != null && nbtCompound.contains("block_in_minecart")) {
-            block = Block.stateById(nbtCompound.copyTag().getInt("block_in_minecart").orElse(1)).getBlock();
-        }
-        AbstractMinecart abstractMinecartEntity = MinecartTransformManager.spawnFromItem(
-                serverWorld, corrospondingItem, new Vec3(x, y, z), stack
-        );
+        AbstractMinecart abstractMinecartEntity = super.getCart(serverWorld, x,y,z,corrospondingItem,stack);
         if (abstractMinecartEntity instanceof ShulkerMinecartEntity shulkerMinecartEntity) {
             if (inventoryNbt != null) {
                 inventoryNbt.copyInto(shulkerMinecartEntity.getItemStacks());

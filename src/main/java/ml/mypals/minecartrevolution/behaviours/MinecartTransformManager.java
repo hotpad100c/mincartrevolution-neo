@@ -5,6 +5,7 @@ import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -114,11 +115,13 @@ public class MinecartTransformManager {
         factoryMap.put(item, factory);
     }
 
-    public static AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, @Nullable ItemStack handStack) {
+    public static AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
         BiFunction<Level, Vec3, AbstractMinecart> factory =
             factoryMap.getOrDefault(item,
                 (w, p) -> new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
         AbstractMinecart minecart = factory.apply(world, pos);
+        Component name = handStack.getCustomName();
+        minecart.setCustomName(name);
         return doExtraCheck(minecart, handStack);
     }
 

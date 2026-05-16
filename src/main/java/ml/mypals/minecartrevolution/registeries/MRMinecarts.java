@@ -400,6 +400,17 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WHITE_WOOL),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new WoolMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+    public static final MinecartEntry<NetherPortalMinecartEntity, MinecartWithBlockItem> PORTAL_MINECART = register(
+            "nether_portal", NetherPortalMinecartEntity::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.NETHER_PORTAL),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new NetherPortalMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+
+    public static final MinecartEntry<EnderPortalMinecartEntity, MinecartWithBlockItem> ENDER_PORTAL_MINECART = register(
+            "end_portal", EnderPortalMinecartEntity::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.END_PORTAL),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new EnderPortalMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
     public static final MinecartEntry<ObsidianMinecart, MinecartWithBlockItem> OBSIDIAN_MINECART = register(
             "obsidian", ObsidianMinecart::new,

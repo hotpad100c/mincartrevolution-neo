@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +25,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
+import net.minecraft.world.entity.vehicle.minecart.MinecartBehavior;
+import net.minecraft.world.entity.vehicle.minecart.OldMinecartBehavior;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -110,6 +114,14 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         minecartEntity.setDamage(50.0F);
 
     }
+    @Override
+    public @NonNull Component getName() {
+        if(getCustomName() != null) return getCustomName();
+        String blockName = getDisplayBlockState().getBlock().getName().getString();
+        String cartName = Items.MINECART.getName(Items.MINECART.getDefaultInstance()).getString();
+        return Component.translatable("item.minecartrevolution.minecart_with_block", blockName, cartName);
+    }
+
 
     public ItemStack addDataToStack(ItemStack stack) {
         return stack;
@@ -214,6 +226,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         BlockState blockState = getDisplayBlockState();
         nbt.putInt("block_in_minecart", Block.getId(blockState));
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+        stack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
         return stack;
     }
 
@@ -355,7 +368,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public boolean canCollideWith(Entity entity) {
-        return Block.isShapeFullBlock(getDisplayBlockState().getOcclusionShape()) && canVehicleCollide(this, entity);
+        return false;
+        //return Block.isShapeFullBlock(getDisplayBlockState().getCollisionShape(level(),blockPosition())) && canVehicleCollide(this, entity);
     }
 
     public static boolean canVehicleCollide(Entity vehicle, Entity entity) {
@@ -370,7 +384,6 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
         Vec3 movement = this.position().subtract(this.xOld, this.yOld, this.zOld);
 
-        double moveLength = movement.length();
 
         AABB aabb = this.getBoundingBox().inflate(0.0, 0.25, 0.0);
 
@@ -380,16 +393,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
         for (Entity entity : level().getEntitiesOfClass(Entity.class, aabb)) {
 
-            if (moveLength < 1.0E-7) {
-                continue;
-            }
-
             if (entity == this || entity.getVehicle() != null) {
-                continue;
-            }
-
-            if (!(entity instanceof Player || entity instanceof ItemEntity)
-                    && level().isClientSide()) {
                 continue;
             }
 
@@ -406,22 +410,39 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
             double z = velocity.z * friction;
 
             double y = velocity.y;
+            BlockState below = level().getBlockState(blockPosition());
 
+            if (below.getBlock() instanceof RailBlock) {
+
+                RailShape shape = below.getValue(RailBlock.SHAPE);
+
+                if (
+                        shape == RailShape.NORTH_EAST ||
+                                shape == RailShape.NORTH_WEST ||
+                                shape == RailShape.SOUTH_EAST ||
+                                shape == RailShape.SOUTH_WEST
+                ) {
+
+                    entity.setPos(
+                            this.getX(),
+                            entity.getY(),
+                            this.getZ()
+                    );
+                }
+            }
             if (Math.abs(x) < 0.003) x = 0;
             if (Math.abs(z) < 0.003) z = 0;
 
             entity.setDeltaMovement(x, y, z);
             entity.setOnGround(true);
-
             entity.applyEffectsFromBlocks(previousPos, entity.position());
-
-            entity.removeLatestMovementRecording();
+            entity.hurtMarked = true;
         }
     }
     @Override
     public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
         if(source.getEntity() instanceof Player player){
-            this.addDeltaMovement(this.position().subtract(player.position()));
+            this.addDeltaMovement(this.position().subtract(player.position()).horizontal());
         }
         return super.hurtServer(level, source, damage);
     }
@@ -429,7 +450,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     @Override
     public boolean hurtClient(DamageSource source) {
         if(source.getEntity() instanceof Player player){
-            this.addDeltaMovement(this.position().subtract(player.position()));
+            this.addDeltaMovement(this.position().subtract(player.position()).horizontal());
         }
         return super.hurtClient(source);
     }

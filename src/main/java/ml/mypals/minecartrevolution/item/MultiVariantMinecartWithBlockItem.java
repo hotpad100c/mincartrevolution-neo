@@ -42,17 +42,4 @@ public class MultiVariantMinecartWithBlockItem extends MinecartWithBlockItem {
         return Component.nullToEmpty(String.format(prompt, blockName, cartName));
     }
 
-    /*@Override
-    public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, AdvancedMinecartEntityTypes.Type type, MinecartWithBlockItem corrospondingItem, ItemStack stack) {
-
-        CustomData nbtCompound = stack.get(DataComponents.CUSTOM_DATA);
-        Block block = corrospondingItem.blockInside;
-        if (nbtCompound != null && nbtCompound.contains("block_in_minecart")) {
-            block = Block.stateById(nbtCompound.copyTag().getInt("block_in_minecart").orElse(1)).getBlock();
-        }
-        return MinecartTransformManager.getTransform(
-                serverWorld, corrospondingItem, Item.byBlock(block), new Vec3(x, y, z),
-                type
-        );
-    }*/
 }
