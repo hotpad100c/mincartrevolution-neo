@@ -21,9 +21,8 @@ public class ObsidianMinecart extends SingleBlockMinecartEntity {
     {
         super.tick();
         if (this.isInLava()) {
-            Vec3 motion = this.getDeltaMovement();
             this.setNoGravity(true);
-            this.setDeltaMovement(motion.x, 0, motion.z);
+            this.addDeltaMovement(new Vec3(0,0.01,0));
         }
         else
         {

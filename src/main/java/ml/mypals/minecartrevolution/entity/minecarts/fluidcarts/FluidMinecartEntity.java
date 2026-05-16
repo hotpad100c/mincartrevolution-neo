@@ -23,6 +23,8 @@ import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 public class FluidMinecartEntity extends VariantBlockMinecartEntity {
     private static final Logger log = LoggerFactory.getLogger(FluidMinecartEntity.class);
 
@@ -49,7 +51,8 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
                     if (!level().isClientSide()) {
                         stack.split(1);
                         player.getInventory().add(new ItemStack(Items.WATER_BUCKET));
-                        transformTo(Items.AIR);
+                        this.setCustomDisplayBlockState(Optional.of(Blocks.AIR.defaultBlockState()));
+                        transformTo(Blocks.AIR);
                     }
                     playBucketSound(Blocks.WATER);
                     return InteractionResult.SUCCESS;
@@ -57,7 +60,8 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
                     if (!level().isClientSide()) {
                         stack.split(1);
                         player.getInventory().add(new ItemStack(Items.LAVA_BUCKET));
-                        transformTo(Items.AIR);
+                        this.setCustomDisplayBlockState(Optional.of(Blocks.AIR.defaultBlockState()));
+                        transformTo(Blocks.AIR);
                     }
                     playBucketSound(Blocks.LAVA);
                     return InteractionResult.SUCCESS;

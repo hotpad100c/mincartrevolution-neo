@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.behaviours;
 
+import com.mojang.datafixers.util.Either;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
@@ -26,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiFunction;
+
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.LOGGER;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.ChestEntityMapper.CHEST_MINECARTS;
@@ -37,9 +38,13 @@ import static ml.mypals.minecartrevolution.entity.minecarts.maps.ShulkerBoxEntit
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.WOOL_ENTITY_MAP;
 
 public class MinecartTransformManager {
-    public static final Map<Item, BiFunction<Level, Vec3, AbstractMinecart>> factoryMap = new HashMap<>();
+    public static final Map<Object, MinecartTransformConfig> factoryMap = new HashMap<>();
 
     static {
+        // ── Specific Custom Transforms (Fluid Buckets, etc.) ─────────
+        register(Items.WATER_BUCKET, MinecartTransformConfig.fluid(MRMinecarts.WATER_MINECART.entity()::get, Items.WATER_BUCKET));
+        register(Items.LAVA_BUCKET, MinecartTransformConfig.fluid(MRMinecarts.LAVA_MINECART.entity()::get, Items.LAVA_BUCKET));
+
         // ── Vanilla conversions (not in MRMinecarts) ─────────────────────
         register(Blocks.TRAPPED_CHEST,   (w, pos) -> new TrappedChestMinecartEntity(w, pos.x, pos.y, pos.z));
         register(Blocks.FURNACE,         (w, pos) -> {
@@ -91,48 +96,69 @@ public class MinecartTransformManager {
         });
 
         // ── Bulk mappers (shulker colours, pressure plates, heads, etc.) ──
-        PRESSURE_PLATE_ENTITY_MAP.forEach((block, f) -> factoryMap.put(block.asItem(), f));
-        SHULKER_ENTITY_MAP.forEach(       (block, f) -> factoryMap.put(block.asItem(), f));
-        NON_INVENTORY_WORKING.forEach(    (block, f) -> factoryMap.put(block.asItem(), f));
-        CHEST_MINECARTS.forEach(          (block, f) -> factoryMap.put(block.asItem(), f));
-        HEAD_MINECARTS.forEach(           (block, f) -> factoryMap.put(block.asItem(), f));
-        WOOL_ENTITY_MAP.forEach(          (block, f) -> factoryMap.put(block.asItem(), f));
+        PRESSURE_PLATE_ENTITY_MAP.forEach((block, f) -> factoryMap.put(block.asItem(), f::apply));
+        SHULKER_ENTITY_MAP.forEach(       (block, f) -> factoryMap.put(block.asItem(), f::apply));
+        NON_INVENTORY_WORKING.forEach(    (block, f) -> factoryMap.put(block.asItem(), f::apply));
+        CHEST_MINECARTS.forEach(          (block, f) -> factoryMap.put(block.asItem(), f::apply));
+        HEAD_MINECARTS.forEach(           (block, f) -> factoryMap.put(block.asItem(), f::apply));
+        WOOL_ENTITY_MAP.forEach(          (block, f) -> factoryMap.put(block.asItem(), f::apply));
 
-        // ── Auto-register from MRMinecarts.MINECARTS ─────────────────────
         for (MRMinecarts.MinecartEntry<?, ?> entry : MRMinecarts.MINECARTS) {
+            Item corItem = entry.item().get();
             if (entry.spawnFactory() != null) {
-                factoryMap.put(entry.item().get(), entry.spawnFactory());
-                factoryMap.put(entry.item().get().getBlockInside().asItem(), entry.spawnFactory());
+                factoryMap.put(corItem, entry.spawnFactory()::apply);
+                Block blockInside = entry.item().get().getBlockInside();
+                Item blockInsideItem = blockInside.asItem();
+                if (corItem != Items.AIR) {
+                    factoryMap.put(blockInside, entry.spawnFactory()::apply);
+                    factoryMap.put(blockInsideItem, entry.spawnFactory()::apply);
+                }
             }
         }
     }
 
-    private static void register(Block block, BiFunction<Level, Vec3, AbstractMinecart> factory) {
+    private static void register(Block block, MinecartTransformConfig factory) {
         factoryMap.put(block.asItem(), factory);
     }
 
-    private static void register(Item item, BiFunction<Level, Vec3, AbstractMinecart> factory) {
+    private static void register(Item item, MinecartTransformConfig factory) {
         factoryMap.put(item, factory);
     }
 
     public static AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
-        BiFunction<Level, Vec3, AbstractMinecart> factory =
+        MinecartTransformConfig factory =
             factoryMap.getOrDefault(item,
                 (w, p) -> new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
-        AbstractMinecart minecart = factory.apply(world, pos);
+        AbstractMinecart minecart = factory.createMinecart(world, pos);
+        Component name = handStack.getCustomName();
+        minecart.setCustomName(name);
+        return doExtraCheck(minecart, handStack);
+    }
+    public static AbstractMinecart spawnFromBlock(Level world, Block block, Vec3 pos, ItemStack handStack) {
+        MinecartTransformConfig factory =
+                factoryMap.getOrDefault(block,
+                        (w, p) -> new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, block));
+        AbstractMinecart minecart = factory.createMinecart(world, pos);
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
         return doExtraCheck(minecart, handStack);
     }
 
-    public static AbstractMinecart checkForTransform(Level world, Vec3 pos, Item item, AbstractMinecart original, ItemStack handStack) {
-        AbstractMinecart minecart = spawnFromItem(world, item, pos, handStack);
+    public static AbstractMinecart checkForTransform(Level level, Vec3 pos, Item item, AbstractMinecart original, ItemStack handStack) {
+        AbstractMinecart minecart = spawnFromItem(level, item, pos, handStack);
+        return configMinecartData(level, minecart, original);
+    }
+    public static AbstractMinecart checkForTransform(Level level, Vec3 pos, Block block, AbstractMinecart original, ItemStack handStack) {
+        AbstractMinecart minecart = spawnFromBlock(level, block, pos, handStack);
+        return configMinecartData(level, minecart, original);
+    }
+    public static AbstractMinecart configMinecartData(Level level, AbstractMinecart minecart, AbstractMinecart original){
         if (minecart != null) {
             ProblemReporter.PathElement PATH_ELEMENT = () -> "Minecart Transforming";
             ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(PATH_ELEMENT, LOGGER);
 
-            TagValueOutput valueOutput = TagValueOutput.createWithContext(reporter, world.registryAccess());
-            TagValueOutput valueOutput1 = TagValueOutput.createWithContext(reporter, world.registryAccess());
+            TagValueOutput valueOutput = TagValueOutput.createWithContext(reporter, level.registryAccess());
+            TagValueOutput valueOutput1 = TagValueOutput.createWithContext(reporter, level.registryAccess());
             minecart.saveWithoutId(valueOutput);
             original.saveWithoutId(valueOutput1);
 
@@ -140,8 +166,8 @@ public class MinecartTransformManager {
             CompoundTag nbtCompound1 = valueOutput1.buildResult();
             nbtCompound1.remove("Dimension");
 
-            ValueInput valueInput = TagValueInput.create(reporter, world.registryAccess(), nbtCompound);
-            ValueInput valueInput1 = TagValueInput.create(reporter, world.registryAccess(), nbtCompound1);
+            ValueInput valueInput = TagValueInput.create(reporter, level.registryAccess(), nbtCompound);
+            ValueInput valueInput1 = TagValueInput.create(reporter, level.registryAccess(), nbtCompound1);
 
             minecart.load(valueInput);
             minecart.load(valueInput1);
@@ -152,7 +178,7 @@ public class MinecartTransformManager {
             minecart.setDeltaMovement(original.getDeltaMovement());
             minecart.absSnapRotationTo(original.getYRot(), original.getXRot());
             original.remove(Entity.RemovalReason.DISCARDED);
-            world.addFreshEntity(minecart);
+            level.addFreshEntity(minecart);
 
             minecart.setHurtDir(-minecart.getHurtDir());
             minecart.setHurtTime(10);

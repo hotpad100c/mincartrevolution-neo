@@ -48,6 +48,7 @@ import java.util.Optional;
 public class VariantBlockMinecartEntity extends AbstractMinecart {
     public boolean activated = false;
     public boolean keepUpdatingLight = false;
+    private boolean movingEntities = false;
     public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
     }
@@ -61,6 +62,11 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z);
         Block block = Block.byItem(item);
+        this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
+    }
+
+    public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Block block) {
+        super(minecart, world, x, y, z);
         this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
     }
 
@@ -178,6 +184,9 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
     public void transformTo(Item item) {
         MinecartTransformManager.checkForTransform(level(), position(), item, this, ItemStack.EMPTY);
+    }
+    public void transformTo(Block block) {
+        MinecartTransformManager.checkForTransform(level(), position(), block, this, ItemStack.EMPTY);
     }
 
     protected void playBucketSound(Block block) {
@@ -378,71 +387,79 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public boolean canBeCollidedWith(@Nullable Entity other) {
+        if (movingEntities) return false;
         return true;
     }
+
     public void moveEntitiesAbove() {
-
         Vec3 movement = this.position().subtract(this.xOld, this.yOld, this.zOld);
+        float deltaRot = this.getYRot() - this.yRotO;
 
+        if (movement.lengthSqr() < 1.0E-7 && Math.abs(deltaRot) < 1.0E-5) return;
 
-        AABB aabb = this.getBoundingBox().inflate(0.0, 0.25, 0.0);
+        double topY = this.getBoundingBox().maxY;
+        double oldTopY = topY - movement.y;
+
+        AABB aabb = this.getBoundingBox().minmax(this.getBoundingBox().move(-movement.x, -movement.y, -movement.z)).inflate(0.1, 0.25, 0.1);
 
         if (getDisplayBlockState().is(Blocks.HONEY_BLOCK)) {
             aabb = aabb.inflate(0.3, 0.0, 0.3);
         }
 
-        for (Entity entity : level().getEntitiesOfClass(Entity.class, aabb)) {
-
-            if (entity == this || entity.getVehicle() != null) {
-                continue;
-            }
-
-            Vec3 previousPos = entity.position();
-            entity.move(MoverType.PISTON, movement);
-
-            Vec3 velocity = entity.getDeltaMovement();
-
-            float slipperiness = getDisplayBlockState().getBlock().getFriction();
-
-            float friction = slipperiness * 0.91F;
-
-            double x = velocity.x * friction;
-            double z = velocity.z * friction;
-
-            double y = velocity.y;
-            BlockState below = level().getBlockState(blockPosition());
-
-            if (below.getBlock() instanceof RailBlock) {
-
-                RailShape shape = below.getValue(RailBlock.SHAPE);
-
-                if (
-                        shape == RailShape.NORTH_EAST ||
-                                shape == RailShape.NORTH_WEST ||
-                                shape == RailShape.SOUTH_EAST ||
-                                shape == RailShape.SOUTH_WEST
-                ) {
-
-                    entity.setPos(
-                            this.getX(),
-                            entity.getY(),
-                            this.getZ()
-                    );
+        this.movingEntities = true;
+        try {
+            for (Entity entity : level().getEntitiesOfClass(Entity.class, aabb)) {
+                if (entity == this || entity.getVehicle() != null || entity.isPassenger()) {
+                    continue;
                 }
-            }
-            if (Math.abs(x) < 0.003) x = 0;
-            if (Math.abs(z) < 0.003) z = 0;
 
-            entity.setDeltaMovement(x, y, z);
-            entity.setOnGround(true);
-            entity.applyEffectsFromBlocks(previousPos, entity.position());
-            entity.hurtMarked = true;
+                if (entity.getBoundingBox().minY < Math.min(topY, oldTopY) - 0.2) continue;
+                if (entity.getBoundingBox().minY > Math.max(topY, oldTopY) + 0.5) continue;
+
+                Vec3 previousPos = entity.position();
+
+                Vec3 offset = new Vec3(entity.getX() - this.xOld, 0, entity.getZ() - this.zOld);
+                double rad = Math.toRadians(deltaRot);
+                double cos = Math.cos(rad);
+                double sin = Math.sin(rad);
+
+                double newOffsetX = offset.x * cos - offset.z * sin;
+                double newOffsetZ = offset.x * sin + offset.z * cos;
+
+                Vec3 expectedPos = new Vec3(this.getX() + newOffsetX, entity.getY() + movement.y, this.getZ() + newOffsetZ);
+                Vec3 requiredMovement = expectedPos.subtract(entity.position());
+
+                entity.move(MoverType.SELF, requiredMovement);
+
+                if (entity.getBoundingBox().minY < topY) {
+                    double dy = topY - entity.getBoundingBox().minY;
+                    entity.setPos(entity.getX(), entity.getY() + dy, entity.getZ());
+                }
+
+                Vec3 velocity = entity.getDeltaMovement();
+                float slipperiness = getDisplayBlockState().getBlock().getFriction();
+                float friction = slipperiness * 0.91F;
+
+                double x = velocity.x * friction;
+                double z = velocity.z * friction;
+                double y = velocity.y;
+
+                if (Math.abs(x) < 0.003) x = 0;
+                if (Math.abs(z) < 0.003) z = 0;
+
+                entity.setDeltaMovement(x, y, z);
+                entity.setOnGround(true);
+                entity.applyEffectsFromBlocks(previousPos, entity.position());
+                entity.hurtMarked = true;
+            }
+        } finally {
+            this.movingEntities = false;
         }
     }
     @Override
     public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
         if(source.getEntity() instanceof Player player){
-            this.addDeltaMovement(this.position().subtract(player.position()).horizontal());
+            this.addDeltaMovement(player.getLookAngle().multiply(1.5,player.isShiftKeyDown()?0.3:0,1.5));
         }
         return super.hurtServer(level, source, damage);
     }
@@ -450,7 +467,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     @Override
     public boolean hurtClient(DamageSource source) {
         if(source.getEntity() instanceof Player player){
-            this.addDeltaMovement(this.position().subtract(player.position()).horizontal());
+            this.addDeltaMovement(player.getLookAngle().multiply(1.5,player.isShiftKeyDown()?0.3:0,1.5));
         }
         return super.hurtClient(source);
     }

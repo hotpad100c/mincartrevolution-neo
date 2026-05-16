@@ -18,6 +18,9 @@ public class WoolMinecartEntity extends VariantBlockMinecartEntity {
     @Override
     public void tick() {
         super.tick();
-        this.setNoGravity(true);
+        //this.setNoGravity(true);
+    }
+    protected double getDefaultGravity() {
+        return 0.001;
     }
 }
