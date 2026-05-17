@@ -4,6 +4,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.NonNull;
 
 public class WoolMinecartEntity extends VariantBlockMinecartEntity {
     public WoolMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
@@ -17,8 +19,16 @@ public class WoolMinecartEntity extends VariantBlockMinecartEntity {
     }
     @Override
     public void tick() {
+        setOnGround(false);
         super.tick();
-        //this.setNoGravity(true);
+    }
+    @Override
+    protected @NonNull Vec3 applyNaturalSlowdown(@NonNull Vec3 movement) {
+        if (this.isInWater()) {
+            movement = movement.scale(0.95F);
+        }
+
+        return movement;
     }
     protected double getDefaultGravity() {
         return 0.001;

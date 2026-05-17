@@ -90,10 +90,9 @@ public class MinecartWithBlockItem extends Item implements IMinecartWithBlockIte
 
     public AbstractMinecart getCart(ServerLevel serverWorld, double x, double y, double z, MinecartWithBlockItem correspondingItem, ItemStack stack) {
 
-        /*MinecartTransformManager.spawnFromItem(
-                serverWorld, correspondingItem, new Vec3(x, y, z), stack
-        );*/
-        AbstractMinecart minecart = MinecartTransformManager.spawnFromBlock(serverWorld, correspondingItem.getBlockInside(stack).getBlock(), new Vec3(x,y,z), stack);
+        AbstractMinecart minecart = MinecartTransformManager.spawnFromItem(serverWorld, correspondingItem, new Vec3(x, y, z), stack);
+        if(minecart == null) minecart = MinecartTransformManager.spawnFromBlock(serverWorld, correspondingItem.getBlockInside(stack).getBlock(), new Vec3(x,y,z), stack);
+
         BlockState blockState = correspondingItem.getBlockInside(stack);
         if (blockState != null) {
             minecart.setCustomDisplayBlockState(Optional.of(blockState));

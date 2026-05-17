@@ -2,9 +2,12 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.NonNull;
 
 public class ObsidianMinecart extends SingleBlockMinecartEntity {
 
@@ -19,17 +22,19 @@ public class ObsidianMinecart extends SingleBlockMinecartEntity {
     @Override
     public void tick()
     {
-        super.tick();
         if (this.isInLava()) {
-            this.setNoGravity(true);
-            this.addDeltaMovement(new Vec3(0,0.01,0));
+            setOnGround(false);
+            this.addDeltaMovement(new Vec3(0,0.05,0));
         }
-        else
-        {
-            this.setNoGravity(false);
-        }
+        super.tick();
     }
 
+    @Override
+    protected @NonNull Vec3 applyNaturalSlowdown(@NonNull Vec3 movement) {
+        if(!this.isInLava()) return super.applyNaturalSlowdown(movement);
+
+        return movement;
+    }
     @Override
     public boolean fireImmune() { return true; }
 }

@@ -1,6 +1,8 @@
 package ml.mypals.minecartrevolution.behaviours;
 
 import com.mojang.datafixers.util.Either;
+import com.sun.jna.platform.win32.Variant;
+import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.manager.AnnotationManager;
@@ -25,10 +27,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforgespi.language.ModFileScanData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.lang.annotation.ElementType;
+import java.util.*;
 import java.util.function.BiFunction;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.LOGGER;
@@ -97,20 +97,23 @@ public class MinecartTransformManager {
             return m;
         });
 
-        // ── Bulk mappers (shulker colours, pressure plates, heads, etc.) ──
+        /*// ── Bulk mappers (shulker colours, pressure plates, heads, etc.) ──
         PRESSURE_PLATE_ENTITY_MAP.forEach((block, f) -> factoryMap.put(block.asItem(), f::apply));
         SHULKER_ENTITY_MAP.forEach(       (block, f) -> factoryMap.put(block.asItem(), f::apply));
         NON_INVENTORY_WORKING.forEach(    (block, f) -> factoryMap.put(block.asItem(), f::apply));
         CHEST_MINECARTS.forEach(          (block, f) -> factoryMap.put(block.asItem(), f::apply));
         HEAD_MINECARTS.forEach(           (block, f) -> factoryMap.put(block.asItem(), f::apply));
         WOOL_ENTITY_MAP.forEach(          (block, f) -> factoryMap.put(block.asItem(), f::apply));
-        // ── Automatic Mapper Loading ──
+        */// ── Automatic Mapper Loading ──
         AnnotationManager manager = new AnnotationManager(MinecartMapper.class, ElementType.FIELD);
         List<ModFileScanData.AnnotationData> annotationData = manager.find();
         for (ModFileScanData.AnnotationData data : annotationData) {
             try {
                 Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> map = (Map<Block, BiFunction<Level, Vec3, AbstractMinecart>>) Class.forName(data.clazz().getClassName()).getDeclaredField(data.memberName()).get(null);
-                map.forEach((block, f) -> factoryMap.put(block.asItem(), f));
+                map.forEach((block, f) -> {
+                    factoryMap.put(block, f::apply);
+                    factoryMap.put(block.asItem(), f::apply);
+                });
             } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
                 throw new IllegalArgumentException("MinecartMapper annotation must be on a static field", e);
             }
@@ -120,7 +123,7 @@ public class MinecartTransformManager {
         for (MRMinecarts.MinecartEntry<?, ?> entry : MRMinecarts.MINECARTS) {
             Item corItem = entry.item().get();
             if (entry.spawnFactory() != null) {
-                factoryMap.put(corItem, entry.spawnFactory()::apply);
+                //factoryMap.put(corItem, entry.spawnFactory()::apply);
                 Block blockInside = entry.item().get().getBlockInside();
                 Item blockInsideItem = blockInside.asItem();
                 if (corItem != Items.AIR) {
@@ -139,11 +142,11 @@ public class MinecartTransformManager {
         factoryMap.put(item, factory);
     }
 
-    public static AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
+    public static @Nullable AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
         MinecartTransformConfig factory =
-            factoryMap.getOrDefault(item,
-                (w, p) -> new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
+            factoryMap.getOrDefault(item,(_, _)->null);
         AbstractMinecart minecart = factory.createMinecart(world, pos);
+        if(minecart == null) return null;
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
         return doExtraCheck(minecart, handStack);
