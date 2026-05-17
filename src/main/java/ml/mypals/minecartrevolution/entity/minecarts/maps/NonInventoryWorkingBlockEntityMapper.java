@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
+import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class NonInventoryWorkingBlockEntityMapper {
+    @MinecartMapper
     public static final Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> NON_INVENTORY_WORKING = new HashMap<>();
 
     static {

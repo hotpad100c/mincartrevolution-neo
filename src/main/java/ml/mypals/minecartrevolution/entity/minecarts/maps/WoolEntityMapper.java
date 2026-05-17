@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
+import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.entity.minecarts.WoolMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
@@ -7,7 +8,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.WoolCarpetBlock;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class WoolEntityMapper {
+    @MinecartMapper
     public static final Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> WOOL_ENTITY_MAP = new HashMap<>();
     static {
         for(DyeColor color : DyeColor.values()){

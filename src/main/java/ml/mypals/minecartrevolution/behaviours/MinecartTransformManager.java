@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.behaviours;
 import com.mojang.datafixers.util.Either;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
+import ml.mypals.minecartrevolution.manager.AnnotationManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -21,13 +22,14 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforgespi.language.ModFileScanData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
+import java.util.function.BiFunction;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.LOGGER;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.ChestEntityMapper.CHEST_MINECARTS;
@@ -102,6 +104,18 @@ public class MinecartTransformManager {
         CHEST_MINECARTS.forEach(          (block, f) -> factoryMap.put(block.asItem(), f::apply));
         HEAD_MINECARTS.forEach(           (block, f) -> factoryMap.put(block.asItem(), f::apply));
         WOOL_ENTITY_MAP.forEach(          (block, f) -> factoryMap.put(block.asItem(), f::apply));
+        // ── Automatic Mapper Loading ──
+        AnnotationManager manager = new AnnotationManager(MinecartMapper.class, ElementType.FIELD);
+        List<ModFileScanData.AnnotationData> annotationData = manager.find();
+        for (ModFileScanData.AnnotationData data : annotationData) {
+            try {
+                Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> map = (Map<Block, BiFunction<Level, Vec3, AbstractMinecart>>) Class.forName(data.clazz().getClassName()).getDeclaredField(data.memberName()).get(null);
+                map.forEach((block, f) -> factoryMap.put(block.asItem(), f));
+            } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
+                throw new IllegalArgumentException("MinecartMapper annotation must be on a static field", e);
+            }
+        }
+
 
         for (MRMinecarts.MinecartEntry<?, ?> entry : MRMinecarts.MINECARTS) {
             Item corItem = entry.item().get();
