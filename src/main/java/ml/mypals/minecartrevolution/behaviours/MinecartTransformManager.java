@@ -1,7 +1,9 @@
 package ml.mypals.minecartrevolution.behaviours;
 
+import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
+import ml.mypals.minecartrevolution.manager.AnnotationManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -19,12 +21,11 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforgespi.language.ModFileScanData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.lang.annotation.ElementType;
+import java.util.*;
 import java.util.function.BiFunction;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.LOGGER;
@@ -33,7 +34,6 @@ import static ml.mypals.minecartrevolution.entity.minecarts.maps.MobHeadEntityMa
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.NonInventoryWorkingBlockEntityMapper.NON_INVENTORY_WORKING;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.PressurePlateEntityMapper.PRESSURE_PLATE_ENTITY_MAP;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.ShulkerBoxEntityMapper.SHULKER_ENTITY_MAP;
-import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.WOOL_ENTITY_MAP;
 
 public class MinecartTransformManager {
     public static final Map<Item, BiFunction<Level, Vec3, AbstractMinecart>> factoryMap = new HashMap<>();
@@ -89,13 +89,18 @@ public class MinecartTransformManager {
             return m;
         });
 
-        // ── Bulk mappers (shulker colours, pressure plates, heads, etc.) ──
-        PRESSURE_PLATE_ENTITY_MAP.forEach((block, f) -> factoryMap.put(block.asItem(), f));
-        SHULKER_ENTITY_MAP.forEach(       (block, f) -> factoryMap.put(block.asItem(), f));
-        NON_INVENTORY_WORKING.forEach(    (block, f) -> factoryMap.put(block.asItem(), f));
-        CHEST_MINECARTS.forEach(          (block, f) -> factoryMap.put(block.asItem(), f));
-        HEAD_MINECARTS.forEach(           (block, f) -> factoryMap.put(block.asItem(), f));
-        WOOL_ENTITY_MAP.forEach(          (block, f) -> factoryMap.put(block.asItem(), f));
+        // ── Automatic Mapper Loading ──
+        AnnotationManager manager = new AnnotationManager(MinecartMapper.class, ElementType.FIELD);
+        List<ModFileScanData.AnnotationData> annotationData = manager.find();
+        for (ModFileScanData.AnnotationData data : annotationData) {
+            try {
+                Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> map = (Map<Block, BiFunction<Level, Vec3, AbstractMinecart>>) Class.forName(data.clazz().getClassName()).getDeclaredField(data.memberName()).get(null);
+                map.forEach((block, f) -> factoryMap.put(block.asItem(), f));
+            } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
+                throw new IllegalArgumentException("MinecartMapper annotation must be on a static field", e);
+            }
+        }
+
 
         // ── Auto-register from MRMinecarts.MINECARTS ─────────────────────
         for (MRMinecarts.MinecartEntry<?, ?> entry : MRMinecarts.MINECARTS) {

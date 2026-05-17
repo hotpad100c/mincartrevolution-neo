@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
+import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.entity.minecarts.container.CopperChestMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.CopperChestMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class ChestEntityMapper {
+    @MinecartMapper
     public static final Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> CHEST_MINECARTS = new HashMap<>();
 
     static {

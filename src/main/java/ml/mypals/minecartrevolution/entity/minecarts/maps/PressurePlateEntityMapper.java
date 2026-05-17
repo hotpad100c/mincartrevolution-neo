@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
+import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PressurePlateMinecartEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class PressurePlateEntityMapper {
+    @MinecartMapper
     public static final Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> PRESSURE_PLATE_ENTITY_MAP = new HashMap<>();
 
     static {

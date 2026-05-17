@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.maps;
 
+import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class ShulkerBoxEntityMapper {
+    @MinecartMapper
     public static final Map<Block, BiFunction<Level, Vec3, AbstractMinecart>> SHULKER_ENTITY_MAP = new HashMap<>();
 
     static {
