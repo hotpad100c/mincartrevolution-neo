@@ -142,9 +142,20 @@ public class MinecartTransformManager {
         factoryMap.put(item, factory);
     }
 
-    public static @Nullable AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
+    public static AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
         MinecartTransformConfig factory =
-            factoryMap.getOrDefault(item,(_, _)->null);
+                factoryMap.getOrDefault(item,
+                (w, p) -> new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
+        AbstractMinecart minecart = factory.createMinecart(world, pos);
+        Component name = handStack.getCustomName();
+        minecart.setCustomName(name);
+        return doExtraCheck(minecart, handStack);
+    }
+    public static AbstractMinecart spawnFromItemNullable(Level world, Item item, Vec3 pos, ItemStack handStack) {
+        MinecartTransformConfig factory =
+                factoryMap.getOrDefault(item,
+                        (w, p) -> null
+                );
         AbstractMinecart minecart = factory.createMinecart(world, pos);
         if(minecart == null) return null;
         Component name = handStack.getCustomName();

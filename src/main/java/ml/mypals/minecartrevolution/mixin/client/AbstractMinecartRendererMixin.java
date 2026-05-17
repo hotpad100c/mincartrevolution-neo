@@ -92,7 +92,7 @@ public class AbstractMinecartRendererMixin {
                 case TrappedChestBlock ignored -> Sheets.CHEST_TRAPPED.single();
                 case WeatheringCopperChestBlock ignored -> {
                     if(state.minecartrevolution$getDisplayBlock().is(Blocks.COPPER_CHEST)
-                    || state.minecartrevolution$getDisplayBlock().is(Blocks.WAXED_COPPER_BLOCK)){
+                    || state.minecartrevolution$getDisplayBlock().is(Blocks.WAXED_COPPER_CHEST)){
                         yield Sheets.CHEST_COPPER_UNAFFECTED.single();
                     }else if(state.minecartrevolution$getDisplayBlock().is(Blocks.EXPOSED_COPPER_CHEST)
                     || state.minecartrevolution$getDisplayBlock().is(Blocks.WAXED_EXPOSED_COPPER_CHEST)){
@@ -104,6 +104,7 @@ public class AbstractMinecartRendererMixin {
                         yield Sheets.CHEST_COPPER_OXIDIZED.single();
                     }
                 }
+                case CopperChestBlock ignored -> Sheets.CHEST_COPPER_UNAFFECTED.single();
                 case EnderChestBlock ignored -> Sheets.ENDER_CHEST_LOCATION;
                 default -> Sheets.CHEST_REGULAR.single();
             };

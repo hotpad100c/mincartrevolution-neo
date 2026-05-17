@@ -13,6 +13,7 @@
     "blocks.ProjectileDispenseBehaviorMixin",
     "blocks.UnrenderableBlocksMixin",
     "entity.EntityMixin",
+    "entity.FallingBlockEntityAccessor",
     "level.ServerLevelMixin",
     "light.LevelChunkMixin",
     "minecart.AbstractMinecartMixin",

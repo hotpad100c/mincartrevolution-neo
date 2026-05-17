@@ -5,10 +5,14 @@ import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.Nullable;
 
@@ -102,14 +106,16 @@ public abstract class PortalMinecartEntity extends VariantBlockMinecartEntity {
         String name = getCustomName().getString();
         PortalMinecartStorage storage = ((IServerLevelExt) level()).mincartrevolution_neo$getPortalMinecartStorage();
 
-        return storage.getClosest(
-                this,
-                level(),
-                position(),
-                this.getClass(),
-                name);
+        PortalMinecartEntity pt = storage.getClosest(this, level(), position(), this.getClass(), name);
+        if(pt != null && level() instanceof ServerLevel serverLevel && !level().isLoaded(pt.blockPosition())){
+            placeTicket(serverLevel, pt.chunkPosition());
+        }
+        return pt;
     }
-
+    public static long placeTicket(ServerLevel level, ChunkPos chunk) {
+        level.getChunkSource().addTicketWithRadius(TicketType.ENDER_PEARL, chunk, 2);
+        return TicketType.ENDER_PEARL.timeout();
+    }
     protected static void playPortalDamageAnimation(AbstractMinecart minecart) {
         ((ServerLevel) minecart.level())
                 .sendParticles(
