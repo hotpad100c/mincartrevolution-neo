@@ -7,10 +7,16 @@ import ml.mypals.minecartrevolution.util.MusicUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+
+import java.util.Optional;
 
 public class SofaMinecart extends SingleBlockMinecartEntity {
     private MinecartMusicSoundInstance musicInstance = null;
@@ -22,6 +28,7 @@ public class SofaMinecart extends SingleBlockMinecartEntity {
 
     public SofaMinecart(EntityType<? extends SofaMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
+        setCustomDisplayBlockState(Optional.of(Blocks.WHITE_CARPET.defaultBlockState()));
     }
 
     @Override
@@ -92,5 +99,9 @@ public class SofaMinecart extends SingleBlockMinecartEntity {
             stopAndResetMusic();
         }
         super.remove(reason);
+    }
+    @Override
+    public @NonNull Vec3 getPassengerRidingPosition(@NonNull Entity passenger) {
+        return super.getPassengerRidingPosition(passenger).add(0, 0.3f, 0);
     }
 }

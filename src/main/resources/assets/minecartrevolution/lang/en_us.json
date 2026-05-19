@@ -1,18 +1,47 @@
 {
-  "item.minecartrevolution.minecart_with_block":"%s %s",
+  "item.minecartrevolution.minecart_with_block": "%s %s",
   "entity.minecartrevolution.cobweb_minecart": "Cobweb Minecart",
   "entity.minecartrevolution.dragon_egg_minecart": "Dragon Egg Minecart",
-  "entity.minecartrevolution.trapped_chest_minecart":"Trapped Chest Minecart",
-  "entity.minecartrevolution.minecart_with_block":"Minecart With Block",
-  "entity.minecartrevolution.shulker_minecart":"Shulker Minecart",
-  "entity.minecartrevolution.harmful_minecart":"Dangerous Minecart",
-  "entity.minecartrevolution.barrel_minecart":"Barrel Minecart",
-  "entity.minecartrevolution.presher_plate_minecart":"Presher Plate Minecart",
-  "entity.minecartrevolution.golden_presher_plate_minecart":"Light Weight Presher Plate Minecart",
-  "entity.minecartrevolution.iron_presher_plate_minecart":"Heavy Weight Presher Plate Minecart",
-  "entity.minecartrevolution.jukebox_minecart":"Jukebox Minecart",
+  "entity.minecartrevolution.trapped_chest_minecart": "Trapped Chest Minecart",
+  "entity.minecartrevolution.minecart_with_block": "Minecart With Block",
+  "entity.minecartrevolution.shulker_minecart": "Shulker Minecart",
+  "entity.minecartrevolution.harmful_minecart": "Dangerous Minecart",
+  "entity.minecartrevolution.barrel_minecart": "Barrel Minecart",
+  "entity.minecartrevolution.presher_plate_minecart": "Presher Plate Minecart",
+  "entity.minecartrevolution.golden_presher_plate_minecart": "Light Weight Presher Plate Minecart",
+  "entity.minecartrevolution.iron_presher_plate_minecart": "Heavy Weight Presher Plate Minecart",
+  "entity.minecartrevolution.jukebox_minecart": "Jukebox Minecart",
   "entity.minecartrevolution.working_minecart": "Working Minecart",
   "entity.minecartrevolution.white_wool_minecart": "Wool Minecart",
+  "itemGroup.minecartrevolution": "Minecart Revolution",
 
-  "itemGroup.minecartrevolution": "Minecart Revolution"
+  "advancement.minecartrevolution.got_block_minecart.title": "Minecart Revolution",
+  "advancement.minecartrevolution.got_block_minecart.description": "Which update added this??",
+
+  "advancement.minecartrevolution.got_jukebox_minecart.title": "On the Rails",
+  "advancement.minecartrevolution.got_jukebox_minecart.description": "Obtain a Jukebox Minecart",
+
+  "advancement.minecartrevolution.got_observer_minecart.title": "Patience Required",
+  "advancement.minecartrevolution.got_observer_minecart.description": "Place an Observer inside a minecart to get the Langton's Ant Minecart",
+
+  "advancement.minecartrevolution.got_lava_proof_minecart.title": "The Floor is Lava!",
+  "advancement.minecartrevolution.got_lava_proof_minecart.description": "Drift across lava on an Obsidian Minecart",
+
+  "advancement.minecartrevolution.craft_dragon_egg_minecart.title": "Is That a Cradle?",
+  "advancement.minecartrevolution.craft_dragon_egg_minecart.description": "It needs a little excitement",
+
+  "advancement.minecartrevolution.got_dangerous_minecart.title": "Hostile",
+  "advancement.minecartrevolution.got_dangerous_minecart.description": "I better not get too close...",
+
+  "advancement.minecartrevolution.ride_dragon_egg_minecart.title": "Egg Sitting",
+  "advancement.minecartrevolution.ride_dragon_egg_minecart.description": "Ride a Dragon Egg Minecart",
+
+  "advancement.minecartrevolution.move_on_jukebox_minecart.title": "Music on the Move",
+  "advancement.minecartrevolution.move_on_jukebox_minecart.description": "Ride a moving Jukebox Minecart on tour",
+
+  "advancement.minecartrevolution.sofa_away_logic.title": "Sofa Away!!!",
+  "advancement.minecartrevolution.sofa_away_logic.description": "Sit on a moving Sofa Minecart for 5 seconds and enjoy the music",
+
+  "advancement.minecartrevolution.no_gravity_logic.title": "Light as a Feather",
+  "advancement.minecartrevolution.no_gravity_logic.description": "Place wool inside a minecart to make it weightless"
 }

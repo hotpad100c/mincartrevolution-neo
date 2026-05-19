@@ -1,13 +1,18 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+
+import java.util.Optional;
 
 public class ObsidianMinecart extends SingleBlockMinecartEntity {
 
@@ -17,6 +22,7 @@ public class ObsidianMinecart extends SingleBlockMinecartEntity {
 
     public ObsidianMinecart(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
+        setCustomDisplayBlockState(Optional.of(Blocks.OBSIDIAN.defaultBlockState()));
     }
 
     @Override
@@ -37,4 +43,14 @@ public class ObsidianMinecart extends SingleBlockMinecartEntity {
     }
     @Override
     public boolean fireImmune() { return true; }
+
+    @Override
+    public @NonNull ItemStack getPickResult() {
+        return MRMinecarts.OBSIDIAN_MINECART.item().get().getDefaultInstance();
+    }
+
+    @Override
+    public @NonNull Item getDropItem() {
+        return MRMinecarts.OBSIDIAN_MINECART.item().get();
+    }
 }

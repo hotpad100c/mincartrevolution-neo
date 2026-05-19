@@ -43,6 +43,7 @@ public class DispenserMinecartEntity extends BaseMinecartContainer implements Co
     public DispenserMinecartEntity(EntityType<?> type, Level level, double x, double y, double z) {
         super(type, level);
         setInitialPos(x, y, z);
+        setCustomDisplayBlockState(Optional.of(Blocks.DISPENSER.defaultBlockState()));
     }
 
     @Override

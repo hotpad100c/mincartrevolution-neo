@@ -392,7 +392,7 @@ public class MRMinecarts {
 
     public static final MinecartEntry<SofaMinecart, MinecartWithBlockItem> SOFA_MINECART = register(
             "sofa", SofaMinecart::new,
-            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.BEDROCK),
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WHITE_CARPET),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new SofaMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
     public static final MinecartEntry<WoolMinecartEntity, MinecartWithBlockItem> WOOL_MINECART = register(
@@ -417,4 +417,10 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OBSIDIAN),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new ObsidianMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+    public static final MinecartEntry<AntMinecart, MinecartWithBlockItem> OBSERVER_MINECART = register(
+            "ant", AntMinecart::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OBSERVER),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new AntMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+
 }
