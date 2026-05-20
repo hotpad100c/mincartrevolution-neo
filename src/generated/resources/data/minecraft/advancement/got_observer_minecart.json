@@ -1,0 +1,30 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "craft_observer_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.ant_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.got_observer_minecart.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "minecartrevolution:minecart_ant"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.got_observer_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_observer_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
