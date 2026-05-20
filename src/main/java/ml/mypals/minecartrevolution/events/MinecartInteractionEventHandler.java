@@ -50,7 +50,7 @@ public class MinecartInteractionEventHandler {
 
         if (player.isSecondaryUseActive()) {
             if (!stackInHand.isEmpty()) {
-                if (stackInHand.getItem() instanceof BlockItem blockItem) {
+                if (stackInHand.getItem() instanceof BlockItem blockItem && !interacted.getDisplayBlockState().isAir()) {
                     interacted.setCustomDisplayBlockState(
                             Optional.of(blockItem.getBlock().defaultBlockState())
                     );
@@ -75,7 +75,7 @@ public class MinecartInteractionEventHandler {
                         }
                     }
                     return;
-                } else if (stackInHand.is(Items.WATER_BUCKET) || stackInHand.is(Items.LAVA_BUCKET)) {
+                } else if ((stackInHand.is(Items.WATER_BUCKET) || stackInHand.is(Items.LAVA_BUCKET) )&& !interacted.getDisplayBlockState().isAir()) {
                     if (!world.isClientSide()) {
                         MinecartTransformManager.checkForTransform(world, interacted.position(), stackInHand.getItem(), interacted, stackInHand);
                         stackInHand.split(1);

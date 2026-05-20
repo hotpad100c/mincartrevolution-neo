@@ -31,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-public class AntMinecart extends SingleBlockMinecartEntity {
+public class AntMinecartEntity extends SingleBlockMinecartEntity {
 
     private Direction facing = Direction.NORTH;
     private int restTicks = 0;
@@ -40,12 +40,12 @@ public class AntMinecart extends SingleBlockMinecartEntity {
 
     @Nullable
     private DyeColor targetDyeColor = null;
-    public AntMinecart(EntityType<AntMinecart> entityType, Level world) {
+    public AntMinecartEntity(EntityType<AntMinecartEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public AntMinecart(EntityType<? extends AbstractMinecart> minecart, Level world,
-                       double x, double y, double z, MinecartWithBlockItem correspondingItem) {
+    public AntMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world,
+                             double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
         setCustomDisplayBlockState(Optional.of(Blocks.OBSERVER.defaultBlockState().setValue(ObserverBlock.FACING, Direction.NORTH)));
     }

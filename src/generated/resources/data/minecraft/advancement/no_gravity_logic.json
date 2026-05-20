@@ -6,13 +6,18 @@
     }
   },
   "display": {
-    "description": "放置一个无重力矿车",
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.no_gravity_logic.description"
+    },
     "frame": "challenge",
     "hidden": true,
     "icon": {
       "id": "minecartrevolution:minecart_wool"
     },
-    "title": "反重力！"
+    "title": {
+      "translate": "advancement.minecartrevolution.no_gravity_logic.title"
+    }
   },
   "requirements": [
     [

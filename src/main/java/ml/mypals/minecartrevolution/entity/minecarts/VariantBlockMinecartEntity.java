@@ -21,12 +21,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
-import net.minecraft.world.entity.vehicle.minecart.MinecartBehavior;
-import net.minecraft.world.entity.vehicle.minecart.OldMinecartBehavior;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,8 +33,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
@@ -246,16 +243,17 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     public void handleActive( ServerLevel level, int x, int y, int z, boolean powered) {
         BlockState blockState = this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
         this.activated = powered;
-        if (blockState.hasProperty(BlockStateProperties.POWERED)) {
+    /*    if (blockState.hasProperty(BlockStateProperties.POWERED)) {
             blockState = blockState.setValue(BlockStateProperties.POWERED, powered);
         }
+
+    */
         if (blockState.hasProperty(RedstoneLampBlock.LIT)) {
             blockState = blockState.setValue(RedstoneLampBlock.LIT, powered);
             if (!powered) this.removeDynamicLight(this.blockPosition().asLong(), true);
-
+            this.setCustomDisplayBlockState(Optional.of(blockState));
         }
-        this.setCustomDisplayBlockState(Optional.of(blockState));
-    }
+}
 
     @Override
     public void tick() {
@@ -471,6 +469,39 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         }
         return super.hurtClient(source);
     }
+    @Override
+    public void move(@NonNull MoverType moverType, @NonNull Vec3 delta) {
+        Vec3 toPosition = this.position().add(delta);
+        super.move(moverType, delta);
+        Vec3 newPosition = this.position();
+        boolean shouldContinue = this.getBehavior().pushAndPickupEntities();
+        if (toPosition.distanceToSqr(newPosition) > getCollisionSensitive()) {
+            shouldContinue = onCollision(delta, toPosition, newPosition) && shouldContinue;
+        }
+        if (shouldContinue) {
+            super.move(moverType, toPosition.subtract(this.position()));
+        }
 
+        if (moverType.equals(MoverType.PISTON)) {
+            this.setOnRails(false);
+        }
+    }
+    public boolean onCollision(Vec3 delta, Vec3 target, Vec3 actual){
+        return true;
+    }
+    public float getCollisionSensitive(){
+        return 0.01f;
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        Optional<BlockState> blockState = input.read("DisplayState", BlockState.CODEC);
+        if(blockState.isPresent()){
+            this.setCustomDisplayBlockState(blockState);
+        }
+        this.setDisplayOffset(input.getIntOr("DisplayOffset", this.getDefaultDisplayOffset()));
+        this.setFlipped(input.getBooleanOr("FlippedRotation", false));
+        this.firstTick = input.getBooleanOr("HasTicked", false);
+    }
 }
 

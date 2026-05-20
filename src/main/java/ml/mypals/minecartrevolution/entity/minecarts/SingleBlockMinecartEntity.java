@@ -42,12 +42,17 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
     public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
         this.correspondingItem = MRMinecarts.BLOCK_MINECART_ITEM.item().get();
+        if(correspondingItem instanceof MinecartWithBlockItem minecart){
+            this.setCustomDisplayBlockState(Optional.of(minecart.getBlockInside().defaultBlockState()));
+
+        }
     }
 
     public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, Item.byBlock(correspondingItem.getBlockInside()));
         this.correspondingItem = correspondingItem;
         this.getEntityData().set(CORRESPONDING_ITEM, Item.getId(correspondingItem));
+        this.setCustomDisplayBlockState(Optional.of(correspondingItem.getBlockInside().defaultBlockState()));
     }
 
     public SingleBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, MinecartWithBlockItem correspondingItem) {

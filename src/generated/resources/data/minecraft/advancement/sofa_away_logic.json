@@ -6,13 +6,18 @@
     }
   },
   "display": {
-    "description": "坐在移动的沙发矿车上5秒并享受音乐",
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.sofa_away_logic.description"
+    },
     "frame": "challenge",
     "hidden": true,
     "icon": {
       "id": "minecartrevolution:minecart_sofa"
     },
-    "title": "Sofa Away!!!"
+    "title": {
+      "translate": "advancement.minecartrevolution.sofa_away_logic.title"
+    }
   },
   "requirements": [
     [

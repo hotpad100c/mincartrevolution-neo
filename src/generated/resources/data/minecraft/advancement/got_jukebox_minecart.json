@@ -9,12 +9,17 @@
     }
   },
   "display": {
-    "description": "获得唱片机矿车",
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.got_jukebox_minecart.description"
+    },
     "frame": "challenge",
     "icon": {
       "id": "minecartrevolution:minecart_jukebox"
     },
-    "title": "音轨"
+    "title": {
+      "translate": "advancement.minecartrevolution.got_jukebox_minecart.title"
+    }
   },
   "requirements": [
     [

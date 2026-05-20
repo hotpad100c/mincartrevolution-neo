@@ -12,21 +12,20 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
-public class SofaMinecart extends SingleBlockMinecartEntity {
+public class SofaMinecartEntity extends SingleBlockMinecartEntity {
     private MinecartMusicSoundInstance musicInstance = null;
     private int movingTicks = 0;
 
-    public SofaMinecart(EntityType<? extends SofaMinecart> entityType, Level world) {
+    public SofaMinecartEntity(EntityType<? extends SofaMinecartEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public SofaMinecart(EntityType<? extends SofaMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
+    public SofaMinecartEntity(EntityType<? extends SofaMinecartEntity> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
         setCustomDisplayBlockState(Optional.of(Blocks.WHITE_CARPET.defaultBlockState()));
     }

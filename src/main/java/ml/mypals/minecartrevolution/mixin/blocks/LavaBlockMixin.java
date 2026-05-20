@@ -3,7 +3,7 @@ package ml.mypals.minecartrevolution.mixin.blocks;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.serialization.MapCodec;
-import ml.mypals.minecartrevolution.entity.minecarts.ObsidianMinecart;
+import ml.mypals.minecartrevolution.entity.minecarts.ObsidianMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
@@ -56,6 +56,6 @@ public abstract class LavaBlockMixin {
     @Unique
     private boolean mincartrevolution_neo$ifObsidianMinecartIsColliding(CollisionContext context) {
         return context instanceof EntityCollisionContext entityCollisionContext
-               && entityCollisionContext.getEntity() instanceof ObsidianMinecart minecart;
+               && entityCollisionContext.getEntity() instanceof ObsidianMinecartEntity minecart;
     }
 }

@@ -19,27 +19,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MRAdvancementProvider {
 
-    /** 成就翻译 key 前缀，格式：advancement.minecartrevolution.<id>.<title|description> */
     private static final String PREFIX = "advancement.minecartrevolution.";
-
-    /** 生成标题 Component */
+    private static final Identifier BG_TEXTURE = Identifier.withDefaultNamespace("textures/gui/advancements/backgrounds/adventure.png");
     private static Component title(String advancementId) {
         return Component.translatable(PREFIX + advancementId + ".title");
     }
 
-    /** 生成描述 Component */
     private static Component desc(String advancementId) {
         return Component.translatable(PREFIX + advancementId + ".description");
     }
 
-    public static void generate(HolderLookup.@NonNull Provider registries, @NonNull Consumer<AdvancementHolder> saver) {
+    public static void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> saver) {
 
         HolderGetter<EntityType<?>> entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
 
@@ -48,7 +45,7 @@ public class MRAdvancementProvider {
                         Items.MINECART,
                         title("got_block_minecart"),
                         desc("got_block_minecart"),
-                        Identifier.withDefaultNamespace("textures/gui/advancements/backgrounds/adventure.png"),
+                        BG_TEXTURE,
                         AdvancementType.GOAL,
                         true,
                         true,
@@ -69,7 +66,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.JUKEBOX_MINECART.item().get(),
                         title("got_jukebox_minecart"),
                         desc("got_jukebox_minecart"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -87,10 +84,10 @@ public class MRAdvancementProvider {
         AdvancementHolder getAntMinecart = Advancement.Builder.advancement()
                 .parent(getBlockMinecart)
                 .display(
-                        MRMinecarts.JUKEBOX_MINECART.item().get(),
+                        MRMinecarts.OBSERVER_MINECART.item().get(),
                         title("got_observer_minecart"),
                         desc("got_observer_minecart"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -108,10 +105,10 @@ public class MRAdvancementProvider {
         AdvancementHolder getLavaProofMinecart = Advancement.Builder.advancement()
                 .parent(getBlockMinecart)
                 .display(
-                        MRMinecarts.JUKEBOX_MINECART.item().get(),
+                        MRMinecarts.OBSIDIAN_MINECART.item().get(),
                         title("got_lava_proof_minecart"),
                         desc("got_lava_proof_minecart"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -132,7 +129,7 @@ public class MRAdvancementProvider {
                         Items.DRAGON_EGG,
                         title("craft_dragon_egg_minecart"),
                         desc("craft_dragon_egg_minecart"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -150,10 +147,10 @@ public class MRAdvancementProvider {
         AdvancementHolder getDangerousMinecart = Advancement.Builder.advancement()
                 .parent(getBlockMinecart)
                 .display(
-                        Items.DRAGON_EGG,
+                        MRMinecarts.CACTUS_MINECART.item(),
                         title("got_dangerous_minecart"),
                         desc("got_dangerous_minecart"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -174,7 +171,7 @@ public class MRAdvancementProvider {
                         Items.DRAGON_EGG,
                         title("ride_dragon_egg_minecart"),
                         desc("ride_dragon_egg_minecart"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -200,7 +197,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.JUKEBOX_MINECART.item().get(),
                         title("move_on_jukebox_minecart"),
                         desc("move_on_jukebox_minecart"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -220,7 +217,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.SOFA_MINECART.item().get(),
                         title("sofa_away_logic"),
                         desc("sofa_away_logic"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -235,7 +232,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.WOOL_MINECART.item().get(),
                         title("no_gravity_logic"),
                         desc("no_gravity_logic"),
-                        null,
+                        BG_TEXTURE,
                         AdvancementType.CHALLENGE,
                         true,
                         true,

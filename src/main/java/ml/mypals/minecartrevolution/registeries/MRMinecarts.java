@@ -390,11 +390,11 @@ public class MRMinecarts {
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new MobHeadMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-    public static final MinecartEntry<SofaMinecart, MinecartWithBlockItem> SOFA_MINECART = register(
-            "sofa", SofaMinecart::new,
+    public static final MinecartEntry<SofaMinecartEntity, MinecartWithBlockItem> SOFA_MINECART = register(
+            "sofa", SofaMinecartEntity::new,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WHITE_CARPET),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-            (entity, item) -> (w, pos) -> new SofaMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+            (entity, item) -> (w, pos) -> new SofaMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
     public static final MinecartEntry<WoolMinecartEntity, MinecartWithBlockItem> WOOL_MINECART = register(
             "wool", WoolMinecartEntity::new,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WHITE_WOOL),
@@ -412,15 +412,20 @@ public class MRMinecarts {
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new EnderPortalMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-    public static final MinecartEntry<ObsidianMinecart, MinecartWithBlockItem> OBSIDIAN_MINECART = register(
-            "obsidian", ObsidianMinecart::new,
+    public static final MinecartEntry<ObsidianMinecartEntity, MinecartWithBlockItem> OBSIDIAN_MINECART = register(
+            "obsidian", ObsidianMinecartEntity::new,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OBSIDIAN),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-            (entity, item) -> (w, pos) -> new ObsidianMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
-    public static final MinecartEntry<AntMinecart, MinecartWithBlockItem> OBSERVER_MINECART = register(
-            "ant", AntMinecart::new,
+            (entity, item) -> (w, pos) -> new ObsidianMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+    public static final MinecartEntry<AntMinecartEntity, MinecartWithBlockItem> OBSERVER_MINECART = register(
+            "ant", AntMinecartEntity::new,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OBSERVER),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-            (entity, item) -> (w, pos) -> new AntMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+            (entity, item) -> (w, pos) -> new AntMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+    public static final MinecartEntry<HoneyMinecartEntity, MinecartWithBlockItem> HONEY_MINECART = register(
+            "honey", HoneyMinecartEntity::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.HONEY_BLOCK),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new HoneyMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
 }

@@ -9,12 +9,17 @@
     }
   },
   "display": {
-    "description": "我最好不要靠近它..",
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.got_dangerous_minecart.description"
+    },
     "frame": "challenge",
     "icon": {
-      "id": "minecraft:dragon_egg"
+      "id": "minecartrevolution:minecart_cactus"
     },
-    "title": "敌意满满"
+    "title": {
+      "translate": "advancement.minecartrevolution.got_dangerous_minecart.title"
+    }
   },
   "requirements": [
     [

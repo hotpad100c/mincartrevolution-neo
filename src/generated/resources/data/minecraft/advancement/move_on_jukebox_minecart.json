@@ -9,13 +9,18 @@
     }
   },
   "display": {
-    "description": "坐上移动的唱片机矿车进行巡回演出",
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.move_on_jukebox_minecart.description"
+    },
     "frame": "challenge",
     "hidden": true,
     "icon": {
       "id": "minecartrevolution:minecart_jukebox"
     },
-    "title": "余音绕轨"
+    "title": {
+      "translate": "advancement.minecartrevolution.move_on_jukebox_minecart.title"
+    }
   },
   "requirements": [
     [

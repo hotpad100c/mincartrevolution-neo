@@ -3,7 +3,6 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,13 +13,13 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
-public class ObsidianMinecart extends SingleBlockMinecartEntity {
+public class ObsidianMinecartEntity extends SingleBlockMinecartEntity {
 
-    public ObsidianMinecart(EntityType<ObsidianMinecart> entityType, Level world) {
+    public ObsidianMinecartEntity(EntityType<ObsidianMinecartEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public ObsidianMinecart(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
+    public ObsidianMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
         setCustomDisplayBlockState(Optional.of(Blocks.OBSIDIAN.defaultBlockState()));
     }

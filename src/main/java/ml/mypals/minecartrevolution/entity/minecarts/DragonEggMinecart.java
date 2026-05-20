@@ -12,10 +12,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 public class DragonEggMinecart extends SingleBlockMinecartEntity {
@@ -83,7 +85,11 @@ public class DragonEggMinecart extends SingleBlockMinecartEntity {
         }
         return super.hurtServer(level, source, damage);
     }
-
+    @Override
+    public boolean onCollision(Vec3 delta, Vec3 target, Vec3 actual) {
+        runAway();
+        return super.onCollision(delta, target, actual);
+    }
     private void runAway() {
         Level level = this.level();
         WorldBorder worldBorder = level.getWorldBorder();
