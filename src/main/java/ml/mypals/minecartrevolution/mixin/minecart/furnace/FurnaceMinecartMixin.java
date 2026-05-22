@@ -1,11 +1,16 @@
 package ml.mypals.minecartrevolution.mixin.minecart.furnace;
 
+import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
+import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.MinecartFurnace;
@@ -51,7 +56,7 @@ import java.util.Optional;
 public abstract class FurnaceMinecartMixin extends AbstractMinecart implements Container {
 
     @Shadow
-    public int fuel;
+    private int fuel;
 
     protected FurnaceMinecartMixin(EntityType<?> type, Level level) {
         super(type, level);
@@ -517,6 +522,59 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
     public void clearContent() {
         this.mincartrevolution$items.clear();
         this.mincartrevolution$cookingTimer = 0;
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void onTick(CallbackInfo ci) {
+        MinecartFurnace self = (MinecartFurnace) (Object) this;
+        if (self.level().isClientSide()) {
+            mr$tickFurnaceDynamicLight((ClientLevel) self.level(), self);
+        }
+    }
+
+    @Override
+    public void remove(Entity.@NonNull RemovalReason reason) {
+        MinecartFurnace self = (MinecartFurnace) (Object) this;
+        if (self.level().isClientSide()) {
+            if (DynamicLightsStorage.LIGHT_SOURCES.remove(self) != null) {
+                DynamicLightsSpread.markAreaDirty(self.blockPosition(), DynamicLightsSpread.RADIUS);
+            }
+        }
+        super.remove(reason);
+    }
+
+    @Unique
+    private void mr$tickFurnaceDynamicLight(ClientLevel world, MinecartFurnace thiz) {
+        int lightLevel = (this.fuel > 0) ? 13 : 0;
+
+        BlockPos blockPos = thiz.blockPosition();
+        BlockPos oldPos = BlockPos.containing(thiz.oldPosition());
+        boolean moved = !oldPos.equals(blockPos);
+
+        if (lightLevel > 0) {
+            DynamicLightsStorage.LIGHT_SOURCES.put(thiz, lightLevel);
+            if (moved) {
+                DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
+                DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
+                mr$updateDynamicLight(world, blockPos);
+            }
+        } else {
+            if (DynamicLightsStorage.LIGHT_SOURCES.remove(thiz) != null) {
+                DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
+                DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
+                mr$updateDynamicLight(world, blockPos);
+            }
+        }
+    }
+
+    @Unique
+    private void mr$updateDynamicLight(ClientLevel world, BlockPos pos) {
+        int vanillaLight = world.getBlockState(pos).getLightEmission(world, pos);
+        double dynamicLight = DynamicLightsStorage.getLightLevel(pos);
+
+        if (dynamicLight >= vanillaLight) {
+            world.getChunkSource().getLightEngine().checkBlock(pos);
+        }
     }
 
 }
