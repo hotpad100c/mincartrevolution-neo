@@ -7,6 +7,7 @@ import ml.mypals.minecartrevolution.entity.others.AttackMonsterMinecartGoal;
 import ml.mypals.minecartrevolution.entity.others.FearDragonHeadMinecartGoal;
 import ml.mypals.minecartrevolution.entity.others.FearMonsterMinecartGoal;
 import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
+import ml.mypals.minecartrevolution.manager.LinkedContainerManager;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import ml.mypals.minecartrevolution.mixin.level.ServerLevelMixin;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
@@ -22,6 +23,9 @@ import net.minecraft.world.level.entity.EntitySectionStorage;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
@@ -102,8 +106,17 @@ public class MinecartRevolution {
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
+    public void onServerStarted(ServerStartedEvent event) {
+        LinkedContainerManager.INSTANCE.load(event.getServer());
+    }
 
+    @SubscribeEvent
+    public void onServerStopping(LevelEvent.Save event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
+            if (serverLevel.dimension() == net.minecraft.world.level.Level.OVERWORLD) {
+                LinkedContainerManager.INSTANCE.save(serverLevel.getServer());
+            }
+        }
     }
 
     @SubscribeEvent

@@ -2,8 +2,11 @@ package ml.mypals.minecartrevolution.entity.minecarts.functioning;
 
 import ml.mypals.minecartrevolution.client.menu.MinecartChestMenu;
 import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
+import ml.mypals.minecartrevolution.interfaces.ILinkedEnderChest;
 import ml.mypals.minecartrevolution.interfaces.IMinecartContainer;
 import ml.mypals.minecartrevolution.inventory.ContainerEntityAccess;
+import ml.mypals.minecartrevolution.inventory.LinkedContainer;
+import ml.mypals.minecartrevolution.manager.LinkedContainerManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -11,10 +14,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
@@ -30,7 +30,7 @@ import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nullable;
 
-public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecartEntity implements IMinecartContainer {
+public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecartEntity implements IMinecartContainer, ILinkedEnderChest {
     public int time;
     public float flip;
     public float oFlip;
@@ -186,7 +186,20 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
             return new SimpleMenuProvider((id, inv, _) -> new EnchantmentMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.enchant"));
         } else if (state.is(Blocks.ENDER_CHEST)) {
             this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS);
-            return new SimpleMenuProvider((id, inv, p) -> new MinecartChestMenu(MenuType.GENERIC_9x3, id, inv, p.getEnderChestInventory(), 3, this), Component.translatable("container.enderchest"));
+            String containerKey = this.hasCustomName() ? this.getCustomName().getString() : "global_ender_minecart";
+            if (containerKey.equalsIgnoreCase("global_ender_minecart")) {
+                return new SimpleMenuProvider((id, inv, p) ->
+                        new MinecartChestMenu(MenuType.GENERIC_9x3, id, inv, p.getEnderChestInventory(), 3, this),
+                        Component.translatable("container.enderchest")
+                );
+            } else {
+                LinkedContainer linkedContainer = LinkedContainerManager.get(containerKey);
+                linkedContainer.setActiveMinecart(this);
+                return new SimpleMenuProvider((id, inv, _) ->
+                        new MinecartChestMenu(MenuType.GENERIC_9x3, id, inv, linkedContainer, 3, this),
+                        this.getDisplayName()
+                );
+            }
         }
         return null;
     }
@@ -199,5 +212,15 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
                 this.level().playSound(this, this.blockPosition(), SoundEvents.ENDER_CHEST_CLOSE, SoundSource.BLOCKS);
             }
         }
+    }
+
+    @Override
+    public Container getContainer() {
+        return null;
+    }
+
+    @Override
+    public boolean isLinked() {
+        return this.getDisplayBlockState().is(Blocks.ENDER_CHEST) && this.hasCustomName();
     }
 }
