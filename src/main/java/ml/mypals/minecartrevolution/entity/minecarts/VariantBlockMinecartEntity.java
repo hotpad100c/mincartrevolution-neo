@@ -67,6 +67,10 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
     }
 
+    public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z) {
+        super(minecart, world, x, y, z);
+    }
+
     @Override
     public void destroy(@NonNull ServerLevel serverLevel, DamageSource source) {
         boolean sourceIsPlayer = false;
@@ -99,7 +103,9 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public void remove(Entity.@NonNull RemovalReason reason) {
-        removeDynamicLight(this.getOnPos().asLong(), true);
+        if (this.level().isClientSide()) {
+            removeDynamicLight(this.blockPosition(), true);
+        }
         this.setRemoved(reason);
     }
 
@@ -250,7 +256,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     */
         if (blockState.hasProperty(RedstoneLampBlock.LIT)) {
             blockState = blockState.setValue(RedstoneLampBlock.LIT, powered);
-            if (!powered) this.removeDynamicLight(this.blockPosition().asLong(), true);
+            if (!powered && this.level().isClientSide()) this.removeDynamicLight(this.blockPosition(), true);
             this.setCustomDisplayBlockState(Optional.of(blockState));
         }
 }
@@ -287,77 +293,32 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         return displayBlock.getLightEmission();
     }
     protected void tickDynamicLight(ClientLevel world) {
-
         int lightLevel = getLightLevel();
 
         BlockPos blockPos = this.blockPosition();
-        long posLong = blockPos.asLong();
-        Vec3 entityPos = this.position();
-
         BlockPos oldPos = BlockPos.containing(this.oldPosition());
         boolean moved = !oldPos.equals(blockPos);
 
-        if (moved || keepUpdatingLight) {
-            removeDynamicLight(oldPos.asLong(), true);
-
-            if (lightLevel > 0) {
-                DynamicLightsStorage.BP_TO_LIGHT_LEVEL.put(posLong, (double) lightLevel);
-
-                DynamicLightsSpread.computeDynamicLights(
-                        posLong,
-                        entityPos.x, entityPos.y, entityPos.z,
-                        lightLevel,
-                        DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
-                        pos -> {
-                            BlockPos bp = BlockPos.of(pos);
-                            setBlockDirty(bp);
-                        }
-                );
+        if (lightLevel > 0) {
+            DynamicLightsStorage.LIGHT_SOURCES.put(this, lightLevel);
+            if (moved || keepUpdatingLight) {
+                DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
+                DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
                 updateDynamicLight(world, blockPos);
             }
-        } else if (lightLevel > 0 && DynamicLightsStorage.getLightLevel(blockPos) == 0.0) {
-            DynamicLightsStorage.BP_TO_LIGHT_LEVEL.put(posLong, (double) lightLevel);
-
-            DynamicLightsSpread.computeDynamicLights(
-                    posLong,
-                    entityPos.x, entityPos.y, entityPos.z,
-                    lightLevel,
-                    DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
-                    pos -> {
-                        BlockPos bp = BlockPos.of(pos);
-                        setBlockDirty(bp);
-                    }
-            );
-
-            updateDynamicLight(world, blockPos);
+        } else {
+            if (DynamicLightsStorage.LIGHT_SOURCES.remove(this) != null) {
+                DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
+                DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
+                updateDynamicLight(world, blockPos);
+            }
         }
     }
 
-    private void removeDynamicLight(long posLong, boolean update) {
-
-        DynamicLightsStorage.BP_TO_LIGHT_LEVEL.remove(posLong);
-        DynamicLightsSpread.computeLightsOff(
-                posLong,
-                DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
-                bp -> {
-                    if (update) {
-                        BlockPos blockPos = BlockPos.of(bp);
-                        setBlockDirty(blockPos);
-                    }
-                }
-        );
-    }
-
-    private void setBlockDirty(BlockPos pos) {
-        for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
-            for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++) {
-                for (int y = pos.getY() - 1; y <= pos.getY() + 1; y++) {
-                    Minecraft.getInstance().levelRenderer.setSectionDirty(
-                            SectionPos.blockToSectionCoord(x),
-                            SectionPos.blockToSectionCoord(y),
-                            SectionPos.blockToSectionCoord(z)
-                    );
-                }
+    private void removeDynamicLight(BlockPos pos, boolean update) {
+        if (DynamicLightsStorage.LIGHT_SOURCES.remove(this) != null) {
+            if (update) {
+                DynamicLightsSpread.markAreaDirty(pos, DynamicLightsSpread.RADIUS);
             }
         }
     }
@@ -491,6 +452,18 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
     public float getCollisionSensitive(){
         return 0.01f;
+    }
+
+    @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        Optional<BlockState> blockState = this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK);
+        if (blockState.isPresent() && !blockState.get().isAir()) {
+            output.store("DisplayState", BlockState.CODEC, blockState.get());
+        }
+        output.putInt("DisplayOffset", this.getDisplayOffset());
+        output.putBoolean("FlippedRotation", this.isFlipped());
+        output.putBoolean("HasTicked", this.firstTick);
     }
 
     @Override

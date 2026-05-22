@@ -10,6 +10,7 @@ import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import ml.mypals.minecartrevolution.mixin.level.ServerLevelMixin;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
+import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -82,6 +83,10 @@ public class MinecartRevolution {
         registrar.playToClient(
                 JukeboxUpdateS2CPacket.TYPE,
                 JukeboxUpdateS2CPacket.STREAM_CODEC
+        );
+        registrar.playToClient(
+                BabelScramblePacket.TYPE,
+                BabelScramblePacket.STREAM_CODEC
         );
     }
 

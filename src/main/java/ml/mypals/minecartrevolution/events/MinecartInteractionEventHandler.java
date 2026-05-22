@@ -50,7 +50,7 @@ public class MinecartInteractionEventHandler {
 
         if (player.isSecondaryUseActive()) {
             if (!stackInHand.isEmpty()) {
-                if (stackInHand.getItem() instanceof BlockItem blockItem && !interacted.getDisplayBlockState().isAir()) {
+                if (stackInHand.getItem() instanceof BlockItem blockItem && interacted.getDisplayBlockState().isAir()) {
                     interacted.setCustomDisplayBlockState(
                             Optional.of(blockItem.getBlock().defaultBlockState())
                     );

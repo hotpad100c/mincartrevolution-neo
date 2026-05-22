@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public class NetherPortalMinecartEntity extends PortalMinecartEntity {
 
@@ -28,16 +29,12 @@ public class NetherPortalMinecartEntity extends PortalMinecartEntity {
 
     public NetherPortalMinecartEntity(EntityType<? extends NetherPortalMinecartEntity> entityType, Level level) {
         super(entityType, level);
+        this.setCustomDisplayBlockState(Optional.of(net.minecraft.world.level.block.Blocks.NETHER_PORTAL.defaultBlockState()));
     }
 
-    public NetherPortalMinecartEntity(
-            EntityType<? extends NetherPortalMinecartEntity> minecart,
-            Level level,
-            double x,
-            double y,
-            double z,
-            Item item) {
+    public NetherPortalMinecartEntity(EntityType<? extends NetherPortalMinecartEntity> minecart, Level level, double x, double y, double z, Item item) {
         super(minecart, level, x, y, z, item);
+        this.setCustomDisplayBlockState(Optional.of(net.minecraft.world.level.block.Blocks.NETHER_PORTAL.defaultBlockState()));
     }
 
     @Override

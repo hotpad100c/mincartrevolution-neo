@@ -43,5 +43,10 @@
   "advancement.minecartrevolution.sofa_away_logic.description": "Sit on a moving Sofa Minecart for 5 seconds and enjoy the music",
 
   "advancement.minecartrevolution.no_gravity_logic.title": "Light as a Feather",
-  "advancement.minecartrevolution.no_gravity_logic.description": "Place wool inside a minecart to make it weightless"
+  "advancement.minecartrevolution.no_gravity_logic.description": "Place wool inside a minecart to make it weightless",
+
+  "advancement.minecartrevolution.is_that_babel_tower.title": "Is That the Tower of Babel?",
+  "advancement.minecartrevolution.is_that_babel_tower.description": "Stack more than 10 minecarts using Rail Minecarts",
+  "advancement.minecartrevolution.babel.title": "Babel",
+  "advancement.minecartrevolution.babel.description": "Experience the collapse of a minecart tower taller than 24 layers"
 }

@@ -5,6 +5,8 @@ import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCrite
 import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.NoGravityCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.SofaAwayCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.BabelTowerCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.BabelCriterion;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -28,6 +30,10 @@ public class MRModCriteria {
             register("sofa_away", SofaAwayCriterion::new);
     public static final DeferredHolder<CriterionTrigger<?>, NoGravityCriterion> NO_GRAVITY = TRIGGERS.
             register("no_gravity", NoGravityCriterion::new);
+    public static final DeferredHolder<CriterionTrigger<?>, BabelTowerCriterion> IS_THAT_BABEL_TOWER = TRIGGERS.
+            register("is_that_babel_tower", BabelTowerCriterion::new);
+    public static final DeferredHolder<CriterionTrigger<?>, BabelCriterion> BABEL = TRIGGERS.
+            register("babel", BabelCriterion::new);
     public static void init() {
         System.out.println("MRModCriteria loaded");
     }

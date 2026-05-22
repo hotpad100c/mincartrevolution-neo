@@ -6,6 +6,8 @@ import ml.mypals.minecartrevolution.advancements.criterion.NoGravityCriterion;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import ml.mypals.minecartrevolution.advancements.criterion.SofaAwayCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.BabelTowerCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.BabelCriterion;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -240,5 +242,35 @@ public class MRAdvancementProvider {
                 )
                 .addCriterion("no_gravity_criterion", NoGravityCriterion.TriggerInstance.noGravity())
                 .save(saver, "no_gravity_logic");
+
+        AdvancementHolder isThatBabelTower = Advancement.Builder.advancement()
+                .parent(getBlockMinecart)
+                .display(
+                        MRMinecarts.NORMAL_RAIL_MINECART.item().get(),
+                        title("is_that_babel_tower"),
+                        desc("is_that_babel_tower"),
+                        BG_TEXTURE,
+                        AdvancementType.CHALLENGE,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("is_that_babel_tower_criterion", BabelTowerCriterion.TriggerInstance.trigger())
+                .save(saver, "is_that_babel_tower");
+
+        AdvancementHolder babel = Advancement.Builder.advancement()
+                .parent(isThatBabelTower)
+                .display(
+                        MRMinecarts.NORMAL_RAIL_MINECART.item().get(),
+                        title("babel"),
+                        desc("babel"),
+                        BG_TEXTURE,
+                        AdvancementType.CHALLENGE,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("babel_criterion", BabelCriterion.TriggerInstance.trigger())
+                .save(saver, "babel");
     }
 }

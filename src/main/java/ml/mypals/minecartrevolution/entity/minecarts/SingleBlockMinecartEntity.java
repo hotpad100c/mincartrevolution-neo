@@ -124,8 +124,9 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
     }
 
 
-    public void load(@NonNull ValueInput nbt) {
-        super.load(nbt);
+    @Override
+    protected void readAdditionalSaveData(@NonNull ValueInput nbt) {
+        super.readAdditionalSaveData(nbt);
         int item = nbt.getIntOr("correspondingItem",-1);
         if(item != -1){
             this.correspondingItem = Item.byId(item);
@@ -134,9 +135,9 @@ public class SingleBlockMinecartEntity extends VariantBlockMinecartEntity {
     }
 
     @Override
-    public void saveWithoutId(ValueOutput nbt) {
+    protected void addAdditionalSaveData(@NonNull ValueOutput nbt) {
         nbt.putInt("correspondingItem", Item.getId(this.correspondingItem));
-        super.saveWithoutId(nbt);
+        super.addAdditionalSaveData(nbt);
     }
 
     public void setCorrespondingItem(Item correspondingItem) {

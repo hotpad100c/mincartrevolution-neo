@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution;
 
+import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
@@ -42,6 +43,8 @@ import org.jspecify.annotations.NonNull;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.List;
+import java.util.ArrayList;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
 
@@ -93,6 +96,10 @@ public class MinecartRevolutionClient {
                 JukeboxUpdateS2CPacket.TYPE,
                 MinecartRevolutionClient::jukeboxEntityPlayUpdate
         );
+        event.register(
+                BabelScramblePacket.TYPE,
+                MinecartRevolutionClient::babelScrambleUpdate
+        );
     }
 
     @SubscribeEvent // on the mod event bus only on the physical client
@@ -142,6 +149,30 @@ public class MinecartRevolutionClient {
                 });
             }
 
+        });
+    }
+
+    private static void babelScrambleUpdate(
+            final ml.mypals.minecartrevolution.packets.BabelScramblePacket payload, final IPayloadContext context) {
+        Minecraft client = Minecraft.getInstance();
+        client.execute(() -> {
+            List<String> languages = new ArrayList<>(
+                    client.getLanguageManager()
+                            .getLanguages()
+                            .keySet()
+            );
+
+            if (client.level != null) {
+                String randomLang = languages.get(
+                        client.level.getRandom().nextInt(languages.size())
+                );
+
+                client.getLanguageManager().setSelected(randomLang);
+                client.options.languageCode = randomLang;
+
+                client.reloadResourcePacks();
+                client.options.save();
+            }
         });
     }
 

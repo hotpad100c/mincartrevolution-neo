@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution.entity.minecarts.fluidcarts;
 
 import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -15,8 +16,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.LavaFluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
@@ -33,11 +38,25 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
     }
 
     public FluidMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, Item item) {
-        super(entityType, world, item);
+        super(entityType, world);
+        if (item == Items.WATER_BUCKET) {
+            this.setCustomDisplayBlockState(Optional.of(Blocks.WATER.defaultBlockState()));
+        } else if (item == Items.LAVA_BUCKET) {
+            this.setCustomDisplayBlockState(Optional.of(Blocks.LAVA.defaultBlockState()));
+        } else {
+            this.setCustomDisplayBlockState(Optional.of(Block.byItem(item).defaultBlockState()));
+        }
     }
 
     public FluidMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
-        super(minecart, world, x, y, z, item);
+        super(minecart, world, x, y, z);
+        if (item == Items.WATER_BUCKET) {
+            this.setCustomDisplayBlockState(Optional.of(Blocks.WATER.defaultBlockState()));
+        } else if (item == Items.LAVA_BUCKET) {
+            this.setCustomDisplayBlockState(Optional.of(Blocks.LAVA.defaultBlockState()));
+        } else {
+            this.setCustomDisplayBlockState(Optional.of(Block.byItem(item).defaultBlockState()));
+        }
     }
 
     @Override
@@ -113,6 +132,18 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
                     living.igniteForSeconds(3);
                 } else if (blockState.is(Blocks.WATER)) {
                     living.clearFire();
+                }
+            }
+        }
+        for (BlockPos blockPos : BlockPos.betweenClosed(aabb.inflate(3,0,3))){
+            if (blockState.is(Blocks.LAVA)) {
+                if (level().isEmptyBlock(blockPos) && !level().isEmptyBlock(blockPos.below()) && this.getRandom().nextInt(10) == 0) {
+                    level().setBlockAndUpdate(blockPos, BaseFireBlock.getState(level(), blockPos));
+                }
+            } else if (blockState.is(Blocks.WATER)) {
+                BlockState targetBlock = level().getBlockState(blockPos);
+                if (targetBlock.is(Blocks.FARMLAND)) {
+                    level().setBlockAndUpdate(blockPos, targetBlock.setValue(FarmlandBlock.MOISTURE, 7));
                 }
             }
         }

@@ -122,7 +122,7 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
 
         for (MagnetMinecartEntity other : others) {
             if (other != this) {
-                net.minecraft.world.phys.Vec3 vec3 = other.position().subtract(this.position());
+                Vec3 vec3 = other.position().subtract(this.position());
                 double distanceSq = vec3.lengthSqr();
                 if (distanceSq > 0.01) {
                     double distance = Math.sqrt(distanceSq);
