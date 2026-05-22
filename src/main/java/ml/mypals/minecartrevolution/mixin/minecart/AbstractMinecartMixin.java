@@ -1,9 +1,14 @@
 package ml.mypals.minecartrevolution.mixin.minecart;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Leashable;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.Level;
@@ -13,13 +18,18 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractMinecart.class)
 public abstract class AbstractMinecartMixin extends VehicleEntity implements Leashable {
+
+    @Shadow
+    protected abstract double getMaxSpeed(ServerLevel level);
 
     @Unique
     private @Nullable LeashData mincartrevolution_neo$leashData;
@@ -74,6 +84,30 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
     private void tick(CallbackInfo ci){
         if (this.level() instanceof ServerLevel serverLevelx) {
             Leashable.tickLeash(serverLevelx, (Entity & Leashable)this);
+        }
+    }
+    @Inject(method = "getMaxSpeed",at = @At("HEAD"), cancellable = true)
+    private void getMaxSpeed(ServerLevel level, CallbackInfoReturnable<Double> cir){
+        cir.setReturnValue(1d);
+    }
+
+    @WrapMethod(method = "comeOffTrack")
+    protected void comeOffTrack(ServerLevel level, Operation<Void> original) {
+
+        double maxSpeed = getMaxSpeed(level);
+        Vec3 movement = this.getDeltaMovement();
+        this.setDeltaMovement(Mth.clamp(movement.x, -maxSpeed, maxSpeed),
+                movement.y,
+                Mth.clamp(movement.z, -maxSpeed, maxSpeed));
+
+        if (this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
+        }
+
+        this.move(MoverType.SELF, this.getDeltaMovement());
+
+        if (!this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.99));
         }
     }
 }

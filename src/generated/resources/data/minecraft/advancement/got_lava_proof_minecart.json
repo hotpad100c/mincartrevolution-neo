@@ -1,9 +1,9 @@
 {
   "parent": "minecraft:got_block_minecart",
   "criteria": {
-    "craft_jukebox_minecart": {
+    "craft_lava_proof_minecart": {
       "conditions": {
-        "entity": "entity.minecartrevolution.jukebox_minecart"
+        "entity": "entity.minecartrevolution.obsidian_minecart"
       },
       "trigger": "minecartrevolution:block_cart_crafted"
     }
@@ -11,19 +11,19 @@
   "display": {
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
-      "translate": "advancement.minecartrevolution.got_jukebox_minecart.description"
+      "translate": "advancement.minecartrevolution.got_lava_proof_minecart.description"
     },
     "frame": "challenge",
     "icon": {
-      "id": "minecartrevolution:minecart_jukebox"
+      "id": "minecartrevolution:minecart_obsidian"
     },
     "title": {
-      "translate": "advancement.minecartrevolution.got_jukebox_minecart.title"
+      "translate": "advancement.minecartrevolution.got_lava_proof_minecart.title"
     }
   },
   "requirements": [
     [
-      "craft_jukebox_minecart"
+      "craft_lava_proof_minecart"
     ]
   ],
   "sends_telemetry_event": true

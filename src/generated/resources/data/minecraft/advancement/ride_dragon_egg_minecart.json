@@ -22,12 +22,17 @@
     }
   },
   "display": {
-    "description": "坐在龙蛋矿车上",
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.ride_dragon_egg_minecart.description"
+    },
     "frame": "challenge",
     "icon": {
       "id": "minecraft:dragon_egg"
     },
-    "title": "孵蛋"
+    "title": {
+      "translate": "advancement.minecartrevolution.ride_dragon_egg_minecart.title"
+    }
   },
   "requirements": [
     [

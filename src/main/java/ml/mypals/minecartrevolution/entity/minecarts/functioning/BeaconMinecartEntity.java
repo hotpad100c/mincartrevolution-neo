@@ -38,11 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements MenuProvider, BeaconBeamOwner {
@@ -115,6 +111,7 @@ public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements 
 
     public BeaconMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z, item);
+        setCustomDisplayBlockState(Optional.of(Blocks.BEACON.defaultBlockState()));
     }
 
     @Override

@@ -27,6 +27,7 @@ import ml.mypals.minecartrevolution.mixin.blocks.PistonBlockInvoker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EnderPortalMinecartEntity extends NetherPortalMinecartEntity {
 
@@ -43,11 +44,12 @@ public class EnderPortalMinecartEntity extends NetherPortalMinecartEntity {
 
     public EnderPortalMinecartEntity(EntityType<EnderPortalMinecartEntity> entityType, Level level) {
         super(entityType, level);
+        this.setCustomDisplayBlockState(Optional.of(Blocks.END_PORTAL.defaultBlockState()));
     }
 
-    public EnderPortalMinecartEntity(EntityType<EnderPortalMinecartEntity> minecart, Level level,
-                                     double x, double y, double z, Item item) {
+    public EnderPortalMinecartEntity(EntityType<EnderPortalMinecartEntity> minecart, Level level, double x, double y, double z, Item item) {
         super(minecart, level, x, y, z, item);
+        this.setCustomDisplayBlockState(Optional.of(net.minecraft.world.level.block.Blocks.NETHER_PORTAL.defaultBlockState()));
     }
 
     @Override

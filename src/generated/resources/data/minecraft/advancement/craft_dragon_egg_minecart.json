@@ -9,12 +9,17 @@
     }
   },
   "display": {
-    "description": "它需要一些刺激",
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.craft_dragon_egg_minecart.description"
+    },
     "frame": "challenge",
     "icon": {
       "id": "minecraft:dragon_egg"
     },
-    "title": "这是摇篮吗？"
+    "title": {
+      "translate": "advancement.minecartrevolution.craft_dragon_egg_minecart.title"
+    }
   },
   "requirements": [
     [

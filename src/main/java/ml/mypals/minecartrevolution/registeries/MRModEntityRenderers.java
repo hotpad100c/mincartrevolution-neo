@@ -57,6 +57,11 @@ public class MRModEntityRenderers {
                 MRMinecarts.ENDER_PORTAL_MINECART.entity().get(),
                 EnderPortalMinecartRenderer::new
         );
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.SOFA_MINECART.entity().get(),
+                SofaMinecartRenderer::new
+        );
+
 
     }
 }

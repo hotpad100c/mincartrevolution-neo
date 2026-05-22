@@ -10,12 +10,16 @@
   },
   "display": {
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
-    "description": "哪个版本更新的？？",
+    "description": {
+      "translate": "advancement.minecartrevolution.got_block_minecart.description"
+    },
     "frame": "goal",
     "icon": {
       "id": "minecraft:minecart"
     },
-    "title": "矿车革命"
+    "title": {
+      "translate": "advancement.minecartrevolution.got_block_minecart.title"
+    }
   },
   "requirements": [
     [

@@ -21,12 +21,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
-import net.minecraft.world.entity.vehicle.minecart.MinecartBehavior;
-import net.minecraft.world.entity.vehicle.minecart.OldMinecartBehavior;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,8 +33,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
@@ -68,6 +65,10 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Block block) {
         super(minecart, world, x, y, z);
         this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
+    }
+
+    public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z) {
+        super(minecart, world, x, y, z);
     }
 
     @Override
@@ -102,7 +103,9 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public void remove(Entity.@NonNull RemovalReason reason) {
-        removeDynamicLight(this.getOnPos().asLong(), true);
+        if (this.level().isClientSide()) {
+            removeDynamicLight(this.blockPosition(), true);
+        }
         this.setRemoved(reason);
     }
 
@@ -246,16 +249,17 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     public void handleActive( ServerLevel level, int x, int y, int z, boolean powered) {
         BlockState blockState = this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
         this.activated = powered;
-        if (blockState.hasProperty(BlockStateProperties.POWERED)) {
+    /*    if (blockState.hasProperty(BlockStateProperties.POWERED)) {
             blockState = blockState.setValue(BlockStateProperties.POWERED, powered);
         }
+
+    */
         if (blockState.hasProperty(RedstoneLampBlock.LIT)) {
             blockState = blockState.setValue(RedstoneLampBlock.LIT, powered);
-            if (!powered) this.removeDynamicLight(this.blockPosition().asLong(), true);
-
+            if (!powered && this.level().isClientSide()) this.removeDynamicLight(this.blockPosition(), true);
+            this.setCustomDisplayBlockState(Optional.of(blockState));
         }
-        this.setCustomDisplayBlockState(Optional.of(blockState));
-    }
+}
 
     @Override
     public void tick() {
@@ -289,77 +293,32 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         return displayBlock.getLightEmission();
     }
     protected void tickDynamicLight(ClientLevel world) {
-
         int lightLevel = getLightLevel();
 
         BlockPos blockPos = this.blockPosition();
-        long posLong = blockPos.asLong();
-        Vec3 entityPos = this.position();
-
         BlockPos oldPos = BlockPos.containing(this.oldPosition());
         boolean moved = !oldPos.equals(blockPos);
 
-        if (moved || keepUpdatingLight) {
-            removeDynamicLight(oldPos.asLong(), true);
-
-            if (lightLevel > 0) {
-                DynamicLightsStorage.BP_TO_LIGHT_LEVEL.put(posLong, (double) lightLevel);
-
-                DynamicLightsSpread.computeDynamicLights(
-                        posLong,
-                        entityPos.x, entityPos.y, entityPos.z,
-                        lightLevel,
-                        DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
-                        pos -> {
-                            BlockPos bp = BlockPos.of(pos);
-                            setBlockDirty(bp);
-                        }
-                );
+        if (lightLevel > 0) {
+            DynamicLightsStorage.LIGHT_SOURCES.put(this, lightLevel);
+            if (moved || keepUpdatingLight) {
+                DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
+                DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
                 updateDynamicLight(world, blockPos);
             }
-        } else if (lightLevel > 0 && DynamicLightsStorage.getLightLevel(blockPos) == 0.0) {
-            DynamicLightsStorage.BP_TO_LIGHT_LEVEL.put(posLong, (double) lightLevel);
-
-            DynamicLightsSpread.computeDynamicLights(
-                    posLong,
-                    entityPos.x, entityPos.y, entityPos.z,
-                    lightLevel,
-                    DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
-                    pos -> {
-                        BlockPos bp = BlockPos.of(pos);
-                        setBlockDirty(bp);
-                    }
-            );
-
-            updateDynamicLight(world, blockPos);
+        } else {
+            if (DynamicLightsStorage.LIGHT_SOURCES.remove(this) != null) {
+                DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
+                DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
+                updateDynamicLight(world, blockPos);
+            }
         }
     }
 
-    private void removeDynamicLight(long posLong, boolean update) {
-
-        DynamicLightsStorage.BP_TO_LIGHT_LEVEL.remove(posLong);
-        DynamicLightsSpread.computeLightsOff(
-                posLong,
-                DynamicLightsStorage.BP_TO_LIGHT_LEVEL::containsKey,
-                bp -> {
-                    if (update) {
-                        BlockPos blockPos = BlockPos.of(bp);
-                        setBlockDirty(blockPos);
-                    }
-                }
-        );
-    }
-
-    private void setBlockDirty(BlockPos pos) {
-        for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++) {
-            for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++) {
-                for (int y = pos.getY() - 1; y <= pos.getY() + 1; y++) {
-                    Minecraft.getInstance().levelRenderer.setSectionDirty(
-                            SectionPos.blockToSectionCoord(x),
-                            SectionPos.blockToSectionCoord(y),
-                            SectionPos.blockToSectionCoord(z)
-                    );
-                }
+    private void removeDynamicLight(BlockPos pos, boolean update) {
+        if (DynamicLightsStorage.LIGHT_SOURCES.remove(this) != null) {
+            if (update) {
+                DynamicLightsSpread.markAreaDirty(pos, DynamicLightsSpread.RADIUS);
             }
         }
     }
@@ -471,6 +430,51 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         }
         return super.hurtClient(source);
     }
+    @Override
+    public void move(@NonNull MoverType moverType, @NonNull Vec3 delta) {
+        Vec3 toPosition = this.position().add(delta);
+        super.move(moverType, delta);
+        Vec3 newPosition = this.position();
+        boolean shouldContinue = this.getBehavior().pushAndPickupEntities();
+        if (toPosition.distanceToSqr(newPosition) > getCollisionSensitive()) {
+            shouldContinue = onCollision(delta, toPosition, newPosition) && shouldContinue;
+        }
+        if (shouldContinue) {
+            super.move(moverType, toPosition.subtract(this.position()));
+        }
 
+        if (moverType.equals(MoverType.PISTON)) {
+            this.setOnRails(false);
+        }
+    }
+    public boolean onCollision(Vec3 delta, Vec3 target, Vec3 actual){
+        return true;
+    }
+    public float getCollisionSensitive(){
+        return 0.01f;
+    }
+
+    @Override
+    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        Optional<BlockState> blockState = this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK);
+        if (blockState.isPresent() && !blockState.get().isAir()) {
+            output.store("DisplayState", BlockState.CODEC, blockState.get());
+        }
+        output.putInt("DisplayOffset", this.getDisplayOffset());
+        output.putBoolean("FlippedRotation", this.isFlipped());
+        output.putBoolean("HasTicked", this.firstTick);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        Optional<BlockState> blockState = input.read("DisplayState", BlockState.CODEC);
+        if(blockState.isPresent()){
+            this.setCustomDisplayBlockState(blockState);
+        }
+        this.setDisplayOffset(input.getIntOr("DisplayOffset", this.getDefaultDisplayOffset()));
+        this.setFlipped(input.getBooleanOr("FlippedRotation", false));
+        this.firstTick = input.getBooleanOr("HasTicked", false);
+    }
 }
 
