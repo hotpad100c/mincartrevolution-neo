@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import ml.mypals.minecartrevolution.entity.minecarts.container.CopperChestMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.container.EnderChestMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.ShulkerMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.TrappedChestMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.IMinecartChestExtension;
@@ -71,7 +72,11 @@ public class AbstractMinecartRendererMixin {
             IMinecartRenderStateExtension stateExt = (IMinecartRenderStateExtension) state;
             stateExt.minecartrevolution$setOpenness(minecartChest.getOpenness(partialTicks));
             stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState());
-        } else if (entity instanceof ShulkerMinecartEntity shulker) {
+        } else if (entity instanceof EnderChestMinecartEntity minecartChest) {
+            IMinecartRenderStateExtension stateExt = (IMinecartRenderStateExtension) state;
+            stateExt.minecartrevolution$setOpenness(minecartChest.getOpenness(partialTicks));
+            stateExt.minecartrevolution$setDisplayBlock(entity.getDisplayBlockState());
+        }else if (entity instanceof ShulkerMinecartEntity shulker) {
             ((BlockModelRenderStateAccessor) state.displayBlockModel).setSpecialRenderer(null);
         }
     }
