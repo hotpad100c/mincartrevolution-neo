@@ -2,12 +2,9 @@ package ml.mypals.minecartrevolution.registeries;
 
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
-import ml.mypals.minecartrevolution.entity.minecarts.functioning.MagnetMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.*;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.*;
-import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
-import ml.mypals.minecartrevolution.entity.minecarts.functioning.NonInventoryWorkingBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.*;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
@@ -338,11 +335,11 @@ public class MRMinecarts {
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new NonInventoryWorkingBlockMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ANVIL_MINECART = register(
-            "anvil", NonInventoryWorkingBlockMinecartEntity::new,
+    public static final MinecartEntry<AnvilMinecart, MinecartWithBlockItem> ANVIL_MINECART = register(
+            "anvil", AnvilMinecart::new,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.ANVIL),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-            (entity, item) -> (w, pos) -> new NonInventoryWorkingBlockMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+            (entity, item) -> (w, pos) -> new AnvilMinecart(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
     public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ENCHANTING_TABLE_MINECART = register(
             "enchanting_table", NonInventoryWorkingBlockMinecartEntity::new,
