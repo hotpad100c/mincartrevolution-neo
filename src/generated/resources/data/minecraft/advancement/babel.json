@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:is_that_babel_tower",
+  "criteria": {
+    "babel_criterion": {
+      "trigger": "minecartrevolution:babel"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.minecartrevolution.babel.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "minecartrevolution:normal_rail"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.babel.title"
+    }
+  },
+  "requirements": [
+    [
+      "babel_criterion"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
