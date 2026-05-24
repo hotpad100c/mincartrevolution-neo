@@ -131,17 +131,6 @@ public class NonInventoryWorkingBlockEntityMapper {
                 )
         );
         NON_INVENTORY_WORKING.put(
-                Blocks.ENDER_CHEST,
-                (world, pos) -> new NonInventoryWorkingBlockMinecartEntity(
-                        MRMinecarts.NON_INVENTORY_WORKING_MINECART.get(),
-                        world,
-                        pos.x(),
-                        pos.y(),
-                        pos.z(),
-                        Items.ENDER_CHEST
-                )
-        );
-        NON_INVENTORY_WORKING.put(
                 Blocks.BEACON,
                 (world, pos) -> new BeaconMinecartEntity(
                         MRMinecarts.BEACON_MINECART.entity().get(),

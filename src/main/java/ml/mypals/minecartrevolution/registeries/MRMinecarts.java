@@ -347,11 +347,11 @@ public class MRMinecarts {
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new NonInventoryWorkingBlockMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-    public static final MinecartEntry<NonInventoryWorkingBlockMinecartEntity, MinecartWithBlockItem> ENDER_CHEST_MINECART = register(
-            "ender_chest", NonInventoryWorkingBlockMinecartEntity::new,
+    public static final MinecartEntry<EnderChestMinecartEntity, MinecartWithBlockItem> ENDER_CHEST_MINECART = register(
+            "ender_chest", EnderChestMinecartEntity::new,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.ENDER_CHEST),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-            (entity, item) -> (w, pos) -> new NonInventoryWorkingBlockMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+            (entity, item) -> (w, pos) -> new EnderChestMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
 
     public static final MinecartEntry<BeaconMinecartEntity, MinecartWithBlockItem> BEACON_MINECART = register(

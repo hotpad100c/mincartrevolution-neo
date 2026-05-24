@@ -6,7 +6,10 @@ import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -14,12 +17,17 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
 
 import java.util.List;
 import java.util.Optional;
 
 public class CobwebMinecartEntity extends SingleBlockMinecartEntity {
     private static int MAX_PASSENGERS_COUNT = 25;
+    public static final TagKey<EntityType<?>> CATCHABLE_ENTITIES = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("minecartrevolution", "cobweb_minecart_catchable"));
+    public static final TagKey<EntityType<?>> UNCATCHABLE_ENTITIES = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("minecartrevolution", "cobweb_minecart_cant_catch"));
 
     public CobwebMinecartEntity(EntityType<CobwebMinecartEntity> entityType, Level world) {
         super(entityType, world);
@@ -69,6 +77,14 @@ public class CobwebMinecartEntity extends SingleBlockMinecartEntity {
                         (!(entity instanceof Player) || ((entity instanceof Player) && this.getDeltaMovement().horizontalDistanceSqr() >= 0.01))
                                 && !(entity instanceof CobwebMinecartEntity)
                                 && this.getPassengers().size() < MAX_PASSENGERS_COUNT
+                                && !entity.is(UNCATCHABLE_ENTITIES)
+                                && (
+                                entity instanceof LivingEntity ||
+                                entity instanceof ItemEntity ||
+                                entity instanceof VehicleEntity ||
+                                entity.is(CATCHABLE_ENTITIES
+                                )
+                        )
                 ) {
                     entity.startRiding(this, true, true);
                 }

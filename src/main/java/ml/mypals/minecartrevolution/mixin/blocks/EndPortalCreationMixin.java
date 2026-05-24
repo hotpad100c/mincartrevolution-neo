@@ -34,8 +34,9 @@ public class EndPortalCreationMixin {
             Minecart minecart = minecarts.getFirst();
             minecart.remove(Entity.RemovalReason.DISCARDED);
             level.addFreshEntity(new EnderPortalMinecartEntity(MRMinecarts.ENDER_PORTAL_MINECART.entity().get(), minecart.level(), minecart.getX(),minecart.getY(),minecart.getZ(),MRMinecarts.ENDER_PORTAL_MINECART.item().asItem()));
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            return level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
-        return true;
+        return original.call(level, pos, blockState,updateFlags);
+
     }
 }
