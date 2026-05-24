@@ -18,6 +18,11 @@ public class RedstoneBlockMinecartEntity extends SingleBlockMinecartEntity imple
         super(entityType, world);
     }
 
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.REDSTONE_BLOCK.defaultBlockState();
+    }
+
     public RedstoneBlockMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> entityType, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(entityType, world, x, y, z, correspondingItem);
         this.setPreviousBlockPos(this.blockPosition());

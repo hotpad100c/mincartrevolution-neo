@@ -37,6 +37,11 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
         super(entityType, world);
     }
 
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.WATER.defaultBlockState();
+    }
+
     public FluidMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world, Item item) {
         super(entityType, world);
         if (item == Items.WATER_BUCKET) {

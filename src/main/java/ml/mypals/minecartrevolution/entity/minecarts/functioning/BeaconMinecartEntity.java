@@ -115,6 +115,11 @@ public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements 
     }
 
     @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.BEACON.defaultBlockState();
+    }
+
+    @Override
     public int getLightLevel() {
         float alpha = getChargeTicks() >= 200 ? 1.0f : (float) getChargeTicks() / 200.0f;
         return (int) (15 * alpha);

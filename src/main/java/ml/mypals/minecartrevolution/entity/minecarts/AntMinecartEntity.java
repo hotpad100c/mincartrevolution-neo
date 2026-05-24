@@ -44,6 +44,11 @@ public class AntMinecartEntity extends SingleBlockMinecartEntity {
         super(entityType, world);
     }
 
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.OBSERVER.defaultBlockState();
+    }
+
     public AntMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world,
                              double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);

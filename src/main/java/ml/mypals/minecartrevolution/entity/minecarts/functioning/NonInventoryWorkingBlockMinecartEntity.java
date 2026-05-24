@@ -44,6 +44,11 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
         super(entityType, world);
     }
 
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.CRAFTING_TABLE.defaultBlockState();
+    }
+
     public NonInventoryWorkingBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z, item);
     }

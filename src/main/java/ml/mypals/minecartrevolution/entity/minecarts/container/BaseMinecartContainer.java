@@ -26,6 +26,11 @@ public abstract class BaseMinecartContainer extends AbstractMinecartContainer {
         super(type, level);
     }
 
+    @Override
+    public BlockState getDisplayBlockState() {
+        return this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(getDefaultDisplayBlockState());
+    }
+
     // ── Subclasses must implement these ─────────────────────────────────────
 
     @Override

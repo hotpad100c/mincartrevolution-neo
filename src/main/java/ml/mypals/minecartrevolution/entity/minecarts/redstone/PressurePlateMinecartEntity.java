@@ -27,6 +27,11 @@ public class PressurePlateMinecartEntity extends VariantBlockMinecartEntity impl
     }
 
     @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.OAK_PRESSURE_PLATE.defaultBlockState();
+    }
+
+    @Override
     public @NonNull Item getDropItem() {
         return MRMinecarts.PRESHER_PLATE_MINECART_ITEM.item().get();
     }

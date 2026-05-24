@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.redstone.ExperimentalRedstoneUtils;
+import org.jspecify.annotations.NonNull;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.Vec3;
 
@@ -33,6 +34,11 @@ public class PistonMinecartEntity extends SingleBlockMinecartEntity {
 
     public PistonMinecartEntity(EntityType<PistonMinecartEntity> entityType, Level world) {
         super(entityType, world);
+    }
+
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.PISTON.defaultBlockState();
     }
 
     public PistonMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
