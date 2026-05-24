@@ -181,7 +181,7 @@ public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
             if (this.getHurtTime() <= 0) {
                 this.setHurtDir(-this.getHurtDir());
                 this.setHurtTime(20);
-                this.setDamage(2);
+                this.setDamage(10);
             }
             if (!level().isClientSide()) {
                 jukeboxManager.movingPos = this.position();

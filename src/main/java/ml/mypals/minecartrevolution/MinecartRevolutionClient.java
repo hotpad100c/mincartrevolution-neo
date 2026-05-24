@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution;
 
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
+import ml.mypals.minecartrevolution.entity.minecarts.AmethystMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import ml.mypals.minecartrevolution.util.MusicUtils;
@@ -21,6 +22,7 @@ import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.JukeboxSong;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -54,6 +56,7 @@ import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
 @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class MinecartRevolutionClient {
     public static HashMap<JukeboxMinecartEntity, SoundInstance> songs = new HashMap<>();
+    public static HashMap<AmethystMinecartEntity, SoundInstance> amethystSongs = new HashMap<>();
 
     public static final StandaloneModelKey<QuadCollection> SOFA_MODEL_KEY = new StandaloneModelKey<>(
             new ModelDebugName() {
@@ -119,7 +122,6 @@ public class MinecartRevolutionClient {
                 return;
             }
             jukeboxMinecartEntity = (JukeboxMinecartEntity) client.level.getEntity(entityId);
-            //ItemStack recordStack = jukeboxMinecartEntity.getDisc().getItem() == null ? ItemStack.EMPTY : jukeboxMinecartEntity.getDisc();
 
             SoundManager soundSystem = Minecraft.getInstance().getSoundManager();
 
@@ -180,6 +182,50 @@ public class MinecartRevolutionClient {
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, new AABB(pos).inflate(3.0))) {
             entity.setRecordPlayingNearby(pos, isPlaying);
         }
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
+        Minecraft client = Minecraft.getInstance();
+        if (client.level == null) return;
+
+        SoundManager soundSystem = client.getSoundManager();
+        
+        for (net.minecraft.world.entity.Entity entity : client.level.entitiesForRendering()) {
+            if (entity instanceof AmethystMinecartEntity amethystMinecart) {
+                ItemStack disc = amethystMinecart.getDisc();
+                SoundInstance instance = amethystSongs.get(amethystMinecart);
+
+                if (!disc.isEmpty()) {
+                    if (instance == null || !soundSystem.isActive(instance)) {
+                        java.util.Optional<net.minecraft.core.Holder<JukeboxSong>> optional = JukeboxSong.fromStack(disc);
+                        if (optional.isPresent()) {
+                            JukeboxSong jukeboxSong = optional.get().value();
+                            SoundEvent soundEvent = jukeboxSong.soundEvent().value();
+                            EntityBoundSoundInstance newInstance = new EntityBoundSoundInstance(soundEvent, SoundSource.RECORDS, 4.0f, 1.0f,
+                                    amethystMinecart, client.level.getRandom().nextLong());
+                            amethystSongs.put(amethystMinecart, newInstance);
+                            soundSystem.play(newInstance);
+                            notifyNearbyEntities(client.level, amethystMinecart.blockPosition(), true);
+                        }
+                    }
+                } else {
+                    if (instance != null) {
+                        soundSystem.stop(instance);
+                        amethystSongs.remove(amethystMinecart);
+                        notifyNearbyEntities(client.level, amethystMinecart.blockPosition(), false);
+                    }
+                }
+            }
+        }
+
+        amethystSongs.entrySet().removeIf(entry -> {
+            if (entry.getKey().isRemoved()) {
+                soundSystem.stop(entry.getValue());
+                return true;
+            }
+            return false;
+        });
     }
     @SubscribeEvent
     public static void setupBuiltInResourcePack(final AddPackFindersEvent event) {

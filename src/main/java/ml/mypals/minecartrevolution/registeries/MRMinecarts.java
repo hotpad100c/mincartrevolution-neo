@@ -420,6 +420,11 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OBSIDIAN),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new ObsidianMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+    public static final MinecartEntry<AmethystMinecartEntity, MinecartWithBlockItem> AMETHYST_MINECART = register(
+            "amethyst", AmethystMinecartEntity::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.AMETHYST_BLOCK),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new AmethystMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
     public static final MinecartEntry<AntMinecartEntity, MinecartWithBlockItem> OBSERVER_MINECART = register(
             "ant", AntMinecartEntity::new,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OBSERVER),
