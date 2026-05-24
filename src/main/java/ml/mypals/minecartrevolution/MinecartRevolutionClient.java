@@ -6,6 +6,7 @@ import ml.mypals.minecartrevolution.entity.minecarts.AmethystMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import ml.mypals.minecartrevolution.util.MusicUtils;
+import ml.mypals.minecartrevolution.client.sound.ChainedJukeboxSoundInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.client.resources.model.geometry.QuadCollection;
@@ -56,7 +57,6 @@ import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
 @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class MinecartRevolutionClient {
     public static HashMap<JukeboxMinecartEntity, SoundInstance> songs = new HashMap<>();
-    public static HashMap<AmethystMinecartEntity, SoundInstance> amethystSongs = new HashMap<>();
 
     public static final StandaloneModelKey<QuadCollection> SOFA_MODEL_KEY = new StandaloneModelKey<>(
             new ModelDebugName() {
@@ -127,20 +127,32 @@ public class MinecartRevolutionClient {
 
             AtomicReference<SoundInstance> instance = new AtomicReference<>(songs.get(jukeboxMinecartEntity));
 
-            if (instance.get() != null && soundSystem.isActive(instance.get()) || !play) {
-                soundSystem.stop(instance.get());
-                songs.remove(jukeboxMinecartEntity);
-                instance.set(null);
-                notifyNearbyEntities(client.level, jukeboxMinecartEntity.blockPosition(), true);
-            } else {
+            if (instance.get() != null) {
+                if (play) {
+                    if (instance.get() instanceof ChainedJukeboxSoundInstance chained) {
+                        chained.updateConnections(payload.connectedAmethystIds());
+                    }
+                    if (!soundSystem.isActive(instance.get())) {
+                        soundSystem.play(instance.get());
+                    }
+                    return;
+                } else {
+                    soundSystem.stop(instance.get());
+                    songs.remove(jukeboxMinecartEntity);
+                    instance.set(null);
+                    notifyNearbyEntities(client.level, jukeboxMinecartEntity.blockPosition(), false);
+                    return;
+                }
+            } else if (play) {
                 Level world = client.level;
                 JukeboxMinecartEntity finalJukeboxMinecartEntity = jukeboxMinecartEntity;
 
                 world.registryAccess().lookupOrThrow(Registries.JUKEBOX_SONG).get(discId).ifPresent(song -> {
                     JukeboxSong jukeboxSong = song.value();
                     SoundEvent soundEvent = jukeboxSong.soundEvent().value();
-                    instance.set(new EntityBoundSoundInstance(soundEvent, SoundSource.RECORDS, 4.0f, 1.0f,
-                            finalJukeboxMinecartEntity, client.level.getRandom().nextLong()));
+                    ChainedJukeboxSoundInstance chainedInstance = new ChainedJukeboxSoundInstance(soundEvent, SoundSource.RECORDS, 4.0f, 1.0f,
+                            finalJukeboxMinecartEntity, client.level.getRandom().nextLong(), payload.connectedAmethystIds());
+                    instance.set(chainedInstance);
                     client.gui.setNowPlaying(jukeboxSong.description());
 
                     notifyNearbyEntities(client.level, finalJukeboxMinecartEntity.blockPosition(), true);
@@ -183,50 +195,7 @@ public class MinecartRevolutionClient {
             entity.setRecordPlayingNearby(pos, isPlaying);
         }
     }
-
-    @SubscribeEvent
-    public static void onClientTick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
-        Minecraft client = Minecraft.getInstance();
-        if (client.level == null) return;
-
-        SoundManager soundSystem = client.getSoundManager();
-        
-        for (net.minecraft.world.entity.Entity entity : client.level.entitiesForRendering()) {
-            if (entity instanceof AmethystMinecartEntity amethystMinecart) {
-                ItemStack disc = amethystMinecart.getDisc();
-                SoundInstance instance = amethystSongs.get(amethystMinecart);
-
-                if (!disc.isEmpty()) {
-                    if (instance == null || !soundSystem.isActive(instance)) {
-                        java.util.Optional<net.minecraft.core.Holder<JukeboxSong>> optional = JukeboxSong.fromStack(disc);
-                        if (optional.isPresent()) {
-                            JukeboxSong jukeboxSong = optional.get().value();
-                            SoundEvent soundEvent = jukeboxSong.soundEvent().value();
-                            EntityBoundSoundInstance newInstance = new EntityBoundSoundInstance(soundEvent, SoundSource.RECORDS, 4.0f, 1.0f,
-                                    amethystMinecart, client.level.getRandom().nextLong());
-                            amethystSongs.put(amethystMinecart, newInstance);
-                            soundSystem.play(newInstance);
-                            notifyNearbyEntities(client.level, amethystMinecart.blockPosition(), true);
-                        }
-                    }
-                } else {
-                    if (instance != null) {
-                        soundSystem.stop(instance);
-                        amethystSongs.remove(amethystMinecart);
-                        notifyNearbyEntities(client.level, amethystMinecart.blockPosition(), false);
-                    }
-                }
-            }
-        }
-
-        amethystSongs.entrySet().removeIf(entry -> {
-            if (entry.getKey().isRemoved()) {
-                soundSystem.stop(entry.getValue());
-                return true;
-            }
-            return false;
-        });
-    }
+    
     @SubscribeEvent
     public static void setupBuiltInResourcePack(final AddPackFindersEvent event) {
         event.addPackFinders(

@@ -54,14 +54,20 @@ public class AmethystMinecartEntity extends SingleBlockMinecartEntity {
         super.tick();
 
         if (!this.level().isClientSide()) {
-            JukeboxMinecartEntity bestJukebox = sourceJukeBoxMinecartEntity;
-            int bestDistance = Integer.MAX_VALUE;
+            boolean needsRecalculation = false;
+            
+            if (this.sourceJukeBoxMinecartEntity == null || this.sourceJukeBoxMinecartEntity.isRemoved() || 
+                this.sourceJukeBoxMinecartEntity.getDisc().isEmpty() || this.sourceJukeBoxMinecartEntity.getPowerStrength(null, null) == 0) {
+                needsRecalculation = true;
+            }
 
-            if(sourceJukeBoxMinecartEntity == null || sourceJukeBoxMinecartEntity.isRemoved()){
-                if(sourceJukeBoxMinecartEntity != null)bestJukebox = null;
+            if (needsRecalculation) {
+                JukeboxMinecartEntity bestJukebox = null;
+                int bestDistance = Integer.MAX_VALUE;
+
                 List<JukeboxMinecartEntity> jukeboxes = this.level().getEntitiesOfClass(
                         JukeboxMinecartEntity.class,
-                        this.getBoundingBox().inflate(16.0D)
+                        this.getBoundingBox().inflate(32)
                 );
 
                 for (JukeboxMinecartEntity jukebox : jukeboxes) {
@@ -71,33 +77,40 @@ public class AmethystMinecartEntity extends SingleBlockMinecartEntity {
                         break;
                     }
                 }
-            }
 
-            if (bestDistance > 1) {
-                List<AmethystMinecartEntity> amethysts = this.level().getEntitiesOfClass(
-                        AmethystMinecartEntity.class,
-                        this.getBoundingBox().inflate(16.0D)
-                );
-                for (AmethystMinecartEntity amethyst : amethysts) {
-                    if (amethyst != this && amethyst.sourceJukeBoxMinecartEntity != null) {
-                        JukeboxMinecartEntity src = amethyst.sourceJukeBoxMinecartEntity;
-                        if (!src.isRemoved() && !src.getDisc().isEmpty() && src.getPowerStrength(null, null) > 0) {
-                            double physicalDist = this.distanceTo(src);
-                            int potentialChainDist = amethyst.chainDistance + 1;
-                            
-                            if (potentialChainDist < 64 && physicalDist <= 16.0D * potentialChainDist) {
-                                if (potentialChainDist < bestDistance) {
-                                    bestDistance = potentialChainDist;
-                                    bestJukebox = src;
+                if (bestDistance > 1) {
+                    List<AmethystMinecartEntity> amethysts = this.level().getEntitiesOfClass(
+                            AmethystMinecartEntity.class,
+                            this.getBoundingBox().inflate(32)
+                    );
+                    for (AmethystMinecartEntity amethyst : amethysts) {
+                        if (amethyst != this && amethyst.sourceJukeBoxMinecartEntity != null) {
+                            JukeboxMinecartEntity src = amethyst.sourceJukeBoxMinecartEntity;
+                            if (!src.isRemoved() && !src.getDisc().isEmpty() && src.getPowerStrength(null, null) > 0) {
+                                int potentialChainDist = amethyst.chainDistance + 1;
+                                
+                                if (potentialChainDist < 64) {
+                                    if (potentialChainDist < bestDistance) {
+                                        bestDistance = potentialChainDist;
+                                        bestJukebox = src;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            this.sourceJukeBoxMinecartEntity = bestJukebox;
-            this.chainDistance = bestDistance;
+                if (this.sourceJukeBoxMinecartEntity != bestJukebox) {
+                    if (this.sourceJukeBoxMinecartEntity != null) {
+                        this.sourceJukeBoxMinecartEntity.removeConnectedAmethyst(this.getId());
+                    }
+                    this.sourceJukeBoxMinecartEntity = bestJukebox;
+                    if (this.sourceJukeBoxMinecartEntity != null) {
+                        this.sourceJukeBoxMinecartEntity.addConnectedAmethyst(this.getId());
+                    }
+                }
+                this.chainDistance = bestDistance;
+            }
 
             if (this.sourceJukeBoxMinecartEntity != null) {
                 if (this.getHurtTime() <= 0) {
@@ -121,5 +134,14 @@ public class AmethystMinecartEntity extends SingleBlockMinecartEntity {
                 }
             }
         }
+    }
+
+    @Override
+    public void remove(@NonNull RemovalReason reason) {
+        if (!this.level().isClientSide() && this.sourceJukeBoxMinecartEntity != null) {
+            this.sourceJukeBoxMinecartEntity.removeConnectedAmethyst(this.getId());
+            this.sourceJukeBoxMinecartEntity = null;
+        }
+        super.remove(reason);
     }
 }

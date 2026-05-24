@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
 
 public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
         implements PowerEmitterMinecartEntity, Clearable {
@@ -52,6 +54,7 @@ public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
     protected static final EntityDataAccessor<ItemStack> DISC =
             SynchedEntityData.defineId(JukeboxMinecartEntity.class, EntityDataSerializers.ITEM_STACK);
     private ItemStack disc = Items.AIR.getDefaultInstance();
+    private final Set<Integer> connectedAmethysts = new HashSet<>();
 
     public JukeboxMinecartEntity(EntityType<? extends JukeboxMinecartEntity> entityType, Level world) {
         super(entityType, world);
@@ -283,7 +286,7 @@ public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
                 if (optional.isPresent()) {
                     int i = level().registryAccess().lookupOrThrow(Registries.JUKEBOX_SONG).getId(optional.get().value());
                     PacketDistributor.sendToPlayer(players, new JukeboxUpdateS2CPacket(
-                            this.getId(), i, play
+                            this.getId(), i, play, new ArrayList<>(this.connectedAmethysts)
                     ));
                 }
             }
@@ -306,5 +309,23 @@ public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
     public static Collection<ServerPlayer> getPlayersAround(ServerLevel world, Vec3 pos, double radius) {
         double radiusSq = radius * radius;
         return new ArrayList<>(Collections.unmodifiableCollection(world.getPlayers((player) -> player.distanceToSqr(pos) <= radiusSq)));
+    }
+
+    public void addConnectedAmethyst(int entityId) {
+        if (this.connectedAmethysts.add(entityId)) {
+            this.broadcastConnectionUpdate();
+        }
+    }
+
+    public void removeConnectedAmethyst(int entityId) {
+        if (this.connectedAmethysts.remove(entityId)) {
+            this.broadcastConnectionUpdate();
+        }
+    }
+
+    private void broadcastConnectionUpdate() {
+        if (!this.level().isClientSide() && this.jukeboxManager.isPlaying()) {
+            this.playOrStop(true); // Re-sends the packet with updated list
+        }
     }
 }
