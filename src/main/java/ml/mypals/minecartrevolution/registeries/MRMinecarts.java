@@ -351,7 +351,7 @@ public class MRMinecarts {
             "ender_chest", EnderChestMinecartEntity::new,
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.ENDER_CHEST),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-            (entity, item) -> (w, pos) -> new EnderChestMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+            (entity, item) -> (w, pos) -> new EnderChestMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z));
 
 
     public static final MinecartEntry<BeaconMinecartEntity, MinecartWithBlockItem> BEACON_MINECART = register(

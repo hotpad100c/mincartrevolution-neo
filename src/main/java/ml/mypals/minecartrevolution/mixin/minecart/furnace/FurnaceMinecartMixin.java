@@ -169,6 +169,8 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
             }
 
             this.setHasFuel(this.fuel > 0);
+        } else {
+            mr$tickFurnaceDynamicLight((ClientLevel) self.level(), self);
         }
 
         if (this.entityData.get(DATA_ID_FUEL) && this.random.nextInt(4) == 0) {
@@ -524,14 +526,6 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
         this.mincartrevolution$cookingTimer = 0;
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
-    private void onTick(CallbackInfo ci) {
-        MinecartFurnace self = (MinecartFurnace) (Object) this;
-        if (self.level().isClientSide()) {
-            mr$tickFurnaceDynamicLight((ClientLevel) self.level(), self);
-        }
-    }
-
     @Override
     public void remove(Entity.@NonNull RemovalReason reason) {
         MinecartFurnace self = (MinecartFurnace) (Object) this;
@@ -545,7 +539,8 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
 
     @Unique
     private void mr$tickFurnaceDynamicLight(ClientLevel world, MinecartFurnace thiz) {
-        int lightLevel = (this.fuel > 0) ? 13 : 0;
+        boolean isBurning = this.entityData.get(DATA_ID_FUEL);
+        int lightLevel = isBurning ? 13 : 0;
 
         BlockPos blockPos = thiz.blockPosition();
         BlockPos oldPos = BlockPos.containing(thiz.oldPosition());

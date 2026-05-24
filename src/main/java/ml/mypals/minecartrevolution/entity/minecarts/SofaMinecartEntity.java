@@ -99,6 +99,7 @@ public class SofaMinecartEntity extends SingleBlockMinecartEntity {
         }
         super.remove(reason);
     }
+
     @Override
     public @NonNull Vec3 getPassengerRidingPosition(@NonNull Entity passenger) {
         return super.getPassengerRidingPosition(passenger).add(0, 0.3f, 0);
