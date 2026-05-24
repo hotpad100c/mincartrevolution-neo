@@ -92,6 +92,10 @@ public class MinecartRevolution {
                 BabelScramblePacket.TYPE,
                 BabelScramblePacket.STREAM_CODEC
         );
+        registrar.playToClient(
+                ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.TYPE,
+                ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.STREAM_CODEC
+        );
     }
 
 

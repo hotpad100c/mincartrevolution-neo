@@ -57,6 +57,8 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
 
     @Shadow
     private int fuel;
+    @Unique
+    private int mr$oldLight;
 
     protected FurnaceMinecartMixin(EntityType<?> type, Level level) {
         super(type, level);
@@ -546,7 +548,8 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
         BlockPos oldPos = BlockPos.containing(thiz.oldPosition());
         boolean moved = !oldPos.equals(blockPos);
 
-        if (lightLevel > 0) {
+        if (lightLevel > 0 || mr$oldLight != lightLevel) {
+            mr$oldLight = lightLevel;
             DynamicLightsStorage.LIGHT_SOURCES.put(thiz, lightLevel);
             if (moved) {
                 DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
@@ -569,6 +572,20 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
 
         if (dynamicLight >= vanillaLight) {
             world.getChunkSource().getLightEngine().checkBlock(pos);
+        }
+    }
+    @Override
+    public void onClientRemoval() {
+        mr$removeDynamicLight(this.blockPosition(), true);
+        super.onClientRemoval();
+    }
+    @Unique
+    private void mr$removeDynamicLight(BlockPos pos, boolean update) {
+        if (update) {
+            BlockPos blockPos = this.blockPosition();
+            BlockPos oldPos = BlockPos.containing(this.oldPosition());
+            DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
+            DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
         }
     }
 

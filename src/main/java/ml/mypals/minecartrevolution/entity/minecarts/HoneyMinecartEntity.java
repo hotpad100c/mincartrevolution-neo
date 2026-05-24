@@ -14,8 +14,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.phys.AABB;
@@ -66,7 +64,7 @@ public class HoneyMinecartEntity extends SingleBlockMinecartEntity {
         }
     }
     @Override
-    public boolean onCollision(Vec3 delta, Vec3 target, Vec3 actual){
+    public boolean onCollision(Vec3 position, Vec3 target, Vec3 actual, Vec3 delta){
 
         AABB box = this.getBoundingBox().expandTowards(delta.normalize().scale(0.5));
         BlockPos.betweenClosedStream(box).filter(pos -> !this.level().getBlockState(pos).isAir() && this.level().getBlockState(pos).isSolid()).findFirst().ifPresent(pos -> {
@@ -84,7 +82,7 @@ public class HoneyMinecartEntity extends SingleBlockMinecartEntity {
                 );
             }
         });
-        return super.onCollision(delta, target, actual);
+        return super.onCollision(position, target, actual, delta);
     }
 
     @Override
@@ -99,13 +97,6 @@ public class HoneyMinecartEntity extends SingleBlockMinecartEntity {
     protected void readAdditionalSaveData(@NonNull ValueInput compound) {
         super.readAdditionalSaveData(compound);
         this.stuckBlock = BlockPos.of(compound.getLongOr("StuckBlock", (Long)null));
-    }
-
-    @Override
-    protected @NonNull Vec3 applyNaturalSlowdown(@NonNull Vec3 movement) {
-        if(!this.isInLava()) return super.applyNaturalSlowdown(movement);
-
-        return movement;
     }
 
     @Override

@@ -1,14 +1,12 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
-import ml.mypals.minecartrevolution.MinecartRevolution;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
+import ml.mypals.minecartrevolution.packets.MinecartCollisionPacket;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -34,11 +32,12 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -47,6 +46,8 @@ import java.util.Optional;
 public class VariantBlockMinecartEntity extends AbstractMinecart {
     public boolean activated = false;
     public boolean keepUpdatingLight = false;
+    private boolean firstTickUpdateLight = true;
+    private int oldLight = 0;
     public double mass = 1D;
     private boolean movingEntities = false;
     public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
@@ -101,17 +102,15 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
             }
 
         }
+
         this.kill(serverLevel);
     }
 
     @Override
-    public void remove(Entity.@NonNull RemovalReason reason) {
-        if (this.level().isClientSide()) {
-            removeDynamicLight(this.blockPosition(), true);
-        }
-        this.setRemoved(reason);
+    public void onClientRemoval() {
+        removeDynamicLight(this.blockPosition(), true);
+        super.onClientRemoval();
     }
-
     private void clear() {
         setCustomDisplayBlockState(Optional.of(Blocks.AIR.defaultBlockState()));
         Minecart minecartEntity = new Minecart(EntityType.MINECART, level());
@@ -157,6 +156,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
                         clear();
                         ItemStack stack = block.asItem().getDefaultInstance();
                         player.setItemInHand(hand, addDataToStack(stack));
+                    }else {
+                        removeDynamicLight(this.blockPosition(), true);
                     }
                 }
                 return InteractionResult.SUCCESS;
@@ -302,13 +303,15 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         BlockPos oldPos = BlockPos.containing(this.oldPosition());
         boolean moved = !oldPos.equals(blockPos);
 
-        if (lightLevel > 0) {
+        if (lightLevel > 0 || lightLevel != oldLight) {
             DynamicLightsStorage.LIGHT_SOURCES.put(this, lightLevel);
-            if (moved || keepUpdatingLight) {
+            if (moved || keepUpdatingLight || firstTickUpdateLight) {
                 DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
                 DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
                 updateDynamicLight(world, blockPos);
+                firstTickUpdateLight = false;
             }
+            oldLight = lightLevel;
         } else {
             if (DynamicLightsStorage.LIGHT_SOURCES.remove(this) != null) {
                 DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
@@ -321,7 +324,10 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     private void removeDynamicLight(BlockPos pos, boolean update) {
         if (DynamicLightsStorage.LIGHT_SOURCES.remove(this) != null) {
             if (update) {
-                DynamicLightsSpread.markAreaDirty(pos, DynamicLightsSpread.RADIUS);
+                BlockPos blockPos = this.blockPosition();
+                BlockPos oldPos = BlockPos.containing(this.oldPosition());
+                DynamicLightsSpread.markAreaDirty(oldPos, DynamicLightsSpread.RADIUS);
+                DynamicLightsSpread.markAreaDirty(blockPos, DynamicLightsSpread.RADIUS);
             }
         }
     }
@@ -413,6 +419,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
                 entity.setOnGround(true);
                 entity.applyEffectsFromBlocks(previousPos, entity.position());
                 entity.hurtMarked = true;
+                entity.needsSync = true;
             }
         } finally {
             this.movingEntities = false;
@@ -421,7 +428,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     @Override
     public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
         if(source.getEntity() instanceof Player player){
-            this.addDeltaMovement(player.getLookAngle().multiply(1.5,player.isShiftKeyDown()?0.3:0,1.5));
+            this.addDeltaMovement(player.getLookAngle().multiply(0.1,player.isShiftKeyDown()?0.3:0,0.1));
         }
         return super.hurtServer(level, source, damage);
     }
@@ -440,7 +447,10 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         Vec3 newPosition = this.position();
         boolean shouldContinue = this.getBehavior().pushAndPickupEntities();
         if (toPosition.distanceToSqr(newPosition) > getCollisionSensitive()) {
-            shouldContinue = onCollision(delta, toPosition, newPosition) && shouldContinue;
+            shouldContinue = onCollision(position(), toPosition, newPosition, delta) && shouldContinue;
+            if (!this.level().isClientSide()) {
+                PacketDistributor.sendToPlayersTrackingEntityAndSelf(this, new MinecartCollisionPacket(this.getId(), position(), delta, toPosition, newPosition));
+            }
         }
         if (shouldContinue) {
             super.move(moverType, toPosition.subtract(this.position()));
@@ -450,7 +460,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
             this.setOnRails(false);
         }
     }
-    public boolean onCollision(Vec3 delta, Vec3 target, Vec3 actual){
+    public boolean onCollision(Vec3 position, Vec3 target, Vec3 actual, Vec3 delta){
         return true;
     }
     public float getCollisionSensitive(){
@@ -458,7 +468,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     @Override
-    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput output) {
+    protected void addAdditionalSaveData(@NonNull ValueOutput output) {
         super.addAdditionalSaveData(output);
         Optional<BlockState> blockState = this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK);
         if (blockState.isPresent() && !blockState.get().isAir()) {

@@ -2,7 +2,6 @@ package ml.mypals.minecartrevolution;
 
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
-import ml.mypals.minecartrevolution.entity.minecarts.AmethystMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import ml.mypals.minecartrevolution.util.MusicUtils;
@@ -10,7 +9,6 @@ import ml.mypals.minecartrevolution.client.sound.ChainedJukeboxSoundInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.client.resources.model.geometry.QuadCollection;
-import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
@@ -23,7 +21,6 @@ import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.JukeboxSong;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -102,6 +99,10 @@ public class MinecartRevolutionClient {
         event.register(
                 BabelScramblePacket.TYPE,
                 MinecartRevolutionClient::babelScrambleUpdate
+        );
+        event.register(
+                ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.TYPE,
+                MinecartRevolutionClient::minecartCollisionUpdate
         );
     }
 
@@ -186,6 +187,16 @@ public class MinecartRevolutionClient {
 
                 client.reloadResourcePacks();
                 client.options.save();
+            }
+        });
+    }
+
+    private static void minecartCollisionUpdate(
+            final ml.mypals.minecartrevolution.packets.MinecartCollisionPacket payload, final IPayloadContext context) {
+        Minecraft client = Minecraft.getInstance();
+        client.execute(() -> {
+            if (client.level != null && client.level.getEntity(payload.entityId()) instanceof ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity minecart) {
+                minecart.onCollision(payload.pos(), payload.target(), payload.actual(), payload.delta());
             }
         });
     }

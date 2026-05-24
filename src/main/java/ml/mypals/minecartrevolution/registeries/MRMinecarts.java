@@ -432,6 +432,11 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.HONEY_BLOCK),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new HoneyMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+    public static final MinecartEntry<PistonMinecartEntity, MinecartWithBlockItem> PISTON_MINECART = register(
+            "piston", PistonMinecartEntity::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.PISTON),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new PistonMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
     public static final MinecartEntry<RailMinecartEntity, MinecartWithBlockItem> NORMAL_RAIL_MINECART = registerItemOnly(
             "normal_rail", RAIL_MINECART,

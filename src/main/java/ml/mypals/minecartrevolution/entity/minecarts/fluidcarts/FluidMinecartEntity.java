@@ -135,7 +135,7 @@ public class FluidMinecartEntity extends VariantBlockMinecartEntity {
                 }
             }
         }
-        for (BlockPos blockPos : BlockPos.betweenClosed(aabb.inflate(3,0,3))){
+        for (BlockPos blockPos : BlockPos.betweenClosed(aabb.inflate(0.5,0,0.5))){
             if (blockState.is(Blocks.LAVA)) {
                 if (level().isEmptyBlock(blockPos) && !level().isEmptyBlock(blockPos.below()) && this.getRandom().nextInt(10) == 0) {
                     level().setBlockAndUpdate(blockPos, BaseFireBlock.getState(level(), blockPos));

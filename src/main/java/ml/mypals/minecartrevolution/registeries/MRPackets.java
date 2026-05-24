@@ -7,4 +7,5 @@ import net.minecraft.resources.Identifier;
 public class MRPackets {
     public static final Identifier JUKEBOX_MINECART_UPDATE = Identifier.fromNamespaceAndPath(MODID, "jukebox_minecart_update");
     public static final Identifier BABEL_SCRAMBLE = Identifier.fromNamespaceAndPath(MODID, "babel_scramble");
+    public static final Identifier MINECART_COLLISION = Identifier.fromNamespaceAndPath(MODID, "minecart_collision");
 }

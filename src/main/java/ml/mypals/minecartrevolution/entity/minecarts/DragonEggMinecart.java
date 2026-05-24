@@ -12,7 +12,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -86,9 +85,9 @@ public class DragonEggMinecart extends SingleBlockMinecartEntity {
         return super.hurtServer(level, source, damage);
     }
     @Override
-    public boolean onCollision(Vec3 delta, Vec3 target, Vec3 actual) {
+    public boolean onCollision(Vec3 position, Vec3 target, Vec3 actual, Vec3 delta) {
         runAway();
-        return super.onCollision(delta, target, actual);
+        return super.onCollision(position, target, actual, delta);
     }
     private void runAway() {
         Level level = this.level();
