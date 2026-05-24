@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import ml.mypals.minecartrevolution.MinecartRevolution;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
@@ -20,6 +21,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
@@ -45,6 +47,7 @@ import java.util.Optional;
 public class VariantBlockMinecartEntity extends AbstractMinecart {
     public boolean activated = false;
     public boolean keepUpdatingLight = false;
+    public double mass = 1D;
     private boolean movingEntities = false;
     public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
@@ -276,7 +279,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
             activateMinecart(serverLevel,this.blockPosition().getX(),this.blockPosition().getY(),this.blockPosition().getZ(),false);
         }
 
-
+        collideWithEntities();
     }
     @Override
     protected void moveAlongTrack(ServerLevel level) {
@@ -475,6 +478,25 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         this.setDisplayOffset(input.getIntOr("DisplayOffset", this.getDefaultDisplayOffset()));
         this.setFlipped(input.getBooleanOr("FlippedRotation", false));
         this.firstTick = input.getBooleanOr("HasTicked", false);
+    }
+
+    public void collideWithEntities() {
+        Vec3 movement = this.getDeltaMovement();
+        if (this.level().isClientSide() || movement.length() < 0.5D) return;
+        Vec3 pos = this.position();
+        for (Entity entity : this.level().getEntities(this,
+                this.getBoundingBox().expandTowards(movement.normalize().scale(0.8D)),
+                e -> e != this.getControllingPassenger())) {
+            if (movement.dot(entity.position().subtract(pos)) > 0) {
+                this.setDeltaMovement(movement.scale(0.89D));
+                entity.setDeltaMovement(movement.normalize().scale(this.mass * 4D * movement.length()).add(entity.getDeltaMovement()));
+                if (entity instanceof LivingEntity) {
+                    // I can't find more accurate dying description to describe "The entity was hit into air by XX minecart (placed by XX)"
+                    entity.hurtServer((ServerLevel)this.level(), entity.damageSources().flyIntoWall(),
+                            (float)(this.mass * 6D * movement.length()));
+                }
+            }
+        }
     }
 }
 
