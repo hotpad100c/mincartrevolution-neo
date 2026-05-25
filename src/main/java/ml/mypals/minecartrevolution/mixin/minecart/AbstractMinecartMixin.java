@@ -88,7 +88,7 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
     }
     @Inject(method = "getMaxSpeed",at = @At("HEAD"), cancellable = true)
     private void getMaxSpeed(ServerLevel level, CallbackInfoReturnable<Double> cir){
-        cir.setReturnValue(1d);
+        cir.setReturnValue(0.5d);
     }
 
     @WrapMethod(method = "comeOffTrack")
