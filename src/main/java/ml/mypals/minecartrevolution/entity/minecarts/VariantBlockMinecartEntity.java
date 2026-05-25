@@ -76,6 +76,11 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     @Override
+    public BlockState getDisplayBlockState() {
+        return this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(getDefaultDisplayBlockState());
+    }
+
+    @Override
     public void destroy(@NonNull ServerLevel serverLevel, DamageSource source) {
         boolean sourceIsPlayer = false;
         Player playerEntity = null;

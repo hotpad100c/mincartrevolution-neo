@@ -27,6 +27,11 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
         super(entityType, world);
     }
 
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.LODESTONE.defaultBlockState();
+    }
+
     public MagnetMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
         super(minecart, world, x, y, z, correspondingItem);
     }

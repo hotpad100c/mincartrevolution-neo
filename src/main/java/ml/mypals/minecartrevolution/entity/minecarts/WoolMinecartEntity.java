@@ -5,6 +5,7 @@ import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
@@ -21,6 +22,12 @@ public class WoolMinecartEntity extends VariantBlockMinecartEntity {
         super(minecart, world, x, y, z, item);
         setCustomDisplayBlockState(Optional.of(Blocks.WHITE_WOOL.defaultBlockState()));
     }
+
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.WHITE_WOOL.defaultBlockState();
+    }
+
     @Override
     public void tick() {
         setOnGround(false);

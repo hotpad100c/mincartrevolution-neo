@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
@@ -19,6 +20,11 @@ public class SofaMinecartEntity extends SingleBlockMinecartEntity {
 
     public SofaMinecartEntity(EntityType<? extends SofaMinecartEntity> entityType, Level world) {
         super(entityType, world);
+    }
+
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.WHITE_CARPET.defaultBlockState();
     }
 
     public SofaMinecartEntity(EntityType<? extends SofaMinecartEntity> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {

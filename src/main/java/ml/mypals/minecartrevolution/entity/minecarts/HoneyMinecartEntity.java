@@ -11,6 +11,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -28,6 +29,11 @@ public class HoneyMinecartEntity extends SingleBlockMinecartEntity {
 
     public HoneyMinecartEntity(EntityType<HoneyMinecartEntity> entityType, Level world) {
         super(entityType, world);
+    }
+
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.HONEY_BLOCK.defaultBlockState();
     }
 
     public HoneyMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {

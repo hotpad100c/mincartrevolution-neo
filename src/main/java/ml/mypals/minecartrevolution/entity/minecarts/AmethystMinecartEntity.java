@@ -10,6 +10,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
@@ -23,6 +25,11 @@ public class AmethystMinecartEntity extends SingleBlockMinecartEntity {
 
     public AmethystMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> entityType, Level world) {
         super(entityType, world);
+    }
+
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.AMETHYST_BLOCK.defaultBlockState();
     }
 
     public AmethystMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {

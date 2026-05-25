@@ -44,6 +44,11 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
         super(entityType, world);
     }
 
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.CRAFTING_TABLE.defaultBlockState();
+    }
+
     public NonInventoryWorkingBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z, item);
     }
@@ -157,7 +162,7 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
         } else if (state.is(Blocks.SMITHING_TABLE)) {
             return new SimpleMenuProvider((id, inv, _) -> new SmithingMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.upgrade"));
         } else if (state.is(BlockTags.ANVIL)) {
-            return new SimpleMenuProvider((id, inv, _) -> new AnvilMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.repair"));
+            return new SimpleMenuProvider((id, inv, _) -> new AnvilMenu(id, inv, ContainerLevelAccess.NULL), Component.translatable("container.repair"));
         } else if (state.is(Blocks.ENCHANTING_TABLE)) {
             return new SimpleMenuProvider((id, inv, _) -> new EnchantmentMenu(id, inv, new ContainerEntityAccess(this)), Component.translatable("container.enchant"));
         }

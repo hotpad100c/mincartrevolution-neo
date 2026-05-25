@@ -23,6 +23,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.ChestLidController;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
@@ -38,6 +40,11 @@ public class EnderChestMinecartEntity extends BaseMinecartContainer implements I
     public EnderChestMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z) {
         super(minecart, world);
         setInitialPos(x, y, z);
+    }
+
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.ENDER_CHEST.defaultBlockState();
     }
 
     @Override
