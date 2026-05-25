@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution;
 
+import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
@@ -217,5 +218,9 @@ public class MinecartRevolutionClient {
                 true,
                 Pack.Position.TOP
         );
+    }
+    @SubscribeEvent
+    public static void onClientLeave(ClientPlayerNetworkEvent.LoggingOut event) {
+        DynamicLightsStorage.clear();
     }
 }
