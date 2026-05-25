@@ -2,6 +2,8 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -23,6 +25,11 @@ public class DamageCausingMinecartEntity extends SingleBlockMinecartEntity {
         this.damageAmount = 0;
         this.damageType = DamageTypes.GENERIC;
         this.damageSource = this.damageSources().source(this.damageType);
+    }
+
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.CACTUS.defaultBlockState();
     }
 
     public DamageCausingMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> minecart, Level world, double x, double y, double z, float damageAmount, MinecartWithBlockItem correspondingItem, ResourceKey<DamageType> damageType) {

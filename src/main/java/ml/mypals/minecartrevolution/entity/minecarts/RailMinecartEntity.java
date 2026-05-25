@@ -6,6 +6,8 @@ import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,6 +24,11 @@ public class RailMinecartEntity extends VariantBlockMinecartEntity {
 
     public RailMinecartEntity(EntityType<RailMinecartEntity> entityType, Level world) {
         super(entityType, world);
+    }
+
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.RAIL.defaultBlockState();
     }
 
     public RailMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item content) {

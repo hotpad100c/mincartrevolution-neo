@@ -25,6 +25,11 @@ public class MobHeadMinecartEntity extends VariantBlockMinecartEntity {
     }
 
     @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.DRAGON_HEAD.defaultBlockState();
+    }
+
+    @Override
     public void tick() {
         super.tick();
 

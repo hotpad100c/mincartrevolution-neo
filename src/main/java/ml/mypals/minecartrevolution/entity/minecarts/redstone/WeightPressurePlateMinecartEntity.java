@@ -27,6 +27,11 @@ public class WeightPressurePlateMinecartEntity extends SingleBlockMinecartEntity
     }
 
     @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE.defaultBlockState();
+    }
+
+    @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         super.interact(player, hand, pos);
         if (this.isVehicle()) {

@@ -61,6 +61,11 @@ public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
         disc = Items.AIR.getDefaultInstance();
     }
 
+    @Override
+    public @NonNull BlockState getDefaultDisplayBlockState() {
+        return Blocks.JUKEBOX.defaultBlockState();
+    }
+
     public void onManagerChange() {
         this.level().updateNeighborsAt(this.blockPosition(), Blocks.JUKEBOX);
     }
