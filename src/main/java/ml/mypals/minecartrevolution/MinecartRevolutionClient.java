@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution;
 
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
