@@ -9,6 +9,7 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.material.FluidState;
@@ -30,6 +31,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.Optional;
+
 public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
     public BlockEntity blockEntity;
     public SimulatedLevel simulatedLevel;
@@ -57,6 +60,18 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
             this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
         }
     }
+    public SimulationBlockMinecartEntity(EntityType<SimulationBlockMinecartEntity> minecart, Level world, double x, double y, double z, Block block) {
+        super(minecart, world, x, y, z);
+        if (this.simulatedLevel == null) {
+            this.simulatedLevel = new SimulatedLevel(this.level(), this);
+        }
+        if (this.simulatedServerLevel == null && !level().isClientSide()) {
+            this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
+        }
+        this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
+    }
+
+
     public void refreshBlockEntity() {
         BlockState state = getDisplayBlockState();
         if (state.hasBlockEntity()) {

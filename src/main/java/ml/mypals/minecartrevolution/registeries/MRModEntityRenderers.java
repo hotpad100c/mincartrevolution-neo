@@ -62,6 +62,11 @@ public class MRModEntityRenderers {
                 SofaMinecartRenderer::new
         );
 
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.BLOCK_MINECART.get(),
+                SimulateBlockMinecartRenderer::new
+        );
+
 
     }
 }

@@ -23,7 +23,7 @@ public class LevelRendererMixin {
         final int blockLightCoordinates = vanillaLightMap >> 4 & 0xffff / 16;
 
         if (state.isSolidRender()) return vanillaLightMap;
-        if (state.emissiveRendering(level, pos)) return vanillaLightMap
+        if (state.emissiveRendering(level, pos)) return vanillaLightMap;
 
         final double dynamicLightLevel = DynamicLightsStorage.getLightLevel(pos);
         final int light = (int) (Math.min(0xff, 16 * Math.max(dynamicLightLevel, blockLightCoordinates)));

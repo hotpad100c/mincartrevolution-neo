@@ -5,6 +5,7 @@ import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.*;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.*;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.*;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulationBlockMinecartEntity;
 import ml.mypals.minecartrevolution.item.*;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
@@ -153,8 +154,8 @@ public class MRMinecarts {
     public static final DeferredHolder<EntityType<?>, EntityType<WeightPressurePlateMinecartEntity>> WEIGHT_PRESHER_PLATE_MINECART = registerEntityOnly(
             "weight_pressure_plate_minecart", WeightPressurePlateMinecartEntity::new);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<VariantBlockMinecartEntity>> BLOCK_MINECART = registerEntityOnly(
-            "block_minecart", VariantBlockMinecartEntity::new);
+    public static final DeferredHolder<EntityType<?>, EntityType<SimulationBlockMinecartEntity>> BLOCK_MINECART = registerEntityOnly(
+            "block_minecart", SimulationBlockMinecartEntity::new);
 
     public static final DeferredHolder<EntityType<?>, EntityType<RailMinecartEntity>> RAIL_MINECART =
             registerEntityOnly("rail_minecart", RailMinecartEntity::new);
@@ -198,7 +199,7 @@ public class MRMinecarts {
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new HorizontalDirectionalRedstoneEmitterPowerMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-    public static final MinecartEntry<VariantBlockMinecartEntity, MultiVariantMinecartWithBlockItem> BLOCK_MINECART_ITEM = registerItemOnly(
+    public static final MinecartEntry<SimulationBlockMinecartEntity, MultiVariantMinecartWithBlockItem> BLOCK_MINECART_ITEM = registerItemOnly(
             "minecart_with_block", BLOCK_MINECART,
             p -> new MultiVariantMinecartWithBlockItem(p.stacksTo(1), Blocks.GRASS_BLOCK),
             MultiVariantMinecartWithBlockItem.DISPENSER_BEHAVIOR,

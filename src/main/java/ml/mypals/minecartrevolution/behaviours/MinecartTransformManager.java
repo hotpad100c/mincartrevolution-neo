@@ -5,6 +5,7 @@ import com.sun.jna.platform.win32.Variant;
 import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulationBlockMinecartEntity;
 import ml.mypals.minecartrevolution.manager.AnnotationManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
@@ -137,7 +138,7 @@ public class MinecartTransformManager {
 
     public static AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
         MinecartTransformConfig factory = factoryMap.getOrDefault(item,
-                (w, p) -> new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
+                (w, p) -> new SimulationBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
         AbstractMinecart minecart = factory.createMinecart(world, pos);
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
@@ -157,7 +158,7 @@ public class MinecartTransformManager {
 
     public static AbstractMinecart spawnFromBlock(Level world, Block block, Vec3 pos, ItemStack handStack) {
         MinecartTransformConfig factory = factoryMap.getOrDefault(block,
-                (w, p) -> new VariantBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, block));
+                (w, p) -> new SimulationBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, block));
         AbstractMinecart minecart = factory.createMinecart(world, pos);
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
