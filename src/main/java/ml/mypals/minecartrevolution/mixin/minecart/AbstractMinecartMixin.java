@@ -101,7 +101,7 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
                 Mth.clamp(movement.z, -maxSpeed, maxSpeed));
 
         if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.7));
         }
 
         this.move(MoverType.SELF, this.getDeltaMovement());
