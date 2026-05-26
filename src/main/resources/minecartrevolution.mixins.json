@@ -22,7 +22,8 @@
     "minecart.AbstractMinecartMixin",
     "minecart.ChestMinecartMixin",
     "minecart.MinecartMixin",
-    "minecart.furnace.FurnaceMinecartMixin"
+    "minecart.furnace.FurnaceMinecartMixin",
+    "simulation.BlockEntityAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
