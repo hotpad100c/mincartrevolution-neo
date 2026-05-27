@@ -1,9 +1,9 @@
 package ml.mypals.minecartrevolution.entity.minecarts.simulation;
 
 
+import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.LevelTicks;
 import net.minecraft.world.ticks.ScheduledTick;
 import org.jspecify.annotations.NonNull;
@@ -12,10 +12,10 @@ import java.util.List;
 
 public class SimulatedServerTickAccess<T> extends LevelTicks<T> {
     private final LevelTicks<T> wrapped;
-    private final SimulationBlockMinecartEntity minecart;
+    private final CompatFriendlyBlockMinecartEntity minecart;
     private final List<ScheduledTick<T>> pendingTicks;
 
-    public SimulatedServerTickAccess(ServerLevel serverLevel, LevelTicks<T> wrapped, SimulationBlockMinecartEntity minecart, List<ScheduledTick<T>> pendingTicks) {
+    public SimulatedServerTickAccess(ServerLevel serverLevel, LevelTicks<T> wrapped, CompatFriendlyBlockMinecartEntity minecart, List<ScheduledTick<T>> pendingTicks) {
         super((l)->serverLevel.isPositionEntityTicking(BlockPos.of(l)));
         this.wrapped = wrapped;
         this.minecart = minecart;

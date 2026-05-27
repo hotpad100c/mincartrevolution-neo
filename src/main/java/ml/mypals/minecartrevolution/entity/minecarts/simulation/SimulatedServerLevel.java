@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.simulation;
 
 
+import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.mixin.simulation.ServerAccessor;
 import ml.mypals.minecartrevolution.mixin.simulation.ServerLevelAccessor;
 import net.minecraft.core.BlockPos;
@@ -51,9 +52,9 @@ import java.util.Optional;
 
 public class SimulatedServerLevel extends ServerLevel {
     private final ServerLevel wrapped;
-    private final SimulationBlockMinecartEntity minecart;
+    private final CompatFriendlyBlockMinecartEntity minecart;
 
-    protected SimulatedServerLevel(ServerLevel wrapped, SimulationBlockMinecartEntity minecart) {
+    public SimulatedServerLevel(ServerLevel wrapped, CompatFriendlyBlockMinecartEntity minecart) {
         this.wrapped = wrapped;
         this.minecart = minecart;
         super(wrapped.getServer(),((ServerAccessor)wrapped.getServer()).mcr$getExecutor(),

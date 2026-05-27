@@ -158,9 +158,9 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
                     playSound(block.defaultBlockState().getSoundType().getBreakSound(), 1, 1);
                     player.swing(hand);
                     if (!this.level().isClientSide()) {
-                        clear();
                         ItemStack stack = block.asItem().getDefaultInstance();
                         player.setItemInHand(hand, addDataToStack(stack));
+                        clear();
                     }else {
                         removeDynamicLight(this.blockPosition(), true);
                     }

@@ -1,15 +1,17 @@
-package ml.mypals.minecartrevolution.entity.minecarts.simulation;
+package ml.mypals.minecartrevolution.entity.minecarts;
 
-import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedLevel;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedServerLevel;
 import ml.mypals.minecartrevolution.mixin.simulation.BlockEntityAccessor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.material.FluidState;
@@ -33,7 +35,9 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 import java.util.Optional;
 
-public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
+import static ml.mypals.minecartrevolution.registeries.MREntityDataSerializers.COMPOUND_TAG_SERIALIZER;
+
+public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntity {
     public BlockEntity blockEntity;
     public SimulatedLevel simulatedLevel;
     private SimulatedServerLevel simulatedServerLevel;
@@ -41,7 +45,12 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
     public final List<ScheduledTick<Block>> pendingBlockTicks = Lists.newArrayList();
     public final List<ScheduledTick<Fluid>> pendingFluidTicks = Lists.newArrayList();
 
-    public SimulationBlockMinecartEntity(EntityType<SimulationBlockMinecartEntity> entityType, Level world) {
+
+    private static final EntityDataAccessor<CompoundTag> DATA_ID_BLOCK_ENTITY_NBT;
+    static {
+        DATA_ID_BLOCK_ENTITY_NBT = SynchedEntityData.defineId(CompatFriendlyBlockMinecartEntity.class, COMPOUND_TAG_SERIALIZER.get());
+    }
+    public CompatFriendlyBlockMinecartEntity(EntityType<CompatFriendlyBlockMinecartEntity> entityType, Level world) {
         super(entityType, world);
         if (this.simulatedLevel == null) {
             this.simulatedLevel = new SimulatedLevel(this.level(), this);
@@ -49,9 +58,16 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
         if (this.simulatedServerLevel == null && !level().isClientSide()) {
             this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
         }
+        refreshBlockEntity();
     }
 
-    public SimulationBlockMinecartEntity(EntityType<SimulationBlockMinecartEntity> minecart, Level world, double x, double y, double z, Item item) {
+    protected void defineSynchedData(SynchedEntityData.Builder entityData) {
+        super.defineSynchedData(entityData);
+        entityData.define(DATA_ID_BLOCK_ENTITY_NBT, new CompoundTag());
+    }
+
+
+    public CompatFriendlyBlockMinecartEntity(EntityType<CompatFriendlyBlockMinecartEntity> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z, item);
         if (this.simulatedLevel == null) {
             this.simulatedLevel = new SimulatedLevel(this.level(), this);
@@ -59,8 +75,9 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
         if (this.simulatedServerLevel == null && !level().isClientSide()) {
             this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
         }
+        refreshBlockEntity();
     }
-    public SimulationBlockMinecartEntity(EntityType<SimulationBlockMinecartEntity> minecart, Level world, double x, double y, double z, Block block) {
+    public CompatFriendlyBlockMinecartEntity(EntityType<CompatFriendlyBlockMinecartEntity> minecart, Level world, double x, double y, double z, Block block) {
         super(minecart, world, x, y, z);
         if (this.simulatedLevel == null) {
             this.simulatedLevel = new SimulatedLevel(this.level(), this);
@@ -69,6 +86,7 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
             this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
         }
         this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
+        refreshBlockEntity();
     }
 
 
@@ -81,16 +99,51 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
                 }
                 this.blockEntity = ((EntityBlock) state.getBlock()).newBlockEntity(this.blockPosition(), state);
                 if (this.blockEntity != null) {
-                    this.blockEntity.setLevel(this.simulatedLevel);
-                    if(blockEntityTag != null){
-                        this.blockEntity.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING,registryAccess(),this.blockEntityTag));
-                    }
+                    Level simLevel = this.level().isClientSide()?simulatedLevel:simulatedServerLevel;
+                    this.blockEntity.setLevel(simLevel);
+                    this.entityData.get(DATA_ID_BLOCK_ENTITY_NBT);
+                    this.blockEntity.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registryAccess(), this.entityData.get(DATA_ID_BLOCK_ENTITY_NBT)));
                 }
             }
         } else {
             this.blockEntity = null;
         }
     }
+    /*
+    @Override
+    public void setCustomDisplayBlockState(@NonNull Optional<BlockState> state) {
+        BlockState oldState = getDisplayBlockState();
+        this.getEntityData().set(DATA_ID_CUSTOM_DISPLAY_BLOCK, state);
+        state.ifPresent(state1 -> {
+            Level simLevel = this.level().isClientSide()?simulatedLevel:simulatedServerLevel;
+            state1.onPlace(simLevel, blockPosition(), oldState, false);
+        });
+    }*/
+    public void setBlockEntityTag(CompoundTag tag) {
+        this.blockEntityTag = tag;
+        this.entityData.set(DATA_ID_BLOCK_ENTITY_NBT, tag);
+        // If blockEntity already exists (e.g. refreshed before first tick), apply immediately
+        if (this.blockEntity != null) {
+            this.blockEntity.loadWithComponents(
+                TagValueInput.create(ProblemReporter.DISCARDING, registryAccess(), tag)
+            );
+        }
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (DATA_ID_BLOCK_ENTITY_NBT.equals(key)) {
+            CompoundTag tag = this.entityData.get(DATA_ID_BLOCK_ENTITY_NBT);
+            this.blockEntityTag = tag;
+            if (this.blockEntity != null && !tag.isEmpty()) {
+                this.blockEntity.loadWithComponents(
+                    TagValueInput.create(ProblemReporter.DISCARDING, registryAccess(), tag)
+                );
+            }
+        }
+    }
+
     @Override
     public @NonNull ItemStack getPickResult() {
         ItemStack stack = super.getPickResult();
@@ -100,6 +153,15 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
         }
         return stack;
     }
+    @Override
+    public ItemStack addDataToStack(ItemStack stack) {
+        if(blockEntityTag != null && blockEntity != null){
+            TypedEntityData<BlockEntityType<?>> customData = TypedEntityData.of(this.blockEntity.getType(), blockEntityTag);
+            stack.set(DataComponents.BLOCK_ENTITY_DATA, customData);
+        }
+        return stack;
+    }
+
 
     @Override
     public void tick() {
@@ -115,6 +177,7 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
         refreshBlockEntity();
         if (this.blockEntity != null) {
             ((BlockEntityAccessor)this.blockEntity).mr$setWorldPosition(this.blockPosition());
+
             BlockState state = getDisplayBlockState();
             BlockEntityTicker<BlockEntity> ticker = state.getTicker(simLevel, (BlockEntityType<BlockEntity>) this.blockEntity.getType());
             if (ticker != null) {
@@ -165,15 +228,18 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
         super.readAdditionalSaveData(compound);
         var beData = compound.child("BlockEntityTag");
         if(beData.isPresent()){
-            if(blockEntity != null){
-                this.blockEntity.loadWithComponents(beData.get());
-                blockEntityTag = this.blockEntity.saveWithFullMetadata(this.registryAccess());
+            if(blockEntity == null){
+                refreshBlockEntity();
             }
+
+            this.blockEntity.loadWithComponents(beData.get());
+            blockEntityTag = this.blockEntity.saveWithFullMetadata(this.registryAccess());
+            this.entityData.set(DATA_ID_BLOCK_ENTITY_NBT, blockEntityTag);
         }
     }
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
-        if(player.isSprinting() || player.isShiftKeyDown()){
+        if(player.isSprinting() || player.isShiftKeyDown() || blockEntity != null){
             return super.interact(player, hand, pos);
         }
         BlockState block = getDisplayBlockState();
@@ -182,9 +248,6 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
         ItemStack stack = player.getItemInHand(hand);
         Level simLevel = this.level().isClientSide()?simulatedLevel:simulatedServerLevel;
 
-        System.out.println(this.level());
-
-        System.out.println(simLevel);
         try {
             return stack.isEmpty()?
                     block.useWithoutItem(
@@ -200,12 +263,16 @@ public class SimulationBlockMinecartEntity extends VariantBlockMinecartEntity {
                             new BlockHitResult(pos,player.getDirection(),this.blockPosition(),false)
                     );
         }catch (Exception e){
-            return InteractionResult.SUCCESS;
+            return super.interact(player, hand, pos);
         }
 
     }
     @Override
     public void remove(@NonNull RemovalReason reason) {
+        if(this.blockEntity != null){
+            blockEntity.setRemoved();
+            blockEntity = null;
+        }
         super.remove(reason);
     }
 

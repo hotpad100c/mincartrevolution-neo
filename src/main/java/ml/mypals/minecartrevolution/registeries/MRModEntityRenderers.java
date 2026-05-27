@@ -64,7 +64,7 @@ public class MRModEntityRenderers {
 
         registerRenderers.registerEntityRenderer(
                 MRMinecarts.BLOCK_MINECART.get(),
-                SimulateBlockMinecartRenderer::new
+                CompatFriendlyBlockMinecartRenderer::new
         );
 
 

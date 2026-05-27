@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts.simulation;
 
+import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.ScheduledTick;
@@ -9,10 +10,10 @@ import java.util.List;
 
 public class SimulatedTickAccess<T> implements LevelTickAccess<T> {
     private final LevelTickAccess<T> wrapped;
-    private final SimulationBlockMinecartEntity minecart;
+    private final CompatFriendlyBlockMinecartEntity minecart;
     private final List<ScheduledTick<T>> pendingTicks;
 
-    public SimulatedTickAccess(LevelTickAccess<T> wrapped, SimulationBlockMinecartEntity minecart, List<ScheduledTick<T>> pendingTicks) {
+    public SimulatedTickAccess(LevelTickAccess<T> wrapped, CompatFriendlyBlockMinecartEntity minecart, List<ScheduledTick<T>> pendingTicks) {
         this.wrapped = wrapped;
         this.minecart = minecart;
         this.pendingTicks = pendingTicks;

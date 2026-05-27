@@ -23,7 +23,10 @@
     "minecart.ChestMinecartMixin",
     "minecart.MinecartMixin",
     "minecart.furnace.FurnaceMinecartMixin",
-    "simulation.BlockEntityAccessor"
+    "simulation.BlockEntityAccessor",
+    "simulation.LevelAccessor",
+    "simulation.ServerAccessor",
+    "simulation.ServerLevelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -41,6 +44,7 @@
     "client.SoundBufferLibraryMixin",
     "client.SoundManagerMixin",
     "level.ClientLevelMixin",
-    "light.LevelRendererMixin"
+    "light.LevelRendererMixin",
+    "simulation.LevelRendererAccessor"
   ]
 }

@@ -1,11 +1,8 @@
 package ml.mypals.minecartrevolution.behaviours;
 
-import com.mojang.datafixers.util.Either;
-import com.sun.jna.platform.win32.Variant;
 import ml.mypals.minecartrevolution.annotations.MinecartMapper;
-import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
-import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulationBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.manager.AnnotationManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
@@ -33,12 +30,6 @@ import java.util.*;
 import java.util.function.BiFunction;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.LOGGER;
-import static ml.mypals.minecartrevolution.entity.minecarts.maps.ChestEntityMapper.CHEST_MINECARTS;
-import static ml.mypals.minecartrevolution.entity.minecarts.maps.MobHeadEntityMapper.HEAD_MINECARTS;
-import static ml.mypals.minecartrevolution.entity.minecarts.maps.NonInventoryWorkingBlockEntityMapper.NON_INVENTORY_WORKING;
-import static ml.mypals.minecartrevolution.entity.minecarts.maps.PressurePlateEntityMapper.PRESSURE_PLATE_ENTITY_MAP;
-import static ml.mypals.minecartrevolution.entity.minecarts.maps.ShulkerBoxEntityMapper.SHULKER_ENTITY_MAP;
-import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.WOOL_ENTITY_MAP;
 
 public class MinecartTransformManager {
     public static final Map<Object, MinecartTransformConfig> factoryMap = new HashMap<>();
@@ -138,7 +129,7 @@ public class MinecartTransformManager {
 
     public static AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
         MinecartTransformConfig factory = factoryMap.getOrDefault(item,
-                (w, p) -> new SimulationBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
+                (w, p) -> new CompatFriendlyBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
         AbstractMinecart minecart = factory.createMinecart(world, pos);
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
@@ -158,7 +149,7 @@ public class MinecartTransformManager {
 
     public static AbstractMinecart spawnFromBlock(Level world, Block block, Vec3 pos, ItemStack handStack) {
         MinecartTransformConfig factory = factoryMap.getOrDefault(block,
-                (w, p) -> new SimulationBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, block));
+                (w, p) -> new CompatFriendlyBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, block));
         AbstractMinecart minecart = factory.createMinecart(world, pos);
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
@@ -219,6 +210,12 @@ public class MinecartTransformManager {
             if (handStack.get(DataComponents.CONTAINER) != null) {
                 Objects.requireNonNull(handStack.get(DataComponents.CONTAINER))
                         .copyInto(shulkerMinecartEntity.getItemStacks());
+            }
+        }
+        if (handStack != null && abstractMinecartEntity instanceof CompatFriendlyBlockMinecartEntity simMinecart) {
+            var beData = handStack.get(DataComponents.BLOCK_ENTITY_DATA);
+            if (beData != null) {
+                simMinecart.setBlockEntityTag(beData.copyTagWithoutId());
             }
         }
         return abstractMinecartEntity;

@@ -12,6 +12,7 @@ import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import ml.mypals.minecartrevolution.mixin.level.ServerLevelMixin;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
+import ml.mypals.minecartrevolution.registeries.MREntityDataSerializers;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -43,6 +44,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import java.util.List;
 
+import static ml.mypals.minecartrevolution.registeries.MREntityDataSerializers.ENTITY_DATA_SERIALIZERS;
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ITEMS;
 import static ml.mypals.minecartrevolution.registeries.MRModCriteria.TRIGGERS;
@@ -77,6 +79,7 @@ public class MinecartRevolution {
         ENTITIES.register(modEventBus);
         TRIGGERS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+        ENTITY_DATA_SERIALIZERS.register(modEventBus);
         MRDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
     }

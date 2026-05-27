@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.entity.minecarts.simulation;
 
 
+import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.mixin.simulation.LevelAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -47,9 +48,9 @@ import java.util.Optional;
 
 public class SimulatedLevel extends Level {
     private final Level wrapped;
-    private final SimulationBlockMinecartEntity minecart;
+    private final CompatFriendlyBlockMinecartEntity minecart;
 
-    protected SimulatedLevel(Level wrapped, SimulationBlockMinecartEntity minecart) {
+    public SimulatedLevel(Level wrapped, CompatFriendlyBlockMinecartEntity minecart) {
         super((WritableLevelData) wrapped.getLevelData(), wrapped.dimension(), wrapped.registryAccess(), wrapped.dimensionTypeRegistration(), wrapped.isClientSide(), wrapped.isDebug(), 0, 0);
         this.wrapped = wrapped;
         this.minecart = minecart;
