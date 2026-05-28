@@ -3,8 +3,6 @@ package ml.mypals.minecartrevolution.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import dev.anvilcraft.lib.v2.rendering.ALRPostEffects;
-import dev.anvilcraft.lib.v2.rendering.AnvilLibRendering;
 import ml.mypals.minecartrevolution.client.renderer.state.BeaconMinecartRenderState;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
 import net.minecraft.client.model.geom.ModelLayers;
