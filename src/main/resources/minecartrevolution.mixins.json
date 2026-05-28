@@ -45,6 +45,7 @@
     "client.SoundManagerMixin",
     "level.ClientLevelMixin",
     "light.LevelRendererMixin",
+    "simulation.ClientLevelAccessor",
     "simulation.LevelRendererAccessor"
   ]
 }

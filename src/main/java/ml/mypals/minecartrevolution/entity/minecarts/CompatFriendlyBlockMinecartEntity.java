@@ -1,8 +1,11 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.ClientSimLevelFactory;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedClientLevel;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedLevel;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedServerLevel;
 import ml.mypals.minecartrevolution.mixin.simulation.BlockEntityAccessor;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -39,8 +42,8 @@ import static ml.mypals.minecartrevolution.registeries.MREntityDataSerializers.C
 
 public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntity {
     public BlockEntity blockEntity;
-    public SimulatedLevel simulatedLevel;
-    private SimulatedServerLevel simulatedServerLevel;
+    public Level simulatedLevel;
+    //private SimulatedServerLevel simulatedServerLevel;
     private CompoundTag blockEntityTag;
     public final List<ScheduledTick<Block>> pendingBlockTicks = Lists.newArrayList();
     public final List<ScheduledTick<Fluid>> pendingFluidTicks = Lists.newArrayList();
@@ -52,12 +55,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     }
     public CompatFriendlyBlockMinecartEntity(EntityType<CompatFriendlyBlockMinecartEntity> entityType, Level world) {
         super(entityType, world);
-        if (this.simulatedLevel == null) {
-            this.simulatedLevel = new SimulatedLevel(this.level(), this);
-        }
-        if (this.simulatedServerLevel == null && !level().isClientSide()) {
-            this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
-        }
+        initSimulatedLevel();
         refreshBlockEntity();
     }
 
@@ -69,24 +67,21 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
     public CompatFriendlyBlockMinecartEntity(EntityType<CompatFriendlyBlockMinecartEntity> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z, item);
-        if (this.simulatedLevel == null) {
-            this.simulatedLevel = new SimulatedLevel(this.level(), this);
-        }
-        if (this.simulatedServerLevel == null && !level().isClientSide()) {
-            this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
-        }
+       initSimulatedLevel();
         refreshBlockEntity();
     }
     public CompatFriendlyBlockMinecartEntity(EntityType<CompatFriendlyBlockMinecartEntity> minecart, Level world, double x, double y, double z, Block block) {
         super(minecart, world, x, y, z);
-        if (this.simulatedLevel == null) {
-            this.simulatedLevel = new SimulatedLevel(this.level(), this);
-        }
-        if (this.simulatedServerLevel == null && !level().isClientSide()) {
-            this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
-        }
+        initSimulatedLevel();
         this.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
         refreshBlockEntity();
+    }
+    public void initSimulatedLevel(){
+        if (this.simulatedLevel == null) {
+            this.simulatedLevel = level().isClientSide()?
+                    ClientSimLevelFactory.create((ClientLevel) level(), this)
+                    :new SimulatedServerLevel((ServerLevel) level(), this);
+        }
     }
 
 
@@ -99,7 +94,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
                 }
                 this.blockEntity = ((EntityBlock) state.getBlock()).newBlockEntity(this.blockPosition(), state);
                 if (this.blockEntity != null) {
-                    Level simLevel = this.level().isClientSide()?simulatedLevel:simulatedServerLevel;
+                    Level simLevel = simulatedLevel;
                     this.blockEntity.setLevel(simLevel);
                     this.entityData.get(DATA_ID_BLOCK_ENTITY_NBT);
                     this.blockEntity.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registryAccess(), this.entityData.get(DATA_ID_BLOCK_ENTITY_NBT)));
@@ -165,14 +160,9 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
     @Override
     public void tick() {
-        if (this.simulatedLevel == null) {
-            this.simulatedLevel = new SimulatedLevel(this.level(), this);
-        }
-        if (this.simulatedServerLevel == null && !level().isClientSide()) {
-            this.simulatedServerLevel = new SimulatedServerLevel((ServerLevel) this.level(), this);
-        }
+        initSimulatedLevel();
 
-        Level simLevel = this.level().isClientSide()?simulatedLevel:simulatedServerLevel;
+        Level simLevel = simulatedLevel;
 
         refreshBlockEntity();
         if (this.blockEntity != null) {
@@ -191,7 +181,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
                 if (tick.triggerTick() <= time) {
                     BlockState state = getDisplayBlockState();
                     if (state.is(tick.type())) {
-                        state.tick(this.simulatedServerLevel, this.blockPosition(), this.level().getRandom());
+                        state.tick((ServerLevel) simLevel, this.blockPosition(), this.level().getRandom());
                     }
                     return true;
                 }
@@ -202,7 +192,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
                     FluidState state = this.simulatedLevel.getFluidState(this.blockPosition());
                     BlockState blockState = getDisplayBlockState();
                     if (state.is(tick.type())) {
-                        state.tick(this.simulatedServerLevel, this.blockPosition(), blockState);
+                        state.tick((ServerLevel) simLevel, this.blockPosition(), blockState);
                     }
                     return true;
                 }
@@ -246,7 +236,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
 
         ItemStack stack = player.getItemInHand(hand);
-        Level simLevel = this.level().isClientSide()?simulatedLevel:simulatedServerLevel;
+        Level simLevel = simulatedLevel;
 
         try {
             return stack.isEmpty()?
