@@ -5,15 +5,14 @@ import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public abstract class PortalMinecartEntity extends VariantBlockMinecartEntity {
     }
 
     @Override
-    public boolean canCollideWith(Entity entity) {
+    public boolean canCollideWith(@NonNull Entity entity) {
         return super.canCollideWith(entity) && !shouldTransfer();
     }
 

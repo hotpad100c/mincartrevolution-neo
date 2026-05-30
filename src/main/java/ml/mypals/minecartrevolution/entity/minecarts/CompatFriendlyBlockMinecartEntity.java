@@ -1,8 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.ClientSimLevelFactory;
-import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedClientLevel;
-import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedLevel;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedServerLevel;
 import ml.mypals.minecartrevolution.mixin.simulation.BlockEntityAccessor;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,7 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.*;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.ScheduledTick;
 import com.google.common.collect.Lists;
 import net.minecraft.world.entity.player.Player;
@@ -35,6 +35,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -228,7 +229,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
         }
     }
     @Override
-    public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+    public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
         if(player.isSprinting() || player.isShiftKeyDown() || blockEntity != null){
             return super.interact(player, hand, pos);
         }
@@ -265,11 +266,68 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
         }
         super.remove(reason);
     }
+    @Override
+    public List<AABB> getColliders() {
+        VoxelShape shape = getDisplayBlockState()
+                .getCollisionShape(simulatedLevel, blockPosition());
 
+        Vec3 pos = position().subtract(0.5, -0.2, 0.5);
+        Vec3 center = pos.add(0.5, 0.5, 0.5);
 
+        double shrink = 0.13f;
 
+        List<AABB> result = new ArrayList<>();
 
+        for (AABB localBox : shape.toAabbs()) {
+            AABB box = localBox.move(pos);
 
+            double minX = box.minX;
+            double minY = box.minY;
+            double minZ = box.minZ;
+            double maxX = box.maxX;
+            double maxY = box.maxY;
+            double maxZ = box.maxZ;
 
+            // X轴
+            if (minX < center.x) minX += shrink;
+            else minX -= shrink;
 
+            if (maxX < center.x) maxX += shrink;
+            else maxX -= shrink;
+
+            // Y轴
+            if (minY < center.y) minY += shrink;
+            else minY -= shrink;
+
+            if (maxY < center.y) maxY += shrink;
+            else maxY -= shrink;
+
+            // Z轴
+            if (minZ < center.z) minZ += shrink;
+            else minZ -= shrink;
+
+            if (maxZ < center.z) maxZ += shrink;
+            else maxZ -= shrink;
+
+            // 防止收缩过度导致反转
+            if (minX > maxX) {
+                double mid = (minX + maxX) * 0.5;
+                minX = maxX = mid;
+            }
+
+            if (minY > maxY) {
+                double mid = (minY + maxY) * 0.5;
+                minY = maxY = mid;
+            }
+
+            if (minZ > maxZ) {
+                double mid = (minZ + maxZ) * 0.5;
+                minZ = maxZ = mid;
+            }
+
+            result.add(new AABB(minX, minY, minZ, maxX, maxY, maxZ));
+        }
+
+        return result;
+    }
 }

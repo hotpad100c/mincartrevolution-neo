@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
+import ml.mypals.minecartrevolution.interfaces.MultiCollision;
 import ml.mypals.minecartrevolution.packets.MinecartCollisionPacket;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -37,13 +38,16 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-public class VariantBlockMinecartEntity extends AbstractMinecart {
+public class VariantBlockMinecartEntity extends AbstractMinecart implements MultiCollision {
     public boolean activated = false;
     public boolean keepUpdatingLight = false;
     private boolean firstTickUpdateLight = true;
@@ -76,7 +80,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     @Override
-    public BlockState getDisplayBlockState() {
+    public @NonNull BlockState getDisplayBlockState() {
         return this.getEntityData().get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(getDefaultDisplayBlockState());
     }
 
@@ -288,7 +292,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         collideWithEntities();
     }
     @Override
-    protected void moveAlongTrack(ServerLevel level) {
+    protected void moveAlongTrack(@NonNull ServerLevel level) {
         super.moveAlongTrack(level);
         moveEntitiesAbove();
     }
@@ -349,9 +353,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     @Override
-    public boolean canCollideWith(Entity entity) {
-        return false;
-        //return Block.isShapeFullBlock(getDisplayBlockState().getCollisionShape(level(),blockPosition())) && canVehicleCollide(this, entity);
+    public boolean canCollideWith(@NonNull Entity entity) {
+        return Block.isShapeFullBlock(getDisplayBlockState().getCollisionShape(level(),blockPosition())) && canVehicleCollide(this, entity);
     }
 
     public static boolean canVehicleCollide(Entity vehicle, Entity entity) {
@@ -512,6 +515,22 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
                 }
             }
         }
+    }
+
+    @Override
+    public List<AABB> getColliders() {
+        VoxelShape shape = getDisplayBlockState()
+                .getCollisionShape(level(), blockPosition());
+
+        Vec3 pos = position().subtract(0.5,0,0.5);
+
+        List<AABB> result = new ArrayList<>();
+
+        for (AABB box : shape.toAabbs()) {
+            result.add(box.move(pos));
+        }
+
+        return result;
     }
 }
 
