@@ -4,6 +4,7 @@ package ml.mypals.minecartrevolution.entity.minecarts.simulation;
 import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.mixin.simulation.LevelAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ExplosionParticleInfo;
 import net.minecraft.core.particles.ParticleOptions;
@@ -39,6 +40,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.neoforged.neoforge.entity.PartEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -237,5 +239,9 @@ public class SimulatedLevel extends Level {
     @Override
     public @NonNull LevelTickAccess<Fluid> getFluidTicks() {
         return new SimulatedTickAccess<>(wrapped.getFluidTicks(), minecart, minecart.pendingFluidTicks);
+    }
+    @Override
+    public int getSignal(@NotNull BlockPos pos, @NotNull Direction direction) {
+        return minecart.activated?15:0;
     }
 }

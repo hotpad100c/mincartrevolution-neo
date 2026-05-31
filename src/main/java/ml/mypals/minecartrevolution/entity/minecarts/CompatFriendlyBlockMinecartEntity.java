@@ -17,6 +17,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.*;
 import net.minecraft.world.phys.BlockHitResult;
@@ -267,9 +269,12 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     }
 
 
-
-
-
-
+    @Override
+    public void handleActive( ServerLevel level, int x, int y, int z, boolean powered) {
+        if(activated != powered){
+            this.activated = powered;
+            getDisplayBlockState().handleNeighborChanged(simulatedLevel, blockPosition(), Blocks.AIR, null, false);
+        }
+    }
 
 }

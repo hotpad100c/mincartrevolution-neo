@@ -10,6 +10,7 @@ import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ExplosionParticleInfo;
 import net.minecraft.core.particles.ParticleOptions;
@@ -41,6 +42,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.neoforged.neoforge.entity.PartEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -259,4 +261,9 @@ public class SimulatedClientLevel extends ClientLevel {
     public void tick(@NonNull BooleanSupplier haveTime) {
         wrapped.tick(haveTime);
     }
+    @Override
+    public int getSignal(@NotNull BlockPos pos, @NotNull Direction direction) {
+        return minecart.activated?15:0;
+    }
+
 }
