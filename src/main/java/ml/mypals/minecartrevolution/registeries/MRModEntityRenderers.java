@@ -67,6 +67,9 @@ public class MRModEntityRenderers {
                 CompatFriendlyBlockMinecartRenderer::new
         );
 
-
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.SCAFFOLD_MINECART.entity().get(),
+                ScaffoldMinecartRenderer::new
+        );
     }
 }

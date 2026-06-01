@@ -459,5 +459,10 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.POWERED_RAIL),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new RailMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+    public static final MinecartEntry<ScaffoldMinecartEntity, MinecartWithBlockItem> SCAFFOLD_MINECART = register(
+            "scaffold", ScaffoldMinecartEntity::new,
+            p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.SCAFFOLDING),
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new ScaffoldMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
 }
