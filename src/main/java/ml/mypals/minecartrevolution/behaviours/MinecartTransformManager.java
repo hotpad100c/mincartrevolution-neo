@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.behaviours;
 import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
 import ml.mypals.minecartrevolution.manager.AnnotationManager;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.component.DataComponents;
@@ -12,12 +13,15 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.*;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -128,8 +132,16 @@ public class MinecartTransformManager {
     }
 
     public static AbstractMinecart spawnFromItem(Level world, Item item, Vec3 pos, ItemStack handStack) {
-        MinecartTransformConfig factory = factoryMap.getOrDefault(item,
-                (w, p) -> new CompatFriendlyBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item));
+        MinecartTransformConfig factory = factoryMap.getOrDefault(item, null);
+        if (factory == null) {
+            if (item instanceof BucketItem bucketItem && bucketItem.getContent() != Fluids.EMPTY) {
+                factory = (w, p) -> new FluidMinecartEntity(
+                        MRMinecarts.WATER_MINECART.entity().get(), w, p.x, p.y, p.z, item);
+            } else {
+                factory = (w, p) -> new CompatFriendlyBlockMinecartEntity(
+                        MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, item);
+            }
+        }
         AbstractMinecart minecart = factory.createMinecart(world, pos);
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);

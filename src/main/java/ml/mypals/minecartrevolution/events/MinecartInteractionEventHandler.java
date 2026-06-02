@@ -5,17 +5,21 @@ import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -75,19 +79,22 @@ public class MinecartInteractionEventHandler {
                         }
                     }
                     return;
-                } else if ((stackInHand.is(Items.WATER_BUCKET) || stackInHand.is(Items.LAVA_BUCKET) )&& !interacted.getDisplayBlockState().isAir()) {
+                } else if (stackInHand.getItem() instanceof BucketItem bucketItem
+                        && bucketItem.getContent() != Fluids.EMPTY
+                        && interacted.getDisplayBlockState().isAir()) {
+                    Fluid fluid = bucketItem.getContent();
                     if (!world.isClientSide()) {
                         MinecartTransformManager.checkForTransform(world, interacted.position(), stackInHand.getItem(), interacted, stackInHand);
-                        stackInHand.split(1);
+                        stackInHand.shrink(1);
                         player.getInventory().add(new ItemStack(Items.BUCKET));
                     }
-                    playBucketSound(Blocks.WATER,world, interacted);
+                    playBucketSound(fluid, world, interacted);
                 }
             }
         }
     }
-    private static void playBucketSound(Block block, Level world, Entity interacted) {
-        if (block == Blocks.LAVA) {
+    private static void playBucketSound(Fluid fluid, Level world, Entity interacted) {
+        if (fluid.defaultFluidState().is(FluidTags.LAVA)) {
             world.playSound(null, interacted.blockPosition(), SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F);
         } else {
             world.playSound(null, interacted.blockPosition(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);

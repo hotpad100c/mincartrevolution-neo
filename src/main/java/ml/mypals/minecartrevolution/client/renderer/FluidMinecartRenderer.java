@@ -1,7 +1,6 @@
 package ml.mypals.minecartrevolution.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import ml.mypals.minecartrevolution.client.renderer.state.FluidMinecartRenderState;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
@@ -9,24 +8,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.entity.AbstractMinecartRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.WaterFluid;
-import org.jline.utils.Colors;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Calendar;
-import java.util.Objects;
+import static net.minecraft.client.renderer.BiomeColors.WATER_COLOR_RESOLVER;
+
 
 public class FluidMinecartRenderer extends AbstractMinecartRenderer<FluidMinecartEntity, FluidMinecartRenderState> {
     public FluidMinecartRenderer(EntityRendererProvider.Context context) {
@@ -39,7 +36,7 @@ public class FluidMinecartRenderer extends AbstractMinecartRenderer<FluidMinecar
     }
 
     @Override
-    public void extractRenderState(FluidMinecartEntity entity, FluidMinecartRenderState state, float partialTicks) {
+    public void extractRenderState(@NonNull FluidMinecartEntity entity, @NonNull FluidMinecartRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
         state.fluidBlock = entity.getDisplayBlockState();
 
@@ -56,15 +53,35 @@ public class FluidMinecartRenderer extends AbstractMinecartRenderer<FluidMinecar
     }
 
 
-    private void renderFluidPlane(BlockState fluidState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light) {
-        TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getFluidStateModelSet().
-                get(fluidState.getFluidState()).stillMaterial().sprite();
-        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(sprite.atlasLocation()), (pose, buffer) -> {
 
-            int color = -1;
-            if(fluidState.is(Blocks.WATER)){
-                color = 0xEE4444FF;
-            }
+    private int getFluidTintColor(BlockPos pos, BlockState fluidState) {
+        FluidState fs = fluidState.getFluidState();
+        if (fs.isEmpty()) return -1;
+        if (fs.is(FluidTags.WATER)) {
+            assert Minecraft.getInstance().level != null;
+            return Minecraft.getInstance().level.getBlockTint(pos, WATER_COLOR_RESOLVER);
+        }
+        FluidStack fluidStack = new FluidStack(fs.getType(), fs.getAmount());
+        int tint = getFluidColor(getFluidModel(fluidStack), fluidStack);
+        int alpha = 0xEE;
+        return (alpha << 24) | (tint & 0x00FFFFFF);
+    }
+    public static int getFluidColor(FluidModel model, FluidStack stack) {
+        int color = 0xffffffff;
+        if(model.fluidTintSource() != null)
+            color=model.fluidTintSource().colorAsStack(stack);
+        return color;
+    }
+    public static FluidModel getFluidModel(FluidStack stack) {
+        return Minecraft.getInstance().getModelManager().getFluidStateModelSet()
+                .get(stack.getFluid().defaultFluidState());
+    }
+
+    private void renderFluidPlane(BlockPos pos, BlockState fluidState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light) {
+        TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getFluidStateModelSet()
+                .get(fluidState.getFluidState()).stillMaterial().sprite();
+        int color = getFluidTintColor(pos, fluidState);
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(sprite.atlasLocation()), (pose, buffer) -> {
             float height = 0.6f;
             buffer.addVertex(pose, -2.1f, height, 0.5f).setColor(color).setUv(sprite.getU0(), sprite.getV0()).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0.0f, 1.0f, 0.0f);
             buffer.addVertex(pose, -2.1f, height, 1.9f).setColor(color).setUv(sprite.getU0(), sprite.getV1()).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0.0f, 1.0f, 0.0f);
@@ -96,7 +113,7 @@ public class FluidMinecartRenderer extends AbstractMinecartRenderer<FluidMinecar
             }
             poseStack.translate(-0.5F, -0.5F, -0.5F);
 
-            renderFluidPlane(fluidState, poseStack, submitNodeCollector, state.lightCoords);
+            renderFluidPlane(BlockPos.containing(new Vec3(state.x, state.y, state.z)), fluidState, poseStack, submitNodeCollector, state.lightCoords);
 
             poseStack.popPose();
         }
