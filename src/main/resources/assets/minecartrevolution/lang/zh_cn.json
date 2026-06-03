@@ -1,4 +1,8 @@
 {
+  "item.minecartrevolution.wrench": "矿车扳手",
+  "item.minecartrevolution.wrench.empty": "矿车是空的",
+  "item.minecartrevolution.wrench.select": "当前编辑属性：%s",
+  "item.minecartrevolution.wrench.set": "将 %s 设置为 %s",
   "item.minecartrevolution.minecart_with_block": "%s%s",
   "entity.minecartrevolution.cobweb_minecart": "蛛网矿车",
   "entity.minecartrevolution.dragon_egg_minecart": "龙蛋矿车",

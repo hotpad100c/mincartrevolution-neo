@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.registeries;
 
+import ml.mypals.minecartrevolution.item.WrenchItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -11,12 +12,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
 
 public class MRModItems {
 
+    public static final DeferredItem<WrenchItem> WRENCH =
+            MRMinecarts.ITEMS.registerItem("wrench",
+                    props -> new WrenchItem(props.stacksTo(1)));
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -31,11 +36,10 @@ public class MRModItems {
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> new ItemStack(Items.MINECART))
             .displayItems((parameters, itemGroup) -> {
-                // Add all custom minecarts
+                itemGroup.accept(WRENCH.get());
                 for (MRMinecarts.MinecartEntry<?, ?> entry : MRMinecarts.MINECARTS) {
                     itemGroup.accept(entry.item().get());
                 }
-                // Add vanilla minecarts
                 itemGroup.accept(Items.MINECART);
                 itemGroup.accept(Items.FURNACE_MINECART);
                 itemGroup.accept(Items.HOPPER_MINECART);

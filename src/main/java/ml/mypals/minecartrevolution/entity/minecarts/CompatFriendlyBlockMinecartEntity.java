@@ -4,6 +4,7 @@ import ml.mypals.minecartrevolution.entity.minecarts.simulation.ClientSimLevelFa
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedClientLevel;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedLevel;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedServerLevel;
+import ml.mypals.minecartrevolution.item.WrenchItem;
 import ml.mypals.minecartrevolution.mixin.simulation.BlockEntityAccessor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.component.DataComponents;
@@ -234,10 +235,11 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
         if(player.isSprinting() || player.isShiftKeyDown() || blockEntity != null){
             return super.interact(player, hand, pos);
         }
-        BlockState block = getDisplayBlockState();
-
-
         ItemStack stack = player.getItemInHand(hand);
+        if(stack.getItem() instanceof WrenchItem){
+            return super.interact(player, hand, pos);
+        }
+        BlockState block = getDisplayBlockState();
         Level simLevel = simulatedLevel;
 
         try {

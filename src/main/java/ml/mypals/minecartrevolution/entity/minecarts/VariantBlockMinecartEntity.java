@@ -3,7 +3,9 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
+import ml.mypals.minecartrevolution.item.WrenchItem;
 import ml.mypals.minecartrevolution.packets.MinecartCollisionPacket;
+import ml.mypals.minecartrevolution.registeries.MRDataComponents;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -149,6 +151,11 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         InteractionResult interactionResult = super.interact(player, hand, pos);
         if(interactionResult.consumesAction())return interactionResult;
         ItemStack stackInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
+
+        if (stackInHand.getItem() instanceof WrenchItem wrench) {
+            return wrench.useOnMinecart(player, this, hand);
+        }
+
         if (player.isSecondaryUseActive()) {
             if (this.hasCustomDisplay()) {
                 BlockState blockState = getDisplayBlockState();
@@ -243,10 +250,12 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     @Override
     public @NonNull ItemStack getPickResult() {
         ItemStack stack = getDropItem().getDefaultInstance();
-        CompoundTag nbt = new CompoundTag();
         BlockState blockState = getDisplayBlockState();
+        stack.set(MRDataComponents.BLOCK_STATE.get(), blockState);
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt("block_in_minecart", Block.getId(blockState));
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+
         stack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
         return stack;
     }

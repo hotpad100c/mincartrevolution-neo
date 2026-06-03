@@ -1,4 +1,8 @@
 {
+  "item.minecartrevolution.wrench": "Minecart Wrench",
+  "item.minecartrevolution.wrench.empty": "Minecart is empty",
+  "item.minecartrevolution.wrench.select": "Now editing: %s",
+  "item.minecartrevolution.wrench.set": "Set %s to %s",
   "item.minecartrevolution.minecart_with_block": "%s %s",
   "entity.minecartrevolution.cobweb_minecart": "Cobweb Minecart",
   "entity.minecartrevolution.dragon_egg_minecart": "Dragon Egg Minecart",
