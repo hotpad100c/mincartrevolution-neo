@@ -1,8 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.ClientSimLevelFactory;
-import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedClientLevel;
-import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedLevel;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedServerLevel;
 import ml.mypals.minecartrevolution.item.WrenchItem;
 import ml.mypals.minecartrevolution.mixin.simulation.BlockEntityAccessor;
@@ -19,7 +17,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.*;
 import net.minecraft.world.phys.BlockHitResult;
@@ -46,7 +43,6 @@ import static ml.mypals.minecartrevolution.registeries.MREntityDataSerializers.C
 public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntity {
     public BlockEntity blockEntity;
     public Level simulatedLevel;
-    //private SimulatedServerLevel simulatedServerLevel;
     private CompoundTag blockEntityTag;
     public final List<ScheduledTick<Block>> pendingBlockTicks = Lists.newArrayList();
     public final List<ScheduledTick<Fluid>> pendingFluidTicks = Lists.newArrayList();
@@ -62,7 +58,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
         refreshBlockEntity();
     }
 
-    protected void defineSynchedData(SynchedEntityData.Builder entityData) {
+    protected void defineSynchedData(SynchedEntityData.@NonNull Builder entityData) {
         super.defineSynchedData(entityData);
         entityData.define(DATA_ID_BLOCK_ENTITY_NBT, new CompoundTag());
     }
@@ -107,20 +103,10 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
             this.blockEntity = null;
         }
     }
-    /*
-    @Override
-    public void setCustomDisplayBlockState(@NonNull Optional<BlockState> state) {
-        BlockState oldState = getDisplayBlockState();
-        this.getEntityData().set(DATA_ID_CUSTOM_DISPLAY_BLOCK, state);
-        state.ifPresent(state1 -> {
-            Level simLevel = this.level().isClientSide()?simulatedLevel:simulatedServerLevel;
-            state1.onPlace(simLevel, blockPosition(), oldState, false);
-        });
-    }*/
+
     public void setBlockEntityTag(CompoundTag tag) {
         this.blockEntityTag = tag;
         this.entityData.set(DATA_ID_BLOCK_ENTITY_NBT, tag);
-        // If blockEntity already exists (e.g. refreshed before first tick), apply immediately
         if (this.blockEntity != null) {
             this.blockEntity.loadWithComponents(
                 TagValueInput.create(ProblemReporter.DISCARDING, registryAccess(), tag)

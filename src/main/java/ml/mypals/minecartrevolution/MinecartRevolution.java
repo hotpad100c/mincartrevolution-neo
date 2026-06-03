@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution;
 
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
+import ml.mypals.minecartrevolution.datagen.MRRecipeProvider;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.PortalMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
 import ml.mypals.minecartrevolution.entity.others.AttackMonsterMinecartGoal;
@@ -73,6 +74,7 @@ public class MinecartRevolution {
     public MinecartRevolution(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::gatherData);
+        modEventBus.addListener(this::gatherServerData);
         modEventBus.addListener(this::registerPayloads);
 
         ITEMS.register(modEventBus);
@@ -115,6 +117,11 @@ public class MinecartRevolution {
                                 MRAdvancementProvider::generate
                         )
                 ));
+        event.createProvider(MRRecipeProvider.Runner::new);
+    }
+
+    public void gatherServerData(GatherDataEvent.Server event) {
+        event.createProvider(MRRecipeProvider.Runner::new);
     }
 
     @SubscribeEvent
