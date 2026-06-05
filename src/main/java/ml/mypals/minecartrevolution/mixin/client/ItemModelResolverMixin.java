@@ -206,18 +206,9 @@ public class ItemModelResolverMixin {
             targetLayer.setLocalTransform(reference.localTransform);
 
             if (sourceLayer.specialRenderer != null) {
-                // Special renderers (e.g. ShulkerBoxSpecialRenderer) draw in block
-                // [0,1] coordinate space and apply their own internal transform
-                // (see ShulkerBoxRenderer.createModelTransform which does
-                //  translate(0.5,0.5,0.5) + scale(1,-1,-1) + translate(0,-1,0)).
-                // We must NOT redirect their translation — just scale them to fit
-                // inside the cart and keep the reference rotation.
+
                 Vector3f scale = new Vector3f();
                 referenceTransform.scale().mul(0.5f, scale);
-
-                // The reference translation already positions the layer correctly
-                // relative to the minecart body; specialRenderer will handle its
-                // own internal centering.
                 targetLayer.setItemTransform(new ItemTransform(
                         referenceTransform.rotation(),
                         referenceTransform.translation(),
