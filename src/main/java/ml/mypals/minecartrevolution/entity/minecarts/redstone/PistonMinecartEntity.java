@@ -100,18 +100,6 @@ public class PistonMinecartEntity extends SingleBlockMinecartEntity {
                 toUpdate[updateIndex++] = blockState;
             }
 
-  /*          if (extending) {
-                PistonType type = PistonType.DEFAULT;
-                BlockState state = Blocks.PISTON_HEAD.defaultBlockState().setValue(PistonHeadBlock.FACING, direction).setValue(PistonHeadBlock.TYPE, type);
-                BlockState blockState = Blocks.MOVING_PISTON
-                        .defaultBlockState()
-                        .setValue(MovingPistonBlock.FACING, direction)
-                        .setValue(MovingPistonBlock.TYPE,  PistonType.DEFAULT);
-                deleteAfterMove.remove(armPos);
-                level.setBlock(armPos, blockState, 324);
-                level.setBlockEntity(MovingPistonBlock.newMovingBlockEntity(armPos, blockState, state, direction, true, true));
-            }
-*/
             BlockState air = Blocks.AIR.defaultBlockState();
 
             for (BlockPos pos : deleteAfterMove.keySet()) {
@@ -153,6 +141,6 @@ public class PistonMinecartEntity extends SingleBlockMinecartEntity {
     }
     @Override
     public float getCollisionSensitive() {
-        return 0.1f;
+        return 0.001f;
     }
 }

@@ -203,25 +203,42 @@ public class ItemModelResolverMixin {
             ItemStackRenderState.LayerRenderState targetLayer = output.newLayer();
 
             targetLayer.setFoilType(sourceLayer.foilType);
-
             targetLayer.setLocalTransform(reference.localTransform);
 
-            Vector3f pos = new Vector3f();
-            sourceLayer.itemTransform.translation().add(0f, 0.04f, 0f, pos);
+            if (sourceLayer.specialRenderer != null) {
+                // Special renderers (e.g. ShulkerBoxSpecialRenderer) draw in block
+                // [0,1] coordinate space and apply their own internal transform
+                // (see ShulkerBoxRenderer.createModelTransform which does
+                //  translate(0.5,0.5,0.5) + scale(1,-1,-1) + translate(0,-1,0)).
+                // We must NOT redirect their translation — just scale them to fit
+                // inside the cart and keep the reference rotation.
+                Vector3f scale = new Vector3f();
+                referenceTransform.scale().mul(0.5f, scale);
 
-            Vector3f scale = new Vector3f();
-            referenceTransform.scale().mul(0.8f, scale);
-
-            targetLayer.setItemTransform(new ItemTransform(
-                    referenceTransform.rotation(),
-                    pos,
-                    scale
-            ));
-            targetLayer.tintLayers().addAll(sourceLayer.tintLayers());
-            targetLayer.prepareQuadList().addAll(quads.isEmpty()?sourceLayer.prepareQuadList():quads);
-            targetLayer.setExtents(sourceLayer.extents);
-            if(sourceLayer.specialRenderer != null){
+                // The reference translation already positions the layer correctly
+                // relative to the minecart body; specialRenderer will handle its
+                // own internal centering.
+                targetLayer.setItemTransform(new ItemTransform(
+                        referenceTransform.rotation(),
+                        referenceTransform.translation(),
+                        scale
+                ));
                 targetLayer.setupSpecialModel(sourceLayer.specialRenderer, sourceLayer.argumentForSpecialRendering);
+            } else {
+                Vector3f pos = new Vector3f();
+                sourceLayer.itemTransform.translation().add(0f, 0.04f, 0f, pos);
+
+                Vector3f scale = new Vector3f();
+                referenceTransform.scale().mul(0.8f, scale);
+
+                targetLayer.setItemTransform(new ItemTransform(
+                        referenceTransform.rotation(),
+                        pos,
+                        scale
+                ));
+                targetLayer.tintLayers().addAll(sourceLayer.tintLayers());
+                targetLayer.prepareQuadList().addAll(quads.isEmpty() ? sourceLayer.prepareQuadList() : quads);
+                targetLayer.setExtents(sourceLayer.extents);
             }
         }
 
