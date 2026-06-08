@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.registeries;
 
+import ml.mypals.minecartrevolution.entity.chain.ChainEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.*;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.*;
@@ -469,5 +470,16 @@ public class MRMinecarts {
             p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.END_PORTAL_FRAME),
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new EndPortalFraneMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+
+    @SuppressWarnings("unchecked")
+    public static final DeferredHolder<EntityType<?>, EntityType<ChainEntity>> CHAIN_ENTITY =
+            (DeferredHolder<EntityType<?>, EntityType<ChainEntity>>) (Object) ENTITIES.register("chain",
+                    () -> EntityType.Builder.of(ChainEntity::new, MobCategory.MISC)
+                            .sized(0.5F, 0.5F)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build(ResourceKey.create(Registries.ENTITY_TYPE,
+                                    Identifier.fromNamespaceAndPath(MODID, "chain")))
+            );
 
 }

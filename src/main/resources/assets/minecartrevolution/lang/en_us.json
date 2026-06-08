@@ -52,5 +52,10 @@
   "advancement.minecartrevolution.is_that_babel_tower.title": "Is That the Tower of Babel?",
   "advancement.minecartrevolution.is_that_babel_tower.description": "Stack more than 10 minecarts using Rail Minecarts",
   "advancement.minecartrevolution.babel.title": "Babel",
-  "advancement.minecartrevolution.babel.description": "Experience the collapse of a minecart tower taller than 24 layers"
+  "advancement.minecartrevolution.babel.description": "Experience the collapse of a minecart tower taller than 24 layers",
+
+  "message.minecartrevolution.chain_selected": "Minecart selected! Right-click another minecart to link with chain.",
+  "message.minecartrevolution.chain_linked": "Minecarts linked with chain!",
+  "message.minecartrevolution.chain_broken": "Chain broken.",
+  "message.minecartrevolution.chain_already_chained": "One of these minecarts is already chained! Break the existing chain first."
 }

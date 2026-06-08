@@ -15,6 +15,7 @@ public class MRModEntityRenderers {
                 .forEach(
                         entityTypeDeferredHolder -> {
                             try {
+                                if (entityTypeDeferredHolder == MRMinecarts.CHAIN_ENTITY) return;
                                 EntityType<? extends AbstractMinecart> entity = (EntityType<? extends AbstractMinecart>) (entityTypeDeferredHolder.get());
                                 registerRenderers.registerEntityRenderer(
                                         entity,
@@ -70,6 +71,11 @@ public class MRModEntityRenderers {
         registerRenderers.registerEntityRenderer(
                 MRMinecarts.SCAFFOLD_MINECART.entity().get(),
                 ScaffoldMinecartRenderer::new
+        );
+
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.CHAIN_ENTITY.get(),
+                ChainRenderer::new
         );
     }
 }
