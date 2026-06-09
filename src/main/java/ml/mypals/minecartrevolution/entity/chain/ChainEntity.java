@@ -28,12 +28,11 @@ public class ChainEntity extends Entity {
     private static final double GRAVITY = 0.04;
     private static final double DAMPING = 0.96;
     private static final int CONSTRAINT_ITERATIONS = 3;
-    private static final double TARGET_SEGMENT_SPACING = 0.3;
-    private static final int MIN_SEGMENTS = 3;
-    private static final int MAX_SEGMENTS = 40;
-    private static final double MAX_DISTANCE_SQ = 1024.0;
-    private static final int TAUT_SEGMENT_LIMIT = 15;
-    private static final double TAUT_LENGTH = (TAUT_SEGMENT_LIMIT - 1) * TARGET_SEGMENT_SPACING;
+    private static final double TARGET_SEGMENT_SPACING = 0.25;
+    private static final int MIN_SEGMENTS = 2;
+    private static final int MAX_SEGMENTS = 5;
+    private static final double MAX_DISTANCE_SQ = 1024;
+    private static final double MAX_DISTANCE = 2.1;
 
     private final List<ChainSegment> segments = new ArrayList<>();
 
@@ -108,7 +107,7 @@ public class ChainEntity extends Entity {
         Vec3 attachA = getAttachmentPoint(cartA);
         Vec3 attachB = getAttachmentPoint(cartB);
         double distance = attachA.distanceTo(attachB);
-        int count = Math.clamp((int) (distance / TARGET_SEGMENT_SPACING) + 1, TAUT_SEGMENT_LIMIT, MAX_SEGMENTS);
+        int count = Math.clamp((int) (distance / TARGET_SEGMENT_SPACING) + 1, MIN_SEGMENTS, MAX_SEGMENTS);
         double spacing = distance / Math.max(count - 1, 1);
 
         ensureSegmentCount(count, attachA, attachB, distance);
@@ -184,16 +183,21 @@ public class ChainEntity extends Entity {
     private void applyPullingForce(AbstractMinecart cartA, AbstractMinecart cartB,
                                      Vec3 attachA, Vec3 attachB, double spacing) {
         double actualDistance = attachA.distanceTo(attachB);
-        if (actualDistance > TAUT_LENGTH) {
-            double excess = actualDistance - TAUT_LENGTH;
-            double springForce = Math.min(excess * 0.08, 0.3);
+        if (actualDistance > MAX_DISTANCE) {
             Vec3 pullDir = attachB.subtract(attachA).normalize();
             Vec3 relativeVel = cartB.getDeltaMovement().subtract(cartA.getDeltaMovement());
-            double approachSpeed = relativeVel.dot(pullDir);
-            double damping = approachSpeed * 0.15;
-            double totalForce = Math.max(springForce - damping, 0);
-            cartA.addDeltaMovement(pullDir.scale(totalForce));
-            cartB.addDeltaMovement(pullDir.scale(-totalForce));
+            double separationSpeed = relativeVel.dot(pullDir);
+
+            if (separationSpeed > 0) {
+                Vec3 correction = pullDir.scale(separationSpeed * 0.5);
+                cartA.addDeltaMovement(correction);
+                cartB.addDeltaMovement(correction.reverse());
+            }
+
+            double excess = actualDistance - MAX_DISTANCE;
+            double snapForce = excess * 0.5;
+            cartA.addDeltaMovement(pullDir.scale(snapForce));
+            cartB.addDeltaMovement(pullDir.scale(-snapForce));
         }
     }
 

@@ -40,27 +40,32 @@ import static net.minecraft.world.item.Items.IRON_CHAIN;
 @EventBusSubscriber(modid = "minecartrevolution")
 public class MinecartInteractionEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void handleInteractionWithMinecart(PlayerInteractEvent.EntityInteract event){
+    public static void handleInteractionWithMinecart(PlayerInteractEvent.EntityInteract event) {
         Level world = event.getLevel();
         Entity interacted = event.getTarget();
         Player player = event.getEntity();
         ItemStack held = event.getItemStack();
-        if (!(interacted instanceof AbstractMinecart)) return;
-        if (!player.isShiftKeyDown()){
-            if(!held.getItem().equals(IRON_CHAIN)){
+        if (!(interacted instanceof AbstractMinecart))
+            return;
+        if (!player.isShiftKeyDown()) {
+            if (!held.getItem().equals(IRON_CHAIN)) {
                 // regular minecart riding is handled by vanilla
-            }else{
-                if (!(interacted instanceof AbstractMinecart minecart)) return;
-                if (world.isClientSide()) return;
-                handleIronChain(player, minecart, held, (ServerLevel) world);
+            } else {
+                if (!(interacted instanceof AbstractMinecart minecart))
+                    return;
+                if (!world.isClientSide()) {
+                    handleIronChain(player, minecart, held, (ServerLevel) world);
+                }
                 event.setCancellationResult(InteractionResult.SUCCESS);
                 event.setCanceled(true);
             }
-        }else{
+        } else {
             interact(player, event.getHand(), (AbstractMinecart) interacted, world);
         }
     }
-    public static void interact(Player player, @NotNull InteractionHand hand, AbstractMinecart interacted, Level world) {
+
+    public static void interact(Player player, @NotNull InteractionHand hand, AbstractMinecart interacted,
+            Level world) {
 
         ItemStack stackInHand = player.getItemInHand(hand);
 
@@ -68,14 +73,15 @@ public class MinecartInteractionEventHandler {
             if (!stackInHand.isEmpty()) {
                 if (stackInHand.getItem() instanceof BlockItem blockItem && interacted.getDisplayBlockState().isAir()) {
                     interacted.setCustomDisplayBlockState(
-                            Optional.of(blockItem.getBlock().defaultBlockState())
-                    );
+                            Optional.of(blockItem.getBlock().defaultBlockState()));
 
                     player.swing(hand);
-                    interacted.playSound(blockItem.getBlock().defaultBlockState().getSoundType(world, interacted.getOnPos(), player).getPlaceSound(), 1, 1);
+                    interacted.playSound(blockItem.getBlock().defaultBlockState()
+                            .getSoundType(world, interacted.getOnPos(), player).getPlaceSound(), 1, 1);
 
                     if (!world.isClientSide()) {
-                        MinecartTransformManager.checkForTransform(world, interacted.position(), blockItem, interacted, stackInHand);
+                        MinecartTransformManager.checkForTransform(world, interacted.position(), blockItem, interacted,
+                                stackInHand);
                         stackInHand.consume(1, player);
                     }
 
@@ -96,7 +102,8 @@ public class MinecartInteractionEventHandler {
                         && interacted.getDisplayBlockState().isAir()) {
                     Fluid fluid = bucketItem.getContent();
                     if (!world.isClientSide()) {
-                        MinecartTransformManager.checkForTransform(world, interacted.position(), stackInHand.getItem(), interacted, stackInHand);
+                        MinecartTransformManager.checkForTransform(world, interacted.position(), stackInHand.getItem(),
+                                interacted, stackInHand);
                         stackInHand.shrink(1);
                         player.getInventory().add(new ItemStack(Items.BUCKET));
                     }
@@ -105,9 +112,11 @@ public class MinecartInteractionEventHandler {
             }
         }
     }
+
     private static void playBucketSound(Fluid fluid, Level world, Entity interacted) {
         if (fluid.defaultFluidState().is(FluidTags.LAVA)) {
-            world.playSound(null, interacted.blockPosition(), SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, interacted.blockPosition(), SoundEvents.BUCKET_EMPTY_LAVA, SoundSource.BLOCKS, 1.0F,
+                    1.0F);
         } else {
             world.playSound(null, interacted.blockPosition(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
@@ -128,7 +137,8 @@ public class MinecartInteractionEventHandler {
                 MinecartChainManager.breakChain(level, minecart);
                 sendOverlayMessage(player,
                         Component.translatable("message.minecartrevolution.chain_broken"));
-                if (!player.isCreative()) held.shrink(1);
+                if (!player.isCreative())
+                    held.shrink(1);
                 level.playSound(null, minecart.blockPosition(),
                         SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
             } else {
@@ -158,7 +168,8 @@ public class MinecartInteractionEventHandler {
                 MinecartChainManager.clearSelection(player);
                 sendOverlayMessage(player,
                         Component.translatable("message.minecartrevolution.chain_linked"));
-                if (!player.isCreative()) held.shrink(1);
+                if (!player.isCreative())
+                    held.shrink(1);
                 level.playSound(null, minecart.blockPosition(),
                         SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
             } else {
