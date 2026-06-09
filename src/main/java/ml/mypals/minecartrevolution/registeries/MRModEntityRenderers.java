@@ -71,5 +71,10 @@ public class MRModEntityRenderers {
                 MRMinecarts.SCAFFOLD_MINECART.entity().get(),
                 ScaffoldMinecartRenderer::new
         );
+
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.MOB_HEAD_MINECART.entity().get(),
+                MobHeadMinecartRenderer::new
+        );
     }
 }
