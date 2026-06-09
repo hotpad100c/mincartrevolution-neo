@@ -46,5 +46,10 @@
   "advancement.minecartrevolution.is_that_babel_tower.title": "那是巴别塔吗",
   "advancement.minecartrevolution.is_that_babel_tower.description": "矿车堆叠超过10层",
   "advancement.minecartrevolution.babel.title": "巴别",
-  "advancement.minecartrevolution.babel.description": "矿车塔超过24层后崩塌"
+  "advancement.minecartrevolution.babel.description": "矿车塔超过24层后崩塌",
+
+  "message.minecartrevolution.chain_selected": "已选择矿车！右键另一个矿车以使用锁链连接。",
+  "message.minecartrevolution.chain_linked": "矿车已用锁链连接！",
+  "message.minecartrevolution.chain_broken": "锁链已断开。",
+  "message.minecartrevolution.chain_already_chained": "其中一个矿车已被连接！请先断开现有锁链。"
 }

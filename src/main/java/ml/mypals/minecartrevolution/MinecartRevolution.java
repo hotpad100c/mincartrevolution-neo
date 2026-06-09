@@ -11,6 +11,8 @@ import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import ml.mypals.minecartrevolution.manager.LinkedContainerManager;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import ml.mypals.minecartrevolution.mixin.level.ServerLevelMixin;
+import ml.mypals.minecartrevolution.manager.MinecartChainManager;
+import ml.mypals.minecartrevolution.packets.ChainSyncPacket;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import ml.mypals.minecartrevolution.registeries.MREntityDataSerializers;
@@ -50,6 +52,7 @@ import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ENTITIES;
 import static ml.mypals.minecartrevolution.registeries.MRMinecarts.ITEMS;
 import static ml.mypals.minecartrevolution.registeries.MRModCriteria.TRIGGERS;
 import ml.mypals.minecartrevolution.registeries.MRDataComponents;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import static ml.mypals.minecartrevolution.registeries.MRModItems.*;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -101,11 +104,16 @@ public class MinecartRevolution {
                 ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.TYPE,
                 ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.STREAM_CODEC
         );
+        registrar.playToClient(
+                ChainSyncPacket.TYPE,
+                ChainSyncPacket.STREAM_CODEC
+        );
     }
 
 
     private void commonSetup(FMLCommonSetupEvent event) {
         registerDispenserBehaviors();
+        MinecartChainManager.chainEntityTypeSupplier = MRMinecarts.CHAIN_ENTITY;
     }
 
 

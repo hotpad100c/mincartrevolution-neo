@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution;
 
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
+import ml.mypals.minecartrevolution.packets.ChainSyncPacket;
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
@@ -106,6 +107,10 @@ public class MinecartRevolutionClient {
                 ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.TYPE,
                 MinecartRevolutionClient::minecartCollisionUpdate
         );
+        event.register(
+                ChainSyncPacket.TYPE,
+                MinecartRevolutionClient::chainSyncUpdate
+        );
     }
 
     @SubscribeEvent // on the mod event bus only on the physical client
@@ -199,6 +204,16 @@ public class MinecartRevolutionClient {
         client.execute(() -> {
             if (client.level != null && client.level.getEntity(payload.entityId()) instanceof ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity minecart) {
                 minecart.onCollision(payload.pos(), payload.target(), payload.actual(), payload.delta());
+            }
+        });
+    }
+
+    private static void chainSyncUpdate(
+            final ChainSyncPacket payload, final IPayloadContext context) {
+        Minecraft client = Minecraft.getInstance();
+        client.execute(() -> {
+            if (client.level != null && client.level.getEntity(payload.chainEntityId()) instanceof ml.mypals.minecartrevolution.entity.chain.ChainEntity chain) {
+                chain.clientSegments = payload.segments();
             }
         });
     }
