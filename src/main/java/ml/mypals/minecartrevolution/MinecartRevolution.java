@@ -12,7 +12,6 @@ import ml.mypals.minecartrevolution.manager.LinkedContainerManager;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import ml.mypals.minecartrevolution.mixin.level.ServerLevelMixin;
 import ml.mypals.minecartrevolution.manager.MinecartChainManager;
-import ml.mypals.minecartrevolution.packets.ChainSyncPacket;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
 import ml.mypals.minecartrevolution.registeries.MREntityDataSerializers;
@@ -103,10 +102,6 @@ public class MinecartRevolution {
         registrar.playToClient(
                 ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.TYPE,
                 ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.STREAM_CODEC
-        );
-        registrar.playToClient(
-                ChainSyncPacket.TYPE,
-                ChainSyncPacket.STREAM_CODEC
         );
     }
 

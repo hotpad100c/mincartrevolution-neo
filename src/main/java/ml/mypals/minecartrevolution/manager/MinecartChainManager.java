@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -68,6 +69,7 @@ public class MinecartChainManager {
     public static void breakChain(ServerLevel level, AbstractMinecart minecart) {
         ChainEntity chain = findChainForMinecart(level, minecart);
         if (chain != null) {
+            onChainBroken(chain);
             chain.discard();
         }
     }
@@ -93,6 +95,9 @@ public class MinecartChainManager {
     }
 
     public static void onChainBroken(ChainEntity chain) {
+        if (!chain.level().isClientSide()) {
+            chain.spawnAtLocation((ServerLevel) chain.level(), Items.IRON_CHAIN);
+        }
     }
 
     public static void onChainRemoved(ChainEntity chain) {

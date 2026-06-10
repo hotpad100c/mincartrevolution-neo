@@ -49,7 +49,6 @@ public class MinecartInteractionEventHandler {
             return;
         if (!player.isShiftKeyDown()) {
             if (!held.getItem().equals(IRON_CHAIN)) {
-                // regular minecart riding is handled by vanilla
             } else {
                 if (!(interacted instanceof AbstractMinecart minecart))
                     return;
@@ -133,12 +132,10 @@ public class MinecartInteractionEventHandler {
         boolean alreadyChained = MinecartChainManager.isMinecartChained(level, minecart);
 
         if (selectedId == null) {
-            if (alreadyChained) {
+            if (alreadyChained && !held.is(IRON_CHAIN)) {
                 MinecartChainManager.breakChain(level, minecart);
                 sendOverlayMessage(player,
                         Component.translatable("message.minecartrevolution.chain_broken"));
-                if (!player.isCreative())
-                    held.shrink(1);
                 level.playSound(null, minecart.blockPosition(),
                         SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
             } else {
@@ -156,8 +153,7 @@ public class MinecartInteractionEventHandler {
                 return;
             }
 
-            boolean selectedChained = MinecartChainManager.isMinecartChained(level, selectedCart);
-            if (alreadyChained || selectedChained) {
+            if (MinecartChainManager.areMinecartsConnected(selectedCart, minecart)) {
                 sendOverlayMessage(player,
                         Component.translatable("message.minecartrevolution.chain_already_chained"));
                 MinecartChainManager.clearSelection(player);

@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -57,12 +58,19 @@ public class ChainRenderer extends EntityRenderer<ChainEntity, EntityRenderState
             TextureAtlasSprite blockTexture = getBlockTexture(blockState);
             RenderType renderType = RenderTypes.entityCutout(blockTexture.atlasLocation());
 
+            float partialTicks = mc.getDeltaTracker().getGameTimeDeltaPartialTick(false);
+
             event.getSubmitNodeCollector().submitCustomGeometry(poseStack, renderType, (renderPoseStack, vc) -> {
                 Matrix4f mat = renderPoseStack.pose();
                 for (ChainEntity chain : mc.level.getEntitiesOfClass(ChainEntity.class,
                         mc.player.getBoundingBox().inflate(64))) {
-                    var segments = chain.clientSegments;
+                    var segments = chain.segments;
                     if (segments == null || segments.size() < 2) continue;
+
+                    Entity e1 = mc.level.getEntity(chain.getCartAId());
+                    Entity e2 = mc.level.getEntity(chain.getCartBId());
+                    if (!(e1 instanceof AbstractMinecart cartA) || !(e2 instanceof AbstractMinecart cartB)) continue;
+
                     int r = 255, g = 255, b = 255, a = 255;
                     float u0 = blockTexture.getU0();
                     float u1 = blockTexture.getU1();
@@ -71,9 +79,16 @@ public class ChainRenderer extends EntityRenderer<ChainEntity, EntityRenderState
                     int overlay = OverlayTexture.NO_OVERLAY;
                     int light = 15728880;
 
+                    Vec3 attachA = cartA.getPosition(partialTicks).add(0, cartA.getBbHeight() * 0.75, 0);
+                    Vec3 attachB = cartB.getPosition(partialTicks).add(0, cartB.getBbHeight() * 0.75, 0);
+
                     for (int i = 1; i < segments.size(); i++) {
-                        Vec3 prev = segments.get(i - 1);
-                        Vec3 curr = segments.get(i);
+                        ChainEntity.ChainSegment prevSeg = segments.get(i - 1);
+                        ChainEntity.ChainSegment currSeg = segments.get(i);
+                        
+                        Vec3 prev = i == 1 ? attachA : prevSeg.oldPosition.lerp(prevSeg.position, partialTicks);
+                        Vec3 curr = i == segments.size() - 1 ? attachB : currSeg.oldPosition.lerp(currSeg.position, partialTicks);
+
                         Vec3 dir = curr.subtract(prev);
                         if (dir.lengthSqr() < 0.0001) continue;
                         dir = dir.normalize();

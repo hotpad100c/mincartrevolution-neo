@@ -1,7 +1,6 @@
 package ml.mypals.minecartrevolution.entity.chain;
 
 import ml.mypals.minecartrevolution.manager.MinecartChainManager;
-import ml.mypals.minecartrevolution.packets.ChainSyncPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
@@ -19,8 +18,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.UUID;
 
 public class ChainEntity extends Entity {
@@ -32,18 +36,15 @@ public class ChainEntity extends Entity {
     private static final int MIN_SEGMENTS = 2;
     private static final int MAX_SEGMENTS = 5;
     private static final double MAX_DISTANCE_SQ = 1024;
-    private static final double MAX_DISTANCE = 2.1;
+    private static final double MAX_DISTANCE = 2;
 
-    private final List<ChainSegment> segments = new ArrayList<>();
+    public final List<ChainSegment> segments = new ArrayList<>();
+
+    private static final EntityDataAccessor<OptionalInt> MINECART_A_ID = SynchedEntityData.defineId(ChainEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
+    private static final EntityDataAccessor<OptionalInt> MINECART_B_ID = SynchedEntityData.defineId(ChainEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
 
     private UUID minecartAUuid;
     private UUID minecartBUuid;
-    private AbstractMinecart cachedCartA;
-    private AbstractMinecart cachedCartB;
-    private List<Vec3> lastSyncedPositions = List.of();
-    private int cacheTick = -1;
-
-    public List<Vec3> clientSegments = List.of();
 
     public ChainEntity(EntityType<?> type, Level level) {
         super(type, level);
@@ -57,6 +58,8 @@ public class ChainEntity extends Entity {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.@NonNull Builder builder) {
+        builder.define(MINECART_A_ID, OptionalInt.empty());
+        builder.define(MINECART_B_ID, OptionalInt.empty());
     }
 
     public UUID getMinecartAUuid() {
@@ -65,6 +68,14 @@ public class ChainEntity extends Entity {
 
     public UUID getMinecartBUuid() {
         return minecartBUuid;
+    }
+
+    public int getCartAId() {
+        return this.entityData.get(MINECART_A_ID).orElse(-1);
+    }
+
+    public int getCartBId() {
+        return this.entityData.get(MINECART_B_ID).orElse(-1);
     }
 
     public void setMinecartA(UUID uuid) {
@@ -78,36 +89,48 @@ public class ChainEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        if (level().isClientSide()) return;
 
-        AbstractMinecart cartA = findMinecart(minecartAUuid);
-        AbstractMinecart cartB = findMinecart(minecartBUuid);
+        AbstractMinecart cartA = null;
+        AbstractMinecart cartB = null;
+
+        if (!level().isClientSide()) {
+            cartA = findMinecartByUuid(minecartAUuid);
+            cartB = findMinecartByUuid(minecartBUuid);
+            if (cartA != null) this.entityData.set(MINECART_A_ID, OptionalInt.of(cartA.getId()));
+            if (cartB != null) this.entityData.set(MINECART_B_ID, OptionalInt.of(cartB.getId()));
+        } else {
+            cartA = findMinecartById(this.entityData.get(MINECART_A_ID).orElse(-1));
+            cartB = findMinecartById(this.entityData.get(MINECART_B_ID).orElse(-1));
+        }
 
         if (cartA == null || cartB == null || cartA == cartB) {
-            breakChain();
+            if (!level().isClientSide()) {
+                breakChain();
+            }
             return;
         }
 
-        if (cartA.position().distanceToSqr(cartB.position()) > MAX_DISTANCE_SQ) {
+        if (!level().isClientSide() && cartA.position().distanceToSqr(cartB.position()) > MAX_DISTANCE_SQ) {
             breakChain();
             return;
         }
 
         if (!cartA.isAlive() || !cartB.isAlive()) {
-            breakChain();
+            if (!level().isClientSide()) {
+                breakChain();
+            }
             return;
         }
 
         simulatePhysics(cartA, cartB);
         updateBounds();
-        syncIfNeeded();
     }
 
     private void simulatePhysics(AbstractMinecart cartA, AbstractMinecart cartB) {
         Vec3 attachA = getAttachmentPoint(cartA);
         Vec3 attachB = getAttachmentPoint(cartB);
         double distance = attachA.distanceTo(attachB);
-        int count = Math.clamp((int) (distance / TARGET_SEGMENT_SPACING) + 1, MIN_SEGMENTS, MAX_SEGMENTS);
+        int count = MAX_SEGMENTS;
         double spacing = distance / Math.max(count - 1, 1);
 
         ensureSegmentCount(count, attachA, attachB, distance);
@@ -134,7 +157,9 @@ public class ChainEntity extends Entity {
             segments.getLast().position = attachB;
         }
 
-        applyPullingForce(cartA, cartB, attachA, attachB, spacing);
+        if (!level().isClientSide()) {
+            applyPullingForce(cartA, cartB, attachA, attachB, spacing);
+        }
 
         BlockPos.MutableBlockPos mpos = new BlockPos.MutableBlockPos();
         for (ChainSegment seg : segments) {
@@ -189,13 +214,13 @@ public class ChainEntity extends Entity {
             double separationSpeed = relativeVel.dot(pullDir);
 
             if (separationSpeed > 0) {
-                Vec3 correction = pullDir.scale(separationSpeed * 0.5);
+                Vec3 correction = pullDir.scale(Math.min(separationSpeed * 0.5, 0.5));
                 cartA.addDeltaMovement(correction);
                 cartB.addDeltaMovement(correction.reverse());
             }
 
             double excess = actualDistance - MAX_DISTANCE;
-            double snapForce = excess * 0.5;
+            double snapForce = Math.min(excess * 0.5, 0.4);
             cartA.addDeltaMovement(pullDir.scale(snapForce));
             cartB.addDeltaMovement(pullDir.scale(-snapForce));
         }
@@ -233,7 +258,7 @@ public class ChainEntity extends Entity {
         return cart.position().add(0, cart.getBbHeight() * 0.75, 0);
     }
 
-    private AbstractMinecart findMinecart(UUID uuid) {
+    private AbstractMinecart findMinecartByUuid(UUID uuid) {
         if (uuid == null) return null;
         if (level() instanceof ServerLevel sl) {
             Entity entity = sl.getEntity(uuid);
@@ -242,23 +267,11 @@ public class ChainEntity extends Entity {
         return null;
     }
 
-    private void syncIfNeeded() {
-        List<Vec3> current = segments.stream().map(s -> s.position).toList();
-        if (lastSyncedPositions.size() != current.size()) {
-            doSync(current);
-            return;
-        }
-        for (int i = 0; i < current.size(); i++) {
-            if (current.get(i).distanceToSqr(lastSyncedPositions.get(i)) > 0.0001) {
-                doSync(current);
-                return;
-            }
-        }
-    }
-
-    private void doSync(List<Vec3> positions) {
-        lastSyncedPositions = List.copyOf(positions);
-        PacketDistributor.sendToPlayersTrackingEntity(this, new ChainSyncPacket(getId(), positions));
+    private AbstractMinecart findMinecartById(int id) {
+        if (id == -1) return null;
+        Entity entity = level().getEntity(id);
+        if (entity instanceof AbstractMinecart cart && cart.isAlive()) return cart;
+        return null;
     }
 
     private void updateBounds() {
@@ -280,10 +293,7 @@ public class ChainEntity extends Entity {
             maxZ = Math.max(maxZ, seg.position.z);
         }
         setPos((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
-        setBoundingBox(new AABB(
-                minX - getX(), minY - getY(), minZ - getZ(),
-                maxX - getX(), maxY - getY(), maxZ - getZ()
-        ));
+
     }
 
     private void breakChain() {
@@ -345,8 +355,8 @@ public class ChainEntity extends Entity {
         return uuid != null && (uuid.equals(minecartAUuid) || uuid.equals(minecartBUuid));
     }
 
-    private static class ChainSegment {
-        Vec3 position;
-        Vec3 oldPosition;
+    public static class ChainSegment {
+        public Vec3 position;
+        public Vec3 oldPosition;
     }
 }
