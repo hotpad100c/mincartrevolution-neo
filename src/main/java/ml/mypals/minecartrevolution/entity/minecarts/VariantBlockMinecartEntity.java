@@ -358,7 +358,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     @Override
-    public boolean canCollideWith(Entity entity) {
+    public boolean canCollideWith(@NonNull Entity entity) {
         return false;
         //return Block.isShapeFullBlock(getDisplayBlockState().getCollisionShape(level(),blockPosition())) && canVehicleCollide(this, entity);
     }

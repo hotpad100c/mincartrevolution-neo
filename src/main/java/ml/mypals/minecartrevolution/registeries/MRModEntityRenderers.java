@@ -82,5 +82,11 @@ public class MRModEntityRenderers {
                 MRMinecarts.MOB_HEAD_MINECART.entity().get(),
                 MobHeadMinecartRenderer::new
         );
+
+
+        registerRenderers.registerEntityRenderer(
+                MRMinecarts.CHAIN_ENTITY.get(),
+                ChainRenderer::new
+        );
     }
 }

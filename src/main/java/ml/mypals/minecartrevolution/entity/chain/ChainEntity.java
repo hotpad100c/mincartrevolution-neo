@@ -30,7 +30,7 @@ import java.util.UUID;
 public class ChainEntity extends Entity {
 
     private static final double GRAVITY = 0.04;
-    private static final double DAMPING = 0.96;
+    private static final double DAMPING = 0;
     private static final int CONSTRAINT_ITERATIONS = 3;
     private static final double TARGET_SEGMENT_SPACING = 0.25;
     private static final int MIN_SEGMENTS = 2;

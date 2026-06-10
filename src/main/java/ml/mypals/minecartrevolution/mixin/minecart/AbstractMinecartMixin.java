@@ -86,10 +86,10 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
             Leashable.tickLeash(serverLevelx, (Entity & Leashable)this);
         }
     }
-    @Inject(method = "getMaxSpeed",at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "getMaxSpeed",at = @At("HEAD"), cancellable = true)
     private void getMaxSpeed(ServerLevel level, CallbackInfoReturnable<Double> cir){
         cir.setReturnValue(0.5d);
-    }
+    }*/
 
     @WrapMethod(method = "comeOffTrack")
     protected void comeOffTrack(ServerLevel level, Operation<Void> original) {

@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -147,6 +148,10 @@ public abstract class FurnaceMinecartMixin extends AbstractMinecart implements C
         }
         cir.setReturnValue(state.setValue(AbstractFurnaceBlock.FACING, Direction.NORTH)
                 .setValue(AbstractFurnaceBlock.LIT, this.hasFuel()));
+    }
+    @Override
+    public boolean canBeCollidedWith(@Nullable Entity other) {
+        return true;
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
