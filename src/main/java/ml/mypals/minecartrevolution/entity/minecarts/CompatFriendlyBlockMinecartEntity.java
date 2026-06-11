@@ -6,10 +6,13 @@ import ml.mypals.minecartrevolution.item.WrenchItem;
 import ml.mypals.minecartrevolution.mixin.simulation.BlockEntityAccessor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,20 +36,26 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
 import static ml.mypals.minecartrevolution.registeries.MREntityDataSerializers.COMPOUND_TAG_SERIALIZER;
 
-public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntity {
+public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntity implements ICapabilityProvider {
     public BlockEntity blockEntity;
     public Level simulatedLevel;
     private CompoundTag blockEntityTag;
     public final List<ScheduledTick<Block>> pendingBlockTicks = Lists.newArrayList();
     public final List<ScheduledTick<Fluid>> pendingFluidTicks = Lists.newArrayList();
-
+    public static final TagKey<Block> SAFE_TO_INTERACT = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("minecartrevolution", "safe_to_interact"));
 
     private static final EntityDataAccessor<CompoundTag> DATA_ID_BLOCK_ENTITY_NBT;
     static {
@@ -66,7 +75,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
     public CompatFriendlyBlockMinecartEntity(EntityType<CompatFriendlyBlockMinecartEntity> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z, item);
-       initSimulatedLevel();
+        initSimulatedLevel();
         refreshBlockEntity();
     }
     public CompatFriendlyBlockMinecartEntity(EntityType<CompatFriendlyBlockMinecartEntity> minecart, Level world, double x, double y, double z, Block block) {
@@ -82,7 +91,6 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
                     :new SimulatedServerLevel((ServerLevel) level(), this);
         }
     }
-
 
     public void refreshBlockEntity() {
         BlockState state = getDisplayBlockState();
@@ -187,6 +195,9 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
                 }
                 return false;
             });
+        }else {
+            BlockState blockState = getDisplayBlockState();
+            blockState.getBlock().animateTick(blockState, simLevel, blockPosition(), getRandom());
         }
 
         super.tick();
@@ -218,7 +229,8 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     }
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
-        if(player.isSprinting() || player.isShiftKeyDown() || blockEntity != null){
+        boolean safeToInteract = getDisplayBlockState().is(SAFE_TO_INTERACT);
+        if(player.isSprinting() || player.isShiftKeyDown() || (!safeToInteract && blockEntity != null)){
             return super.interact(player, hand, pos);
         }
         ItemStack stack = player.getItemInHand(hand);
@@ -265,4 +277,8 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
         }
     }
 
+    @Override
+    public @Nullable Object getCapability(@NonNull Object object, Object context) {
+        return simulatedLevel.getCapability((BlockCapability<? extends Object, ? super Object>) object,blockPosition(), context);
+    }
 }

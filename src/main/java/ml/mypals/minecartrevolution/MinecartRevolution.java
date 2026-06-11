@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution;
 
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
 import ml.mypals.minecartrevolution.datagen.MRRecipeProvider;
+import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.PortalMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
 import ml.mypals.minecartrevolution.entity.others.AttackMonsterMinecartGoal;
@@ -18,12 +19,16 @@ import ml.mypals.minecartrevolution.registeries.MREntityDataSerializers;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.entity.EntitySectionStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
@@ -32,6 +37,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -44,6 +50,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static ml.mypals.minecartrevolution.registeries.MREntityDataSerializers.ENTITY_DATA_SERIALIZERS;
@@ -78,6 +85,7 @@ public class MinecartRevolution {
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::gatherServerData);
         modEventBus.addListener(this::registerPayloads);
+        modEventBus.addListener(this::registerCapabilities);
 
         ITEMS.register(modEventBus);
         ENTITIES.register(modEventBus);
@@ -105,6 +113,35 @@ public class MinecartRevolution {
         );
     }
 
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        registerCartCap(event, MRMinecarts.BLOCK_MINECART.get());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T, C> T getCartCap(ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity cart, net.neoforged.neoforge.capabilities.BlockCapability<T, C> cap, C context) {
+        return (T) cart.getCapability(cap, context);
+    }
+
+    private <T extends Entity> void registerCartCap(RegisterCapabilitiesEvent event, EntityType<T> type) {
+        event.registerEntity(Capabilities.Item.ENTITY, type, (entity, _) -> {
+            if (entity instanceof CompatFriendlyBlockMinecartEntity cart ) {
+                return getCartCap(cart, Capabilities.Item.BLOCK, null);
+            }
+            return null;
+        });
+        event.registerEntity(Capabilities.Energy.ENTITY, type, (entity, context) -> {
+            if (entity instanceof CompatFriendlyBlockMinecartEntity cart && cart.blockEntity != null) {
+                return getCartCap(cart, Capabilities.Energy.BLOCK, context);
+            }
+            return null;
+        });
+        event.registerEntity(Capabilities.Fluid.ENTITY, type, (entity, context) -> {
+            if (entity instanceof CompatFriendlyBlockMinecartEntity cart && cart.blockEntity != null) {
+                return getCartCap(cart, Capabilities.Fluid.BLOCK, context);
+            }
+            return null;
+        });
+    }
 
     private void commonSetup(FMLCommonSetupEvent event) {
         registerDispenserBehaviors();
