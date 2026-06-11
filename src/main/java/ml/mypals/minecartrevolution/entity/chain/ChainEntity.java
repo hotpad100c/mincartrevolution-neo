@@ -210,19 +210,24 @@ public class ChainEntity extends Entity {
         double actualDistance = attachA.distanceTo(attachB);
         if (actualDistance > MAX_DISTANCE) {
             Vec3 pullDir = attachB.subtract(attachA).normalize();
-            Vec3 relativeVel = cartB.getDeltaMovement().subtract(cartA.getDeltaMovement());
+
+            Vec3 velA = cartA.getDeltaMovement();
+            Vec3 velB = cartB.getDeltaMovement();
+            Vec3 relativeVel = velB.subtract(velA);
             double separationSpeed = relativeVel.dot(pullDir);
 
             if (separationSpeed > 0) {
-                Vec3 correction = pullDir.scale(Math.min(separationSpeed * 0.5, 0.5));
-                cartA.addDeltaMovement(correction);
-                cartB.addDeltaMovement(correction.reverse());
+                Vec3 impulse = pullDir.scale(separationSpeed * 0.5);
+                cartA.setDeltaMovement(velA.add(impulse));
+                cartB.setDeltaMovement(velB.subtract(impulse));
             }
 
             double excess = actualDistance - MAX_DISTANCE;
-            double snapForce = Math.min(excess * 0.5, 0.4);
-            cartA.addDeltaMovement(pullDir.scale(snapForce));
-            cartB.addDeltaMovement(pullDir.scale(-snapForce));
+            if (excess > 0.001) {
+                Vec3 posCorrection = pullDir.scale(excess * 0.5);
+                cartA.setPos(cartA.position().add(posCorrection));
+                cartB.setPos(cartB.position().subtract(posCorrection));
+            }
         }
     }
 

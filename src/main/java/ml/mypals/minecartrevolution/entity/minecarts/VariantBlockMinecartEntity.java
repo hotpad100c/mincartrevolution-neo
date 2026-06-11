@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
+import ml.mypals.minecartrevolution.entity.chain.ChainEntity;
 import ml.mypals.minecartrevolution.item.WrenchItem;
 import ml.mypals.minecartrevolution.packets.MinecartCollisionPacket;
 import ml.mypals.minecartrevolution.registeries.MRDataComponents;
@@ -359,8 +360,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
     @Override
     public boolean canCollideWith(@NonNull Entity entity) {
-        return false;
-        //return Block.isShapeFullBlock(getDisplayBlockState().getCollisionShape(level(),blockPosition())) && canVehicleCollide(this, entity);
+        return canVehicleCollide(this, entity);
     }
 
     public static boolean canVehicleCollide(Entity vehicle, Entity entity) {
@@ -391,9 +391,11 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         this.movingEntities = true;
         try {
             for (Entity entity : level().getEntitiesOfClass(Entity.class, aabb)) {
-                if (entity == this || entity.getVehicle() != null || entity.isPassenger()) {
+                if (entity == this || entity instanceof ChainEntity  || entity.getVehicle() != null || entity.isPassenger()) {
                     continue;
                 }
+
+                entity.setOnGround(true);
 
                 if (entity.getBoundingBox().minY < Math.min(topY, oldTopY) - 0.2) continue;
                 if (entity.getBoundingBox().minY > Math.max(topY, oldTopY) + 0.5) continue;
@@ -420,7 +422,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
                 Vec3 velocity = entity.getDeltaMovement();
                 float slipperiness = getDisplayBlockState().getBlock().getFriction();
-                float friction = slipperiness * 0.91F;
+                float friction = slipperiness * 0.5F;
 
                 double x = velocity.x * friction;
                 double z = velocity.z * friction;
@@ -505,6 +507,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     public void collideWithEntities() {
+        if(!this.isOnRails()) return;
         Vec3 movement = this.getDeltaMovement();
         if (this.level().isClientSide() || movement.length() < 0.5D) return;
         Vec3 pos = this.position();

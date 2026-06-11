@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class OldMinecartBehaviourMixin {
 
     @Inject(method = "getSlowdownFactor", at = @At("HEAD"), cancellable = true)
-    public void stopRiding(CallbackInfoReturnable<Double> cir) {
+    public void getSlowdownFactor(CallbackInfoReturnable<Double> cir) {
         cir.setReturnValue(0.99);
     }
 
