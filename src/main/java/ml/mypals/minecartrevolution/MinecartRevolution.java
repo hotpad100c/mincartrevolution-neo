@@ -123,7 +123,7 @@ public class MinecartRevolution {
     }
 
     private <T extends Entity> void registerCartCap(RegisterCapabilitiesEvent event, EntityType<T> type) {
-        event.registerEntity(Capabilities.Item.ENTITY, type, (entity, _) -> {
+        /*event.registerEntity(Capabilities.Item.ENTITY, type, (entity, _) -> {
             if (entity instanceof CompatFriendlyBlockMinecartEntity cart ) {
                 return getCartCap(cart, Capabilities.Item.BLOCK, null);
             }
@@ -140,7 +140,7 @@ public class MinecartRevolution {
                 return getCartCap(cart, Capabilities.Fluid.BLOCK, context);
             }
             return null;
-        });
+        });*/
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
