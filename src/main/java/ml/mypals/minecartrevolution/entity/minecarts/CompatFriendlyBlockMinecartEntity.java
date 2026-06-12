@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import ml.mypals.minecartrevolution.MinecartRevolution;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.ClientSimLevelFactory;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedServerLevel;
 import ml.mypals.minecartrevolution.item.WrenchItem;
@@ -12,11 +13,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.block.Blocks;
@@ -151,6 +154,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
             TypedEntityData<BlockEntityType<?>> customData = TypedEntityData.of(this.blockEntity.getType(), blockEntityTag);
             stack.set(DataComponents.BLOCK_ENTITY_DATA, customData);
         }
+
         return stack;
     }
 
@@ -226,6 +230,22 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
             blockEntityTag = this.blockEntity.saveWithFullMetadata(this.registryAccess());
             this.entityData.set(DATA_ID_BLOCK_ENTITY_NBT, blockEntityTag);
         }
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState blockState){
+        ItemStack stack = blockState.getCloneItemStack(simulatedLevel, blockPosition(), true);
+
+        if (blockEntity != null) {
+            try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(blockEntity.problemPath(), MinecartRevolution.LOGGER)) {
+                TagValueOutput output = TagValueOutput.createWithContext(reporter, simulatedLevel.registryAccess());
+                blockEntity.saveCustomOnly(output);
+                blockEntity.removeComponentsFromTag(output);
+                BlockItem.setBlockEntityData(stack, blockEntity.getType(), output);
+                stack.applyComponents(blockEntity.collectComponents());
+            }
+        }
+        return stack;
     }
     @Override
     public @NonNull InteractionResult interact(Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {

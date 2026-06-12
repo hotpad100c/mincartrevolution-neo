@@ -166,8 +166,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
                     playSound(block.defaultBlockState().getSoundType().getBreakSound(), 1, 1);
                     player.swing(hand);
                     if (!this.level().isClientSide()) {
-                        ItemStack stack = block.asItem().getDefaultInstance();
-                        player.setItemInHand(hand, addDataToStack(stack));
+                        ItemStack stack = getCloneItemStack(blockState);
+                        player.setItemInHand(hand, stack);
                         clear();
                     }else {
                         removeDynamicLight(this.blockPosition(), true);
@@ -202,6 +202,11 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         }
     }
 
+    public ItemStack getCloneItemStack(BlockState blockState){
+        ItemStack stack = blockState.getBlock().asItem().getDefaultInstance();
+        addDataToStack(stack);
+        return stack;
+    }
     public void transformTo(Item item) {
         MinecartTransformManager.checkForTransform(level(), position(), item, this, ItemStack.EMPTY);
     }
