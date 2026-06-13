@@ -13,6 +13,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.BlockItem;
@@ -47,6 +48,22 @@ public class MinecartInteractionEventHandler {
         ItemStack held = event.getItemStack();
         if (!(interacted instanceof AbstractMinecart))
             return;
+
+        if (held.is(Items.SLIME_BALL) && interacted.getType() == EntityType.MINECART && ((AbstractMinecart) interacted).getDisplayBlockState().isAir()) {
+            if (!world.isClientSide()) {
+                ml.mypals.minecartrevolution.entity.minecarts.functioning.PickerMinecartEntity picker = new ml.mypals.minecartrevolution.entity.minecarts.functioning.PickerMinecartEntity(world, interacted.getX(), interacted.getY(), interacted.getZ());
+                MinecartTransformManager.configMinecartData(world, picker, (AbstractMinecart) interacted);
+                if (!player.isCreative()) {
+                    held.shrink(1);
+                }
+                world.playSound(null, interacted.blockPosition(), net.minecraft.sounds.SoundEvents.SLIME_BLOCK_PLACE, net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
+            } else {
+                player.swing(event.getHand());
+            }
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
         if (!player.isShiftKeyDown()) {
             if (!held.getItem().equals(IRON_CHAIN)) {
             } else {

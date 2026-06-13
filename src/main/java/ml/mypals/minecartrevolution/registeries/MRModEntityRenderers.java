@@ -85,8 +85,8 @@ public class MRModEntityRenderers {
 
 
         registerRenderers.registerEntityRenderer(
-                MRMinecarts.CHAIN_ENTITY.get(),
-                ChainRenderer::new
+                MRMinecarts.PICKER_MINECART.entity().get(),
+                context -> new PickerMinecartRenderer(context)
         );
     }
 }

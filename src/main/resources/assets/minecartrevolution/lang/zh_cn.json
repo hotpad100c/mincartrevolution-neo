@@ -13,6 +13,9 @@
   "entity.minecartrevolution.white_wool_minecart": "羊毛矿车",
   "itemGroup.minecartrevolution": "矿车革命",
 
+  "item.minecartrevolution.minecart_picker": "黏着矿车",
+  "entity.minecartrevolution.minecart_picker": "黏着矿车",
+
   "advancement.minecartrevolution.got_block_minecart.title": "矿车革命",
   "advancement.minecartrevolution.got_block_minecart.description": "哪个版本更新的？？",
 

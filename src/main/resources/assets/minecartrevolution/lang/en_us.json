@@ -18,6 +18,8 @@
   "entity.minecartrevolution.working_minecart": "Working Minecart",
   "entity.minecartrevolution.white_wool_minecart": "Wool Minecart",
   "itemGroup.minecartrevolution": "Minecart Revolution",
+  "item.minecartrevolution.minecart_picker": "Sticky Minecart",
+  "entity.minecartrevolution.minecart_picker": "Sticky Minecart",
 
   "advancement.minecartrevolution.got_block_minecart.title": "Minecart Revolution",
   "advancement.minecartrevolution.got_block_minecart.description": "Which update added this??",

@@ -471,6 +471,12 @@ public class MRMinecarts {
             MinecartWithBlockItem.DISPENSER_BEHAVIOR,
             (entity, item) -> (w, pos) -> new EndPortalFraneMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
+    public static final MinecartEntry<PickerMinecartEntity, PickerMinecartItem> PICKER_MINECART = register(
+            "picker", (type, world) -> new PickerMinecartEntity((EntityType<? extends net.minecraft.world.entity.vehicle.minecart.Minecart>) type, world),
+            PickerMinecartItem::new,
+            MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+            (entity, item) -> (w, pos) -> new PickerMinecartEntity(w, pos.x, pos.y, pos.z));
+
     @SuppressWarnings("unchecked")
     public static final DeferredHolder<EntityType<?>, EntityType<ChainEntity>> CHAIN_ENTITY =
             (DeferredHolder<EntityType<?>, EntityType<ChainEntity>>) (Object) ENTITIES.register("chain",
