@@ -180,7 +180,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
                     player.swing(hand);
                     playSound(blockItem.getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1, 1);
                     if (!this.level().isClientSide()) {
-                        transformTo(blockItem);
+                        MinecartTransformManager.checkForTransform(level(), position(), blockItem, this, stackInHand);
                         stackInHand.consume(1, player);
                     }
                 }else if (stackInHand.is(Items.WATER_BUCKET) || stackInHand.is(Items.LAVA_BUCKET)) {

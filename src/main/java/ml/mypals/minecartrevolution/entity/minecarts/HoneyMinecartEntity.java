@@ -102,7 +102,9 @@ public class HoneyMinecartEntity extends SingleBlockMinecartEntity {
     @Override
     protected void readAdditionalSaveData(@NonNull ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        this.stuckBlock = BlockPos.of(compound.getLongOr("StuckBlock", (Long)null));
+        compound.getLong("StuckBlock").ifPresent(l->{
+            this.stuckBlock = BlockPos.of(l);
+        });
     }
 
     @Override

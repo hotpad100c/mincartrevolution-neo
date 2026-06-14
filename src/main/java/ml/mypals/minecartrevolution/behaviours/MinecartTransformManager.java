@@ -163,6 +163,9 @@ public class MinecartTransformManager {
         MinecartTransformConfig factory = factoryMap.getOrDefault(block,
                 (w, p) -> new CompatFriendlyBlockMinecartEntity(MRMinecarts.BLOCK_MINECART.get(), w, p.x, p.y, p.z, block));
         AbstractMinecart minecart = factory.createMinecart(world, pos);
+        if (minecart.getDisplayBlockState().isAir()) {
+            minecart.setCustomDisplayBlockState(Optional.of(block.defaultBlockState()));
+        }
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
         return doExtraCheck(minecart, handStack);
@@ -194,6 +197,9 @@ public class MinecartTransformManager {
             CompoundTag nbtCompound = valueOutput.buildResult();
             CompoundTag nbtCompound1 = valueOutput1.buildResult();
             nbtCompound1.remove("Dimension");
+            nbtCompound1.remove("DisplayState");
+            nbtCompound1.remove("DisplayOffset");
+            nbtCompound1.remove("CustomDisplayTile");
 
             ValueInput valueInput = TagValueInput.create(reporter, level.registryAccess(), nbtCompound);
             ValueInput valueInput1 = TagValueInput.create(reporter, level.registryAccess(), nbtCompound1);

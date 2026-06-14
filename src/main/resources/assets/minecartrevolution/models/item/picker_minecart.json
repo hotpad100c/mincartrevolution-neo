@@ -2,7 +2,7 @@
   "parent": "minecartrevolution:item/templates/minecart",
   "texture_size": [64, 32],
   "textures": {
-    "minecart": "entity/minecart/minecart"
+    "minecart": "minecartrevolution:entity/minecart/picker_minecart"
   },
   "elements": [
     {
