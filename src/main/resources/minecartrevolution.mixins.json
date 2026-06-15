@@ -11,6 +11,7 @@
     "blocks.EndPortalCreationMixin",
     "blocks.LavaBlockMixin",
     "blocks.NetherPortalCreationMixin",
+    "blocks.PistonStructureResolverMixin",
     "blocks.PistonBlockInvoker",
     "blocks.ProjectileDispenseBehaviorMixin",
     "blocks.UnrenderableBlocksMixin",

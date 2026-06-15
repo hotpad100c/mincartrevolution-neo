@@ -17,6 +17,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.NonNull;
 
+import java.util.Optional;
+
 public class PickerMinecartEntity extends Minecart {
 
     public PickerMinecartEntity(EntityType<?> entityType, Level level) {
@@ -56,7 +58,7 @@ public class PickerMinecartEntity extends Minecart {
                 AbstractMinecart result = MinecartTransformManager.checkForTransform(
                         level, position(), block, this, ItemStack.EMPTY);
                 level.destroyBlock(above, false);
-
+                result.setCustomDisplayBlockState(Optional.of(state));
 
                 if (blockEntityTag != null && result instanceof CompatFriendlyBlockMinecartEntity compat) {
                     compat.setBlockEntityTag(blockEntityTag);
