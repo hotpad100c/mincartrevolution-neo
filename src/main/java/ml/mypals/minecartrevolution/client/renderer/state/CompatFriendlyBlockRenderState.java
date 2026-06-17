@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.client.renderer.state;
 
+import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.state.MinecartRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
@@ -9,4 +10,5 @@ public class CompatFriendlyBlockRenderState extends MinecartRenderState {
     public BlockEntityRenderState beRenderState;
     public BlockEntity be;
     public LevelRenderState levelRenderState;
+    public CompatFriendlyBlockMinecartEntity minecart;
 }
