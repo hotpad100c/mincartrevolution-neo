@@ -38,6 +38,3 @@ run/
 **/src/generated/**/.cache/
 repo/
 !**/src/**/repo/
-
-### Vibe ###
-opencode.json
