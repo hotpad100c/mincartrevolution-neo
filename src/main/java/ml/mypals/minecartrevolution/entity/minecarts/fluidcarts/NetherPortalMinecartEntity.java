@@ -142,6 +142,9 @@ public class NetherPortalMinecartEntity extends PortalMinecartEntity {
         NetherPortalMinecartEntity netherTarget = cachedTarget;
         if (netherTarget == null) return;
 
+
+        onFireTeleportEvent(serverLevel, netherTarget);
+
         Vec3 myPos     = this.position();
         Vec3 targetPos = netherTarget.position();
 
@@ -191,7 +194,6 @@ public class NetherPortalMinecartEntity extends PortalMinecartEntity {
         playPortalDamageAnimation(this);
         playPortalDamageAnimation(netherTarget);
 
-        onFireTeleportEvent(serverLevel, netherTarget);
     }
 
     private void resetTeleportEvent() {

@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -17,7 +18,7 @@ public class EnderPortalMinecartEntity extends NetherPortalMinecartEntity {
 
     private static final int   SHAKE_DURATION  = 60;
     private static final float SHAKE_INTENSITY = 0.3f;
-    private static final double SHAKE_RADIUS   = 16.0;
+    private static final double SHAKE_RADIUS   = 5;
 
     public EnderPortalMinecartEntity(EntityType<EnderPortalMinecartEntity> entityType, Level level) {
         super(entityType, level);
@@ -56,8 +57,7 @@ public class EnderPortalMinecartEntity extends NetherPortalMinecartEntity {
         }
     }
 
-    private static final int BLOCK_FLAG_SET_TARGET =
-            net.minecraft.world.level.block.Block.UPDATE_CLIENTS | 256 | 512 | 128;
+    private static final int BLOCK_FLAG_SET_TARGET = Block.UPDATE_CLIENTS | 256 | 512 | 128;
 
     private static final int AREA_RADIUS = 5;
     private static final int AREA_HEIGHT = 2;
