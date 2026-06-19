@@ -13,8 +13,10 @@ import ml.mypals.minecartrevolution.manager.LinkedContainerManager;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import ml.mypals.minecartrevolution.mixin.level.ServerLevelMixin;
 import ml.mypals.minecartrevolution.manager.MinecartChainManager;
+import ml.mypals.minecartrevolution.packets.EnderPortalShakePacket;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
+import ml.mypals.minecartrevolution.packets.MinecartCollisionPacket;
 import ml.mypals.minecartrevolution.registeries.MREntityDataSerializers;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.resources.Identifier;
@@ -85,7 +87,6 @@ public class MinecartRevolution {
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::gatherServerData);
         modEventBus.addListener(this::registerPayloads);
-        modEventBus.addListener(this::registerCapabilities);
 
         ITEMS.register(modEventBus);
         ENTITIES.register(modEventBus);
@@ -108,40 +109,15 @@ public class MinecartRevolution {
                 BabelScramblePacket.STREAM_CODEC
         );
         registrar.playToClient(
-                ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.TYPE,
-                ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.STREAM_CODEC
+                EnderPortalShakePacket.TYPE,
+                EnderPortalShakePacket.STREAM_CODEC
+        );
+        registrar.playToClient(
+                MinecartCollisionPacket.TYPE,
+                MinecartCollisionPacket.STREAM_CODEC
         );
     }
 
-    private void registerCapabilities(RegisterCapabilitiesEvent event) {
-        registerCartCap(event, MRMinecarts.BLOCK_MINECART.get());
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T, C> T getCartCap(ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity cart, net.neoforged.neoforge.capabilities.BlockCapability<T, C> cap, C context) {
-        return (T) cart.getCapability(cap, context);
-    }
-
-    private <T extends Entity> void registerCartCap(RegisterCapabilitiesEvent event, EntityType<T> type) {
-        /*event.registerEntity(Capabilities.Item.ENTITY, type, (entity, _) -> {
-            if (entity instanceof CompatFriendlyBlockMinecartEntity cart ) {
-                return getCartCap(cart, Capabilities.Item.BLOCK, null);
-            }
-            return null;
-        });
-        event.registerEntity(Capabilities.Energy.ENTITY, type, (entity, context) -> {
-            if (entity instanceof CompatFriendlyBlockMinecartEntity cart && cart.blockEntity != null) {
-                return getCartCap(cart, Capabilities.Energy.BLOCK, context);
-            }
-            return null;
-        });
-        event.registerEntity(Capabilities.Fluid.ENTITY, type, (entity, context) -> {
-            if (entity instanceof CompatFriendlyBlockMinecartEntity cart && cart.blockEntity != null) {
-                return getCartCap(cart, Capabilities.Fluid.BLOCK, context);
-            }
-            return null;
-        });*/
-    }
 
     private void commonSetup(FMLCommonSetupEvent event) {
         registerDispenserBehaviors();

@@ -205,7 +205,7 @@ public class NetherPortalMinecartEntity extends PortalMinecartEntity {
         onResetTeleportEvent();
     }
 
-    protected void onChargingTick(ServerLevel serverLevel, int timer, float progress) {}
+    protected void onChargingTick(Level level, int timer, float progress) {}
     protected void onFireTeleportEvent(ServerLevel serverLevel, NetherPortalMinecartEntity netherTarget) {
         serverLevel.playSound(null, this.blockPosition(),
                 SoundEvents.PORTAL_TRAVEL, this.getSoundSource(), 1.0F, 0.8F);

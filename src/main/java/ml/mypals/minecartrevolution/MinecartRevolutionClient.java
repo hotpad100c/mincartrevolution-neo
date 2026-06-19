@@ -1,8 +1,10 @@
 package ml.mypals.minecartrevolution;
 
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import ml.mypals.minecartrevolution.client.CameraShakeManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
 import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
+import ml.mypals.minecartrevolution.packets.EnderPortalShakePacket;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
 import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
@@ -31,6 +33,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
@@ -105,6 +108,10 @@ public class MinecartRevolutionClient {
         event.register(
                 ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.TYPE,
                 MinecartRevolutionClient::minecartCollisionUpdate
+        );
+        event.register(
+                EnderPortalShakePacket.TYPE,
+                MinecartRevolutionClient::enderPortalShakeUpdate
         );
     }
 
@@ -201,6 +208,17 @@ public class MinecartRevolutionClient {
                 minecart.onCollision(payload.pos(), payload.target(), payload.actual(), payload.delta());
             }
         });
+    }
+
+    private static void enderPortalShakeUpdate(
+            final EnderPortalShakePacket payload, final IPayloadContext context) {
+        Minecraft client = Minecraft.getInstance();
+        client.execute(() -> CameraShakeManager.start(payload.durationTicks(), payload.intensity()));
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(final ClientTickEvent.Post event) {
+        CameraShakeManager.tick();
     }
 
 
