@@ -3,7 +3,7 @@ name: register-minecart
 description: Step-by-step workflow for adding a new minecart type to the MinecartRevolution Neo mod (NeoForge 26.1.2, Java 25). Use when the user wants to register, add, or create a new minecart entity, minecart item variant, or minecart with custom behavior.
 ---
 
-# Register New Minecart (注册新矿车)
+# Register New Minecart
 
 ## Quick start
 

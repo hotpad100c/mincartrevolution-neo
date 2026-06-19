@@ -8,26 +8,26 @@
 - **NeoForge**: 26.1.2
 - **Naming**: Entity `{base}_minecart`, Item `minecart_{base}`, constant `{BASE}_MINECART`
 
-## File structure (关键文件位置)
+## File structure
 
-| 文件/目录 | 用途 |
+| File/Directory | Purpose |
 |---|---|
-| `registeries/MRMinecarts.java` | 所有矿车实体+物品的注册中心 |
-| `registeries/MRModEntityRenderers.java` | 实体渲染器注册 |
-| `registeries/MRModItems.java` | 创造标签页、发射器行为 |
-| `entity/minecarts/` | 自定义矿车实体类 |
-| `entity/minecarts/container/` | 容器矿车（桶、箱子、发射器…） |
-| `entity/minecarts/functioning/` | 功能矿车（铁砧、信标、唱片机…） |
-| `entity/minecarts/redstone/` | 红石矿车（红石块、压力板、活塞…） |
-| `entity/minecarts/fluidcarts/` | 流体/传送门矿车（水、岩浆、地狱门…） |
-| `entity/minecarts/maps/` | `@MinecartMapper` 方块→实体映射 |
-| `item/` | 自定义物品类（`MinecartWithBlockItem` 子类） |
-| `behaviours/MinecartTransformManager.java` | 方块/物品→矿车实体的工厂映射 |
-| `behaviours/MinecartTransformConfig.java` | 矿车工厂函数式接口 |
-| `client/renderer/` | 自定义矿车渲染器 |
-| `client/light/` | 移动光源系统（`DynamicLightsStorage`） |
-| `assets/minecartrevolution/lang/` | 语言文件（`en_us.json`、`zh_cn.json`） |
-| `datagen/MRRecipeProvider.java` | 配方数据生成 |
+| `registeries/MRMinecarts.java` | Central registry for all minecart entities + items |
+| `registeries/MRModEntityRenderers.java` | Entity renderer registration |
+| `registeries/MRModItems.java` | Creative tab, dispenser behaviors |
+| `entity/minecarts/` | Custom minecart entity classes |
+| `entity/minecarts/container/` | Container minecarts (barrel, chest, dispenser...) |
+| `entity/minecarts/functioning/` | Functional minecarts (anvil, beacon, jukebox...) |
+| `entity/minecarts/redstone/` | Redstone minecarts (redstone block, pressure plate, piston...) |
+| `entity/minecarts/fluidcarts/` | Fluid/portal minecarts (water, lava, nether portal...) |
+| `entity/minecarts/maps/` | `@MinecartMapper` block→entity dispatch |
+| `item/` | Custom item classes (`MinecartWithBlockItem` subclasses) |
+| `behaviours/MinecartTransformManager.java` | Block/item→minecart entity factory map |
+| `behaviours/MinecartTransformConfig.java` | Minecart factory functional interface |
+| `client/renderer/` | Custom minecart renderers |
+| `client/light/` | Moving light system (`DynamicLightsStorage`) |
+| `assets/minecartrevolution/lang/` | Language files (`en_us.json`, `zh_cn.json`) |
+| `datagen/MRRecipeProvider.java` | Recipe data generation |
 
 ## No registration needed (any block)
 
@@ -174,7 +174,7 @@ Custom item classes need an explicit lang key:
 "item.minecartrevolution.minecart_foo": "Foo Minecart",
 ```
 
-#### 6. (Optional) Interactable minecart (打开 GUI / 使用方块)
+#### 6. (Optional) Interactable minecart (open GUI / use block)
 
 Two approaches:
 
@@ -313,39 +313,39 @@ Existing mappers: `RailMinecartEntityMapper` (4 rail types), `PressurePlateEntit
 
 ---
 
-## Entity class hierarchy (实体类继承体系)
+## Entity class hierarchy
 
 Choose your base class by the features needed:
 
 ```
 AbstractMinecart (vanilla)
-├── VariantBlockMinecartEntity                     [基础：显示方块、移动光源]
-│   ├── SingleBlockMinecartEntity                  [+对应物品追踪、掉落物逻辑]
-│   │   ├── DamageCausingMinecartEntity            [伤害接触实体]
-│   │   ├── RedstoneBlockMinecartEntity            [+PowerEmitterMinecartEntity 红石信号]
-│   │   │   ├── HorizontalDirectionalRedstoneEmitterPowerMinecartEntity [定向红石]
+├── VariantBlockMinecartEntity                     [base: display block, moving light]
+│   ├── SingleBlockMinecartEntity                  [+item tracking, drop logic]
+│   │   ├── DamageCausingMinecartEntity            [damage on contact]
+│   │   ├── RedstoneBlockMinecartEntity            [+PowerEmitterMinecartEntity redstone signal]
+│   │   │   ├── HorizontalDirectionalRedstoneEmitterPowerMinecartEntity [directional redstone]
 │   │   │   └── EndPortalFraneMinecartEntity
-│   │   ├── SpongeMinecartEntity                   [吸水/干燥]
-│   │   ├── JukeboxMinecartEntity                  [+PowerEmitterMinecartEntity 唱片播放]
-│   │   ├── ObsidianMinecartEntity                 [岩浆漂浮]
-│   │   ├── AmethystMinecartEntity                 [声音中继]
-│   │   ├── AntMinecartEntity                      [Langton蚂蚁/侦测器]
-│   │   ├── HoneyMinecartEntity                    [黏着方块]
-│   │   ├── PistonMinecartEntity                   [推动实体]
-│   │   └── ScaffoldMinecartEntity                 [脚手架]
-│   ├── CompatFriendlyBlockMinecartEntity          [通用方块交互、BE模拟、Capability]
-│   ├── NonInventoryWorkingBlockMinecartEntity     [打开原版菜单（工作台/铁砧/附魔...)]
+│   │   ├── SpongeMinecartEntity                   [water absorption/drying]
+│   │   ├── JukeboxMinecartEntity                  [+PowerEmitterMinecartEntity music playback]
+│   │   ├── ObsidianMinecartEntity                 [lava floating]
+│   │   ├── AmethystMinecartEntity                 [sound relay]
+│   │   ├── AntMinecartEntity                      [Langton's ant / observer]
+│   │   ├── HoneyMinecartEntity                    [stick to blocks]
+│   │   ├── PistonMinecartEntity                   [push entities]
+│   │   └── ScaffoldMinecartEntity                 [scaffolding]
+│   ├── CompatFriendlyBlockMinecartEntity          [generic block interaction, BE simulation, Capability]
+│   ├── NonInventoryWorkingBlockMinecartEntity     [open vanilla menus (crafting/anvil/enchanting...)]
 │   │   └── AnvilMinecart
-│   ├── RailMinecartEntity                         [轨道铺设]
-│   ├── PressurePlateMinecartEntity                [+PowerEmitterMinecartEntity 压力板]
-│   ├── BeaconMinecartEntity                       [信标效果]
-│   ├── MobHeadMinecartEntity                      [生物头颅]
-│   ├── WoolMinecartEntity                         [无重力]
-│   ├── FluidMinecartEntity                        [流体（水/岩浆）]
-│   └── PortalMinecartEntity                       [传送门]
+│   ├── RailMinecartEntity                         [rail placement]
+│   ├── PressurePlateMinecartEntity                [+PowerEmitterMinecartEntity pressure plate]
+│   ├── BeaconMinecartEntity                       [beacon effects]
+│   ├── MobHeadMinecartEntity                      [mob heads]
+│   ├── WoolMinecartEntity                         [no gravity]
+│   ├── FluidMinecartEntity                        [fluids (water/lava)]
+│   └── PortalMinecartEntity                       [portals]
 │       ├── NetherPortalMinecartEntity
 │       └── EnderPortalMinecartEntity
-├── AbstractMinecartContainer (vanilla)            [容器矿车基类]
+├── AbstractMinecartContainer (vanilla)            [container minecart base]
 │   └── BaseMinecartContainer
 │       ├── BarrelMinecartEntity
 │       ├── TrappedChestMinecartEntity             [+PowerEmitterMinecartEntity]
@@ -354,14 +354,14 @@ AbstractMinecart (vanilla)
 │       ├── EnderChestMinecartEntity
 │       └── DispenserMinecartEntity
 └── Minecart (vanilla)
-    └── PickerMinecartEntity                       [黏着矿车]
+    └── PickerMinecartEntity                       [sticky minecart]
 ```
 
-## Existing minecart catalog (现有矿车速查)
+## Existing minecart catalog
 
-### 自定义实体矿车 (Scenario A)
+### Custom entity minecarts (Scenario A)
 
-| 常量名 | 实体类 | 物品类 | 红石 | 可交互 | 自定义渲染 | @Mapper |
+| Constant | Entity Class | Item Class | Redstone | Interactive | Custom Renderer | @Mapper |
 |---|---|---|---|---|---|---|
 | `SPONGE_MINECART` | `SpongeMinecartEntity` | `MinecartWithBlockItem` | | | | |
 | `BARREL_MINECART` | `BarrelMinecartEntity` | `MinecartWithBlockItem` | | | | |
@@ -399,9 +399,9 @@ AbstractMinecart (vanilla)
 | `END_PORTAL_FRAME_MINECART` | `EndPortalFraneMinecartEntity` | `MinecartWithBlockItem` | ✓ | | | |
 | `PICKER_MINECART` | `PickerMinecartEntity` | `PickerMinecartItem` | | | ✓ | |
 
-### 变体矿车 (Scenario B) — `registerItemOnly()` 复用共享实体
+### Variant minecarts (Scenario B) — `registerItemOnly()` reusing shared entity
 
-| 常量名 | 复用实体 | 实体类 | 物品类 | 红石 | 自定义物品 | @Mapper |
+| Constant | Reuses Entity | Entity Class | Item Class | Redstone | Custom Item | @Mapper |
 |---|---|---|---|---|---|---|
 | `CACTUS_MINECART` | `DAMAGE_CAUSING_MINECART` | `DamageCausingMinecartEntity` | `DamageCausingMinecartItem` | | ✓ | |
 | `MAGMA_BLOCK_MINECART` | `DAMAGE_CAUSING_MINECART` | `DamageCausingMinecartEntity` | `DamageCausingMinecartItem` | | ✓ | |
@@ -414,38 +414,38 @@ AbstractMinecart (vanilla)
 | `IRON_PRESHER_PLATE_MINECART` | `WEIGHT_PRESHER_PLATE_MINECART` | `WeightPressurePlateMinecartEntity` | `MinecartWithBlockItem` | ✓ | | |
 | `GOLDEN_PRESHER_PLATE_MINECART` | `WEIGHT_PRESHER_PLATE_MINECART` | `WeightPressurePlateMinecartEntity` | `MinecartWithBlockItem` | ✓ | | |
 | `WET_SPONGE_MINECART` | `SPONGE_MINECART` (entity) | `SpongeMinecartEntity` | `MinecartWithBlockItem` | | | |
-| `BLAST_FURNACE_MINECART` | 原版 `furnace_minecart` | `MinecartFurnace` (vanilla) | `MinecartWithBlockItem` | | | |
-| `SMOKER_MINECART` | 原版 `furnace_minecart` | `MinecartFurnace` (vanilla) | `MinecartWithBlockItem` | | | |
+| `BLAST_FURNACE_MINECART` | vanilla `furnace_minecart` | `MinecartFurnace` (vanilla) | `MinecartWithBlockItem` | | | |
+| `SMOKER_MINECART` | vanilla `furnace_minecart` | `MinecartFurnace` (vanilla) | `MinecartWithBlockItem` | | | |
 | `NORMAL_RAIL_MINECART` | `RAIL_MINECART` | `RailMinecartEntity` | `MinecartWithBlockItem` | | | ✓ |
 | `DETECTOR_RAIL_MINECART` | `RAIL_MINECART` | `RailMinecartEntity` | `MinecartWithBlockItem` | | | ✓ |
 | `ACTIVATOR_RAIL_MINECART` | `RAIL_MINECART` | `RailMinecartEntity` | `MinecartWithBlockItem` | | | ✓ |
 | `POWERED_RAIL_MINECART` | `RAIL_MINECART` | `RailMinecartEntity` | `MinecartWithBlockItem` | | | ✓ |
 
-### 仅实体注册（无物品）
+### Entity-only registrations (no item)
 
-| 常量名 | 实体类 | 红石 | 说明 |
+| Constant | Entity Class | Redstone | Notes |
 |---|---|---|---|
-| `DAMAGE_CAUSING_MINECART` | `DamageCausingMinecartEntity` | | 伤害类矿车的共享实体 |
-| `POWER_PROVIDER_MINECART` | `RedstoneBlockMinecartEntity` | ✓ | 红石类矿车的共享实体 |
-| `DIRECTIONAL_POWER_PROVIDER_MINECART` | `HorizontalDirectionalRedstoneEmitterPowerMinecartEntity` | ✓ | 定向红石（中继器） |
-| `PRESHER_PLATE_MINECART` | `PressurePlateMinecartEntity` | ✓ | 压力板矿车共享实体 |
-| `WEIGHT_PRESHER_PLATE_MINECART` | `WeightPressurePlateMinecartEntity` | ✓ | 测重压力板矿车共享实体 |
-| `BLOCK_MINECART` | `CompatFriendlyBlockMinecartEntity` | | 通用方块交互矿车（回退类型） |
-| `RAIL_MINECART` | `RailMinecartEntity` | | 铁轨矿车共享实体 |
-| `NON_INVENTORY_WORKING_MINECART` | `NonInventoryWorkingBlockMinecartEntity` | | 工作方块矿车共享实体 |
+| `DAMAGE_CAUSING_MINECART` | `DamageCausingMinecartEntity` | | Shared entity for damage-dealing minecarts |
+| `POWER_PROVIDER_MINECART` | `RedstoneBlockMinecartEntity` | ✓ | Shared entity for redstone minecarts |
+| `DIRECTIONAL_POWER_PROVIDER_MINECART` | `HorizontalDirectionalRedstoneEmitterPowerMinecartEntity` | ✓ | Directional redstone (repeater) |
+| `PRESHER_PLATE_MINECART` | `PressurePlateMinecartEntity` | ✓ | Shared entity for pressure plate minecarts |
+| `WEIGHT_PRESHER_PLATE_MINECART` | `WeightPressurePlateMinecartEntity` | ✓ | Shared entity for weighted pressure plate minecarts |
+| `BLOCK_MINECART` | `CompatFriendlyBlockMinecartEntity` | | Generic block interaction minecart (fallback type) |
+| `RAIL_MINECART` | `RailMinecartEntity` | | Shared entity for rail minecarts |
+| `NON_INVENTORY_WORKING_MINECART` | `NonInventoryWorkingBlockMinecartEntity` | | Shared entity for working block minecarts |
 
-### @MinecartMapper 映射文件
+### @MinecartMapper files
 
-| 文件 | 映射字段 | 映射到的矿车 |
+| File | Maps | Target Minecart(s) |
 |---|---|---|
-| `ChestEntityMapper.java` | 箱子 → `MinecartChest`；铜箱子变体 → `CopperChestMinecartEntity` | `COPPER_CHEST_MINECART` |
-| `MobHeadEntityMapper.java` | 所有生物头颅/墙头/南瓜 → `MobHeadMinecartEntity` | `MOB_HEAD_MINECART` |
-| `NonInventoryWorkingBlockEntityMapper.java` | 工作台/切石机/织布机/制图台/砂轮/锻造台/铁砧/附魔台 → `NonInventoryWorkingBlockMinecartEntity`；信标 → `BeaconMinecartEntity` | 9个矿车条目 |
-| `PressurePlateEntityMapper.java` | 所有木质/石质压力板 → `PressurePlateMinecartEntity` | `PRESHER_PLATE_MINECART_ITEM` |
-| `RailMinecartEntityMapper.java` | 铁轨/激活铁轨/探测铁轨/充能铁轨 → `RailMinecartEntity` | 4个铁轨矿车 |
-| `ShulkerBoxEntityMapper.java` | 16色潜影盒 + 无色 → `ShulkerMinecartEntity` | `SHULKER_MINECART` |
-| `SofaEntityMapper.java` | 16色羊毛 → `WoolMinecartEntity`（使用 `SOFA_MINECART` 实体） | `SOFA_MINECART` |
-| `WoolEntityMapper.java` | 16色羊毛 → `WoolMinecartEntity`（使用 `WOOL_MINECART` 实体） | `WOOL_MINECART` |
+| `ChestEntityMapper.java` | Chest → `MinecartChest`; copper chest variants → `CopperChestMinecartEntity` | `COPPER_CHEST_MINECART` |
+| `MobHeadEntityMapper.java` | All mob heads/wall heads/pumpkin → `MobHeadMinecartEntity` | `MOB_HEAD_MINECART` |
+| `NonInventoryWorkingBlockEntityMapper.java` | Crafting table/stonecutter/loom/cartography/grindstone/smithing/anvil/enchanting → `NonInventoryWorkingBlockMinecartEntity`; beacon → `BeaconMinecartEntity` | 9 minecart entries |
+| `PressurePlateEntityMapper.java` | All wood/stone pressure plates → `PressurePlateMinecartEntity` | `PRESHER_PLATE_MINECART_ITEM` |
+| `RailMinecartEntityMapper.java` | Rail/activator/detector/powered rail → `RailMinecartEntity` | 4 rail minecarts |
+| `ShulkerBoxEntityMapper.java` | 16 dyed shulker boxes + undyed → `ShulkerMinecartEntity` | `SHULKER_MINECART` |
+| `SofaEntityMapper.java` | 16 wool colors → `WoolMinecartEntity` (using `SOFA_MINECART` entity) | `SOFA_MINECART` |
+| `WoolEntityMapper.java` | 16 wool colors → `WoolMinecartEntity` (using `WOOL_MINECART` entity) | `WOOL_MINECART` |
 
 ---
 
