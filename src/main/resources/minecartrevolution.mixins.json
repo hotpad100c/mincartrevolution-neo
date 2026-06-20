@@ -17,6 +17,7 @@
     "blocks.UnrenderableBlocksMixin",
     "entity.EntityMixin",
     "entity.OldMinecartBehaviourMixin",
+    "entity.PiglinMixin",
     "level.ServerLevelMixin",
     "light.LevelChunkMixin",
     "minecart.AbstractMinecartMixin",
