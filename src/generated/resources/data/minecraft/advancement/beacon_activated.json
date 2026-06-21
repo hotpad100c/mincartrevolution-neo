@@ -1,26 +1,22 @@
 {
-  "parent": "minecraft:got_beacon_minecart",
-  "criteria": {
-    "beacon_activated_criterion": {
-      "trigger": "minecartrevolution:beacon_activated"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.beacon_activated.description"
-    },
-    "frame": "challenge",
-    "icon": {
-      "id": "minecraft:beacon"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.beacon_activated.title"
-    }
-  },
-  "requirements": [
-    [
-      "beacon_activated_criterion"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_beacon_minecart",
+	"criteria": {
+		"beacon_activated_criterion": {
+			"trigger": "minecartrevolution:beacon_activated"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.beacon_activated.description"
+		},
+		"frame": "challenge",
+		"icon": {
+			"id": "minecraft:beacon"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.beacon_activated.title"
+		}
+	},
+	"requirements": [["beacon_activated_criterion"]],
+	"sends_telemetry_event": true
 }

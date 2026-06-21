@@ -1,8 +1,4 @@
 {
-  "replace": false,
-  "values": [
-    "beecrasy:sequencer",
-    "beecrasy:honey_press",
-    "beecrasy:skep"
-  ]
+	"replace": false,
+	"values": ["beecrasy:sequencer", "beecrasy:honey_press", "beecrasy:skep"]
 }

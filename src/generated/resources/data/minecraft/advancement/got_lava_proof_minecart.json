@@ -1,29 +1,25 @@
 {
-  "parent": "minecraft:got_block_minecart",
-  "criteria": {
-    "craft_got_lava_proof_minecart": {
-      "conditions": {
-        "entity": "entity.minecartrevolution.obsidian_minecart"
-      },
-      "trigger": "minecartrevolution:block_cart_crafted"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.got_lava_proof_minecart.description"
-    },
-    "frame": "challenge",
-    "icon": {
-      "id": "minecartrevolution:minecart_obsidian"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.got_lava_proof_minecart.title"
-    }
-  },
-  "requirements": [
-    [
-      "craft_got_lava_proof_minecart"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_block_minecart",
+	"criteria": {
+		"craft_got_lava_proof_minecart": {
+			"conditions": {
+				"entity": "entity.minecartrevolution.obsidian_minecart"
+			},
+			"trigger": "minecartrevolution:block_cart_crafted"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.got_lava_proof_minecart.description"
+		},
+		"frame": "challenge",
+		"icon": {
+			"id": "minecartrevolution:minecart_obsidian"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.got_lava_proof_minecart.title"
+		}
+	},
+	"requirements": [["craft_got_lava_proof_minecart"]],
+	"sends_telemetry_event": true
 }
