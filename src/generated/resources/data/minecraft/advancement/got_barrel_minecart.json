@@ -1,29 +1,25 @@
 {
-  "parent": "minecraft:got_block_minecart",
-  "criteria": {
-    "craft_got_barrel_minecart": {
-      "conditions": {
-        "entity": "entity.minecartrevolution.barrel_minecart"
-      },
-      "trigger": "minecartrevolution:block_cart_crafted"
-    }
-  },
-  "display": {
-    "announce_to_chat": false,
-    "description": {
-      "translate": "advancement.minecartrevolution.got_barrel_minecart.description"
-    },
-    "icon": {
-      "id": "minecartrevolution:minecart_barrel"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.got_barrel_minecart.title"
-    }
-  },
-  "requirements": [
-    [
-      "craft_got_barrel_minecart"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_block_minecart",
+	"criteria": {
+		"craft_got_barrel_minecart": {
+			"conditions": {
+				"entity": "entity.minecartrevolution.barrel_minecart"
+			},
+			"trigger": "minecartrevolution:block_cart_crafted"
+		}
+	},
+	"display": {
+		"announce_to_chat": false,
+		"description": {
+			"translate": "advancement.minecartrevolution.got_barrel_minecart.description"
+		},
+		"icon": {
+			"id": "minecartrevolution:minecart_barrel"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.got_barrel_minecart.title"
+		}
+	},
+	"requirements": [["craft_got_barrel_minecart"]],
+	"sends_telemetry_event": true
 }

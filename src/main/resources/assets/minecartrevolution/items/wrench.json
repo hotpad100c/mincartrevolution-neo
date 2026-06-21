@@ -1,6 +1,6 @@
 {
-  "model": {
-    "type": "minecraft:model",
-    "model": "minecartrevolution:item/wrench"
-  }
+	"model": {
+		"type": "minecraft:model",
+		"model": "minecartrevolution:item/wrench"
+	}
 }
