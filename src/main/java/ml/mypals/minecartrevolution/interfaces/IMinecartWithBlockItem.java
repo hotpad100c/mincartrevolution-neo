@@ -8,19 +8,19 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface IMinecartWithBlockItem {
-    BlockState getBlockInside(ItemStack stack);
+  BlockState getBlockInside(ItemStack stack);
 
-    default BlockState getSyncedBlockState(ItemStack stack, Block defaultBlock) {
+  default BlockState getSyncedBlockState(ItemStack stack, Block defaultBlock) {
 
-        BlockState state = stack.get(MRDataComponents.BLOCK_STATE.get());
-        if (state != null) return state;
+    BlockState state = stack.get(MRDataComponents.BLOCK_STATE.get());
+    if (state != null) return state;
 
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData != null && customData.contains("block_in_minecart")) {
-            int id = customData.copyTag().getIntOr("block_in_minecart",1);
-            return Block.stateById(id);
-        }
-
-        return defaultBlock.defaultBlockState();
+    CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+    if (customData != null && customData.contains("block_in_minecart")) {
+      int id = customData.copyTag().getIntOr("block_in_minecart", 1);
+      return Block.stateById(id);
     }
+
+    return defaultBlock.defaultBlockState();
+  }
 }

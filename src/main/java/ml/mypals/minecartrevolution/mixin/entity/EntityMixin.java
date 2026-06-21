@@ -18,32 +18,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-    @Shadow
-    private @Nullable Entity vehicle;
+  @Shadow private @Nullable Entity vehicle;
 
-    @Shadow
-    @Final
-    protected RandomSource random;
+  @Shadow @Final protected RandomSource random;
 
-    @Shadow
-    private Level level;
+  @Shadow private Level level;
 
-    @Shadow
-    private BlockPos blockPosition;
+  @Shadow private BlockPos blockPosition;
 
-    @Shadow
-    public abstract EntityType<?> getType();
+  @Shadow
+  public abstract EntityType<?> getType();
 
-    @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
-    public void stopRiding(CallbackInfo ci) {
-        Entity me = (Entity) (Object) this;
-        if (this.vehicle instanceof CobwebMinecartEntity && me instanceof Player && this.random.nextFloat() < 0.7f) {
-            if (!this.level.isClientSide()) {
-                ci.cancel();
-            } else {
-                this.level.addDestroyBlockEffect(this.blockPosition, Blocks.COBWEB.defaultBlockState());
-            }
-        }
+  @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
+  public void stopRiding(CallbackInfo ci) {
+    Entity me = (Entity) (Object) this;
+    if (this.vehicle instanceof CobwebMinecartEntity
+        && me instanceof Player
+        && this.random.nextFloat() < 0.7f) {
+      if (!this.level.isClientSide()) {
+        ci.cancel();
+      } else {
+        this.level.addDestroyBlockEffect(this.blockPosition, Blocks.COBWEB.defaultBlockState());
+      }
     }
-
+  }
 }

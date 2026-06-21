@@ -5,6 +5,5 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public class MobHeadMinecartRenderState extends MinecartRenderState {
-    @Nullable
-    public BlockState headBlockState;
+  @Nullable public BlockState headBlockState;
 }

@@ -48,7 +48,7 @@ Note: B1 and B2 are often used together — items for the creative tab (B1), map
 All registration happens in `registeries/MRMinecarts.java`. Three methods:
 
 | Method | Purpose |
-|--------|---------|
+| -------- | --------- |
 | `register(baseName, entityFactory, itemFactory)` | Registers entity type + item |
 | `registerItemOnly(itemName, existingEntity, itemFactory)` | Registers item pointing to existing entity |
 | `registerEntityOnly(entityName, entityFactory)` | Registers entity type only |

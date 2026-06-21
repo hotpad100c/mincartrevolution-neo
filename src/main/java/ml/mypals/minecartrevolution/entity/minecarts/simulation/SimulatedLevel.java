@@ -1,6 +1,8 @@
 package ml.mypals.minecartrevolution.entity.minecarts.simulation;
 
-
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.mixin.simulation.LevelAccessor;
 import net.minecraft.core.BlockPos;
@@ -44,204 +46,259 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
 public class SimulatedLevel extends Level {
-    private final Level wrapped;
-    private final CompatFriendlyBlockMinecartEntity minecart;
+  private final Level wrapped;
+  private final CompatFriendlyBlockMinecartEntity minecart;
 
-    public SimulatedLevel(Level wrapped, CompatFriendlyBlockMinecartEntity minecart) {
-        super((WritableLevelData) wrapped.getLevelData(), wrapped.dimension(), wrapped.registryAccess(), wrapped.dimensionTypeRegistration(), wrapped.isClientSide(), wrapped.isDebug(), 0, 0);
-        this.wrapped = wrapped;
-        this.minecart = minecart;
-    }
-    public Level getLevel(){
-        return wrapped;
-    }
+  public SimulatedLevel(Level wrapped, CompatFriendlyBlockMinecartEntity minecart) {
+    super(
+        (WritableLevelData) wrapped.getLevelData(),
+        wrapped.dimension(),
+        wrapped.registryAccess(),
+        wrapped.dimensionTypeRegistration(),
+        wrapped.isClientSide(),
+        wrapped.isDebug(),
+        0,
+        0);
+    this.wrapped = wrapped;
+    this.minecart = minecart;
+  }
 
-    @Override
-    public void sendBlockUpdated(@NonNull BlockPos pos, @NonNull BlockState old, @NonNull BlockState current, @Block.UpdateFlags int updateFlags) {
-        wrapped.sendBlockUpdated(pos, old, current, updateFlags);
-    }
+  public Level getLevel() {
+    return wrapped;
+  }
 
-    @Override
-    public void playSeededSound(@Nullable Entity except, double x, double y, double z, @NonNull Holder<SoundEvent> sound, @NonNull SoundSource source, float volume, float pitch, long seed) {
-        wrapped.playSeededSound(except, x, y, z, sound, source, volume, pitch, seed);
-    }
+  @Override
+  public void sendBlockUpdated(
+      @NonNull BlockPos pos,
+      @NonNull BlockState old,
+      @NonNull BlockState current,
+      @Block.UpdateFlags int updateFlags) {
+    wrapped.sendBlockUpdated(pos, old, current, updateFlags);
+  }
 
-    @Override
-    public void playSeededSound(@Nullable Entity except, @NonNull Entity sourceEntity, @NonNull Holder<SoundEvent> sound, @NonNull SoundSource source, float volume, float pitch, long seed) {
-        wrapped.playSeededSound(except, sourceEntity, sound, source, volume, pitch, seed);
-    }
+  @Override
+  public void playSeededSound(
+      @Nullable Entity except,
+      double x,
+      double y,
+      double z,
+      @NonNull Holder<SoundEvent> sound,
+      @NonNull SoundSource source,
+      float volume,
+      float pitch,
+      long seed) {
+    wrapped.playSeededSound(except, x, y, z, sound, source, volume, pitch, seed);
+  }
 
-    @Override
-    public @NonNull BlockState getBlockState(BlockPos pos) {
-        if (pos.equals(minecart.blockPosition())) {
-            return minecart.getDisplayBlockState();
-        }
-        return wrapped.getBlockState(pos);
-    }
+  @Override
+  public void playSeededSound(
+      @Nullable Entity except,
+      @NonNull Entity sourceEntity,
+      @NonNull Holder<SoundEvent> sound,
+      @NonNull SoundSource source,
+      float volume,
+      float pitch,
+      long seed) {
+    wrapped.playSeededSound(except, sourceEntity, sound, source, volume, pitch, seed);
+  }
 
-    @Override
-    public boolean setBlock(BlockPos pos,@NonNull BlockState state, int flags) {
-        if (pos.equals(minecart.blockPosition())) {
-            minecart.setCustomDisplayBlockState(Optional.of(state));
-            minecart.refreshBlockEntity();
-            return true;
-        }
-        return wrapped.setBlock(pos, state, flags);
+  @Override
+  public @NonNull BlockState getBlockState(BlockPos pos) {
+    if (pos.equals(minecart.blockPosition())) {
+      return minecart.getDisplayBlockState();
     }
+    return wrapped.getBlockState(pos);
+  }
 
-    @Override
-    public @Nullable BlockEntity getBlockEntity(BlockPos pos) {
-        if (pos.equals(minecart.blockPosition())) {
-            return minecart.blockEntity;
-        }
-        return wrapped.getBlockEntity(pos);
+  @Override
+  public boolean setBlock(BlockPos pos, @NonNull BlockState state, int flags) {
+    if (pos.equals(minecart.blockPosition())) {
+      minecart.setCustomDisplayBlockState(Optional.of(state));
+      minecart.refreshBlockEntity();
+      return true;
     }
+    return wrapped.setBlock(pos, state, flags);
+  }
 
-    @Override
-    public void blockEvent(BlockPos pos, @NonNull Block block, int eventID, int eventParam) {
-        if (pos.equals(minecart.blockPosition()) && minecart.blockEntity != null) {
-            minecart.blockEntity.triggerEvent(eventID, eventParam);
-        } else {
-            wrapped.blockEvent(pos, block, eventID, eventParam);
-        }
+  @Override
+  public @Nullable BlockEntity getBlockEntity(BlockPos pos) {
+    if (pos.equals(minecart.blockPosition())) {
+      return minecart.blockEntity;
     }
+    return wrapped.getBlockEntity(pos);
+  }
 
-    @Override
-    public void explode(@Nullable Entity source, @Nullable DamageSource damageSource, @Nullable ExplosionDamageCalculator damageCalculator, double x, double y, double z, float r, boolean fire, @NonNull ExplosionInteraction interactionType, @NonNull ParticleOptions smallExplosionParticles, @NonNull ParticleOptions largeExplosionParticles, @NonNull WeightedList<ExplosionParticleInfo> blockParticles, @NonNull Holder<SoundEvent> explosionSound) {
-        wrapped.explode(source, damageSource, damageCalculator, x, y, z, r, fire, interactionType, smallExplosionParticles, largeExplosionParticles, blockParticles, explosionSound);
+  @Override
+  public void blockEvent(BlockPos pos, @NonNull Block block, int eventID, int eventParam) {
+    if (pos.equals(minecart.blockPosition()) && minecart.blockEntity != null) {
+      minecart.blockEntity.triggerEvent(eventID, eventParam);
+    } else {
+      wrapped.blockEvent(pos, block, eventID, eventParam);
     }
+  }
 
-    @Override
-    public @NonNull String gatherChunkSourceStats() {
-        return wrapped.gatherChunkSourceStats();
-    }
+  @Override
+  public void explode(
+      @Nullable Entity source,
+      @Nullable DamageSource damageSource,
+      @Nullable ExplosionDamageCalculator damageCalculator,
+      double x,
+      double y,
+      double z,
+      float r,
+      boolean fire,
+      @NonNull ExplosionInteraction interactionType,
+      @NonNull ParticleOptions smallExplosionParticles,
+      @NonNull ParticleOptions largeExplosionParticles,
+      @NonNull WeightedList<ExplosionParticleInfo> blockParticles,
+      @NonNull Holder<SoundEvent> explosionSound) {
+    wrapped.explode(
+        source,
+        damageSource,
+        damageCalculator,
+        x,
+        y,
+        z,
+        r,
+        fire,
+        interactionType,
+        smallExplosionParticles,
+        largeExplosionParticles,
+        blockParticles,
+        explosionSound);
+  }
 
-    @Override
-    public void setRespawnData(LevelData.@NonNull RespawnData respawnData) {
-        wrapped.setRespawnData(respawnData);
-    }
+  @Override
+  public @NonNull String gatherChunkSourceStats() {
+    return wrapped.gatherChunkSourceStats();
+  }
 
-    @Override
-    public LevelData.@NonNull RespawnData getRespawnData() {
-        return wrapped.getRespawnData();
-    }
+  @Override
+  public void setRespawnData(LevelData.@NonNull RespawnData respawnData) {
+    wrapped.setRespawnData(respawnData);
+  }
 
-    @Override
-    public @Nullable Entity getEntity(int id) {
-        return wrapped.getEntity(id);
-    }
+  @Override
+  public LevelData.@NonNull RespawnData getRespawnData() {
+    return wrapped.getRespawnData();
+  }
 
-    @Override
-    public @NonNull Collection<? extends PartEntity<?>> dragonParts() {
-        return wrapped.dragonParts();
-    }
+  @Override
+  public @Nullable Entity getEntity(int id) {
+    return wrapped.getEntity(id);
+  }
 
-    @Override
-    public @NonNull TickRateManager tickRateManager() {
-        return wrapped.tickRateManager();
-    }
+  @Override
+  public @NonNull Collection<? extends PartEntity<?>> dragonParts() {
+    return wrapped.dragonParts();
+  }
 
-    @Override
-    public @Nullable MapItemSavedData getMapData(@NonNull MapId id) {
-        return wrapped.getMapData(id);
-    }
+  @Override
+  public @NonNull TickRateManager tickRateManager() {
+    return wrapped.tickRateManager();
+  }
 
-    @Override
-    public void destroyBlockProgress(int id, @NonNull BlockPos blockPos, int progress) {
-        wrapped.destroyBlockProgress(id, blockPos, progress);
-    }
+  @Override
+  public @Nullable MapItemSavedData getMapData(@NonNull MapId id) {
+    return wrapped.getMapData(id);
+  }
 
-    @Override
-    public @NonNull Scoreboard getScoreboard() {
-        return wrapped.getScoreboard();
-    }
+  @Override
+  public void destroyBlockProgress(int id, @NonNull BlockPos blockPos, int progress) {
+    wrapped.destroyBlockProgress(id, blockPos, progress);
+  }
 
-    @Override
-    public @NonNull RecipeAccess recipeAccess() {
-        return wrapped.recipeAccess();
-    }
+  @Override
+  public @NonNull Scoreboard getScoreboard() {
+    return wrapped.getScoreboard();
+  }
 
-    @Override
-    protected @NonNull LevelEntityGetter<Entity> getEntities() {
-        return ((LevelAccessor)this.wrapped).minecartRevolution$getEntities();
-    }
+  @Override
+  public @NonNull RecipeAccess recipeAccess() {
+    return wrapped.recipeAccess();
+  }
 
-    @Override
-    public @NonNull ClockManager clockManager() {
-        return wrapped.clockManager();
-    }
+  @Override
+  protected @NonNull LevelEntityGetter<Entity> getEntities() {
+    return ((LevelAccessor) this.wrapped).minecartRevolution$getEntities();
+  }
 
-    @Override
-    public @NonNull Holder<Biome> getUncachedNoiseBiome(int quartX, int quartY, int quartZ) {
-        return wrapped.getUncachedNoiseBiome(quartX, quartY, quartZ);
-    }
+  @Override
+  public @NonNull ClockManager clockManager() {
+    return wrapped.clockManager();
+  }
 
-    @Override
-    public int getSeaLevel() {
-        return wrapped.getSeaLevel();
-    }
+  @Override
+  public @NonNull Holder<Biome> getUncachedNoiseBiome(int quartX, int quartY, int quartZ) {
+    return wrapped.getUncachedNoiseBiome(quartX, quartY, quartZ);
+  }
 
-    @Override
-    public @NonNull FeatureFlagSet enabledFeatures() {
-        return wrapped.enabledFeatures();
-    }
+  @Override
+  public int getSeaLevel() {
+    return wrapped.getSeaLevel();
+  }
 
-    @Override
-    public @NonNull EnvironmentAttributeSystem environmentAttributes() {
-        return wrapped.environmentAttributes();
-    }
+  @Override
+  public @NonNull FeatureFlagSet enabledFeatures() {
+    return wrapped.enabledFeatures();
+  }
 
-    @Override
-    public @NonNull PotionBrewing potionBrewing() {
-        return wrapped.potionBrewing();
-    }
+  @Override
+  public @NonNull EnvironmentAttributeSystem environmentAttributes() {
+    return wrapped.environmentAttributes();
+  }
 
-    @Override
-    public @NonNull FuelValues fuelValues() {
-        return wrapped.fuelValues();
-    }
+  @Override
+  public @NonNull PotionBrewing potionBrewing() {
+    return wrapped.potionBrewing();
+  }
 
-    @Override
-    public @NonNull ChunkSource getChunkSource() {
-        return wrapped.getChunkSource();
-    }
+  @Override
+  public @NonNull FuelValues fuelValues() {
+    return wrapped.fuelValues();
+  }
 
-    @Override
-    public void levelEvent(@Nullable Entity source, int type, @NonNull BlockPos pos, int data) {
-        wrapped.levelEvent(source, type, pos, data);
-    }
+  @Override
+  public @NonNull ChunkSource getChunkSource() {
+    return wrapped.getChunkSource();
+  }
 
-    @Override
-    public void gameEvent(@NonNull Holder<GameEvent> gameEvent, @NonNull Vec3 position, GameEvent.@NonNull Context context) {
-        wrapped.gameEvent(gameEvent, position, context);
-    }
+  @Override
+  public void levelEvent(@Nullable Entity source, int type, @NonNull BlockPos pos, int data) {
+    wrapped.levelEvent(source, type, pos, data);
+  }
 
-    @Override
-    public @NonNull List<? extends Player> players() {
-        return wrapped.players();
-    }
+  @Override
+  public void gameEvent(
+      @NonNull Holder<GameEvent> gameEvent,
+      @NonNull Vec3 position,
+      GameEvent.@NonNull Context context) {
+    wrapped.gameEvent(gameEvent, position, context);
+  }
 
-    @Override
-    public @NonNull WorldBorder getWorldBorder() {
-        return wrapped.getWorldBorder();
-    }
+  @Override
+  public @NonNull List<? extends Player> players() {
+    return wrapped.players();
+  }
 
-    @Override
-    public @NonNull LevelTickAccess<Block> getBlockTicks() {
-        return new SimulatedTickAccess<>(wrapped.getBlockTicks(), minecart, minecart.pendingBlockTicks);
-    }
+  @Override
+  public @NonNull WorldBorder getWorldBorder() {
+    return wrapped.getWorldBorder();
+  }
 
-    @Override
-    public @NonNull LevelTickAccess<Fluid> getFluidTicks() {
-        return new SimulatedTickAccess<>(wrapped.getFluidTicks(), minecart, minecart.pendingFluidTicks);
-    }
-    @Override
-    public int getSignal(@NotNull BlockPos pos, @NotNull Direction direction) {
-        return minecart.activated?15:0;
-    }
+  @Override
+  public @NonNull LevelTickAccess<Block> getBlockTicks() {
+    return new SimulatedTickAccess<>(wrapped.getBlockTicks(), minecart, minecart.pendingBlockTicks);
+  }
+
+  @Override
+  public @NonNull LevelTickAccess<Fluid> getFluidTicks() {
+    return new SimulatedTickAccess<>(wrapped.getFluidTicks(), minecart, minecart.pendingFluidTicks);
+  }
+
+  @Override
+  public int getSignal(@NotNull BlockPos pos, @NotNull Direction direction) {
+    return minecart.activated ? 15 : 0;
+  }
 }

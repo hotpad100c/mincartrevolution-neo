@@ -11,7 +11,7 @@
 ## File structure
 
 | File/Directory | Purpose |
-|---|---|
+| --- | --- |
 | `registeries/MRMinecarts.java` | Central registry for all minecart entities + items |
 | `registeries/MRModEntityRenderers.java` | Entity renderer registration |
 | `registeries/MRModItems.java` | Creative tab, dispenser behaviors |
@@ -101,7 +101,7 @@ Also call `setCustomDisplayBlockState(...)` in the constructor to match.
 **Common overrides** (copy from existing entities):
 
 | Override | Purpose | Example file |
-|---|---|---|
+| --- | --- | --- |
 | `tick()` | Per-tick logic | `ObsidianMinecartEntity.java:34` |
 | `applyNaturalSlowdown()` | Modify movement drag | `HoneyMinecartEntity.java:44` |
 | `move()` | Custom movement | `HoneyMinecartEntity.java:63` |
@@ -362,7 +362,7 @@ AbstractMinecart (vanilla)
 ### Custom entity minecarts (Scenario A)
 
 | Constant | Entity Class | Item Class | Redstone | Interactive | Custom Renderer | @Mapper |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | `SPONGE_MINECART` | `SpongeMinecartEntity` | `MinecartWithBlockItem` | | | | |
 | `BARREL_MINECART` | `BarrelMinecartEntity` | `MinecartWithBlockItem` | | | | |
 | `TRAPPED_CHEST_MINECART` | `TrappedChestMinecartEntity` | `MinecartWithBlockItem` | ✓ | | | |
@@ -402,7 +402,7 @@ AbstractMinecart (vanilla)
 ### Variant minecarts (Scenario B) — `registerItemOnly()` reusing shared entity
 
 | Constant | Reuses Entity | Entity Class | Item Class | Redstone | Custom Item | @Mapper |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | `CACTUS_MINECART` | `DAMAGE_CAUSING_MINECART` | `DamageCausingMinecartEntity` | `DamageCausingMinecartItem` | | ✓ | |
 | `MAGMA_BLOCK_MINECART` | `DAMAGE_CAUSING_MINECART` | `DamageCausingMinecartEntity` | `DamageCausingMinecartItem` | | ✓ | |
 | `CAMPFIRE_MINECART` | `DAMAGE_CAUSING_MINECART` | `DamageCausingMinecartEntity` | `DamageCausingMinecartItem` | | ✓ | |
@@ -424,7 +424,7 @@ AbstractMinecart (vanilla)
 ### Entity-only registrations (no item)
 
 | Constant | Entity Class | Redstone | Notes |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `DAMAGE_CAUSING_MINECART` | `DamageCausingMinecartEntity` | | Shared entity for damage-dealing minecarts |
 | `POWER_PROVIDER_MINECART` | `RedstoneBlockMinecartEntity` | ✓ | Shared entity for redstone minecarts |
 | `DIRECTIONAL_POWER_PROVIDER_MINECART` | `HorizontalDirectionalRedstoneEmitterPowerMinecartEntity` | ✓ | Directional redstone (repeater) |
@@ -437,7 +437,7 @@ AbstractMinecart (vanilla)
 ### @MinecartMapper files
 
 | File | Maps | Target Minecart(s) |
-|---|---|---|
+| --- | --- | --- |
 | `ChestEntityMapper.java` | Chest → `MinecartChest`; copper chest variants → `CopperChestMinecartEntity` | `COPPER_CHEST_MINECART` |
 | `MobHeadEntityMapper.java` | All mob heads/wall heads/pumpkin → `MobHeadMinecartEntity` | `MOB_HEAD_MINECART` |
 | `NonInventoryWorkingBlockEntityMapper.java` | Crafting table/stonecutter/loom/cartography/grindstone/smithing/anvil/enchanting → `NonInventoryWorkingBlockMinecartEntity`; beacon → `BeaconMinecartEntity` | 9 minecart entries |
@@ -454,7 +454,7 @@ AbstractMinecart (vanilla)
 When you add a `MinecartEntry` to `MRMinecarts.MINECARTS`, these systems pick it up automatically:
 
 | System | Location | How |
-|---|---|---|
+| --- | --- | --- |
 | Creative tab | `MRModItems.java:40` | Iterates `MINECARTS` |
 | Dispenser behavior | `MRModItems.java:52` | Iterates `MINECARTS` |
 | Block/Item→Entity transform | `MinecartTransformManager.java:113` | Iterates `MINECARTS`, registers `spawnFactory` |

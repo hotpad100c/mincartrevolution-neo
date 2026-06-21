@@ -1,10 +1,15 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
-import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import static net.minecraft.world.level.block.Block.dropResources;
+
+import java.util.Optional;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
+import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.attribute.EnvironmentAttributes;
@@ -25,131 +30,151 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Optional;
-
-import ml.mypals.minecartrevolution.registeries.MRModCriteria;
-import net.minecraft.server.level.ServerPlayer;
-
-import static net.minecraft.world.level.block.Block.dropResources;
-
 public class SpongeMinecartEntity extends SingleBlockMinecartEntity {
-    public static final int ABSORB_RADIUS = 6;
-    public static final int ABSORB_LIMIT = 64;
-    private static final Direction[] DIRECTIONS = Direction.values();
+  public static final int ABSORB_RADIUS = 6;
+  public static final int ABSORB_LIMIT = 64;
+  private static final Direction[] DIRECTIONS = Direction.values();
 
-    private int absorbRadius = ABSORB_RADIUS;
-    private int absorbLimit = ABSORB_RADIUS;
+  private int absorbRadius = ABSORB_RADIUS;
+  private int absorbLimit = ABSORB_RADIUS;
 
-    protected SpongeMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> entityType, Level world, int absorbRadius, int absorbLimit) {
-        super(entityType, world);
-        this.absorbRadius = absorbRadius;
-        this.absorbLimit = absorbLimit;
-    }
+  protected SpongeMinecartEntity(
+      EntityType<? extends SingleBlockMinecartEntity> entityType,
+      Level world,
+      int absorbRadius,
+      int absorbLimit) {
+    super(entityType, world);
+    this.absorbRadius = absorbRadius;
+    this.absorbLimit = absorbLimit;
+  }
 
-    public SpongeMinecartEntity(EntityType<? extends SingleBlockMinecartEntity> minecart, Level world, double x, double y, double z, int absorbRadius, int absorbLimit, MinecartWithBlockItem correspondingItem) {
-        super(minecart, world, x, y, z, correspondingItem);
-        this.absorbRadius = absorbRadius;
-        this.absorbLimit = absorbLimit;
-    }
+  public SpongeMinecartEntity(
+      EntityType<? extends SingleBlockMinecartEntity> minecart,
+      Level world,
+      double x,
+      double y,
+      double z,
+      int absorbRadius,
+      int absorbLimit,
+      MinecartWithBlockItem correspondingItem) {
+    super(minecart, world, x, y, z, correspondingItem);
+    this.absorbRadius = absorbRadius;
+    this.absorbLimit = absorbLimit;
+  }
 
-    public SpongeMinecartEntity(EntityType<SpongeMinecartEntity> spongeMinecartEntityEntityType, Level world) {
-        super(spongeMinecartEntityEntityType, world);
-        this.absorbRadius = ABSORB_RADIUS;
-        this.absorbLimit = ABSORB_LIMIT;
-    }
+  public SpongeMinecartEntity(
+      EntityType<SpongeMinecartEntity> spongeMinecartEntityEntityType, Level world) {
+    super(spongeMinecartEntityEntityType, world);
+    this.absorbRadius = ABSORB_RADIUS;
+    this.absorbLimit = ABSORB_LIMIT;
+  }
 
-    @Override
-    public void tick() {
-        super.tick();
-        this.update(level(), blockPosition());
-    }
+  @Override
+  public void tick() {
+    super.tick();
+    this.update(level(), blockPosition());
+  }
 
-    protected void update(Level world, BlockPos pos) {
-        BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        Block block = blockState.getBlock();
-        if (block instanceof SpongeBlock spongeBlock) {
-            if (this.absorbWater(world, pos)) {
-                this.setCustomDisplayBlockState(Optional.of(Blocks.WET_SPONGE.defaultBlockState()));
-                world.playSound(this, pos, SoundEvents.SPONGE_ABSORB, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setCorrespondingItem(MRMinecarts.WET_SPONGE_MINECART.item().get());
-                // Trigger advancement for any nearby players
-                if (world instanceof ServerLevel serverLevel) {
-                    serverLevel.getEntitiesOfClass(ServerPlayer.class, this.getBoundingBox().inflate(8))
-                            .forEach(p -> MRModCriteria.SPONGE_ABSORBED.get().trigger(p));
-                }
-            }
-        } else if (block instanceof WetSpongeBlock) {
-
-            if (level().dimensionType().attributes().contains(EnvironmentAttributes.WATER_EVAPORATES)) {
-                this.setCustomDisplayBlockState(Optional.of(Blocks.SPONGE.defaultBlockState()));
-                world.playSound(this, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setCorrespondingItem(MRMinecarts.SPONGE_MINECART.item().get());
-
-            } else if (level() instanceof ServerLevel serverLevel &&
-                    serverLevel.getRandom().nextInt(4096)
-                            < serverLevel.getGameRules().get(GameRules.RANDOM_TICK_SPEED)) {
-                this.setCustomDisplayBlockState(Optional.of(Blocks.SPONGE.defaultBlockState()));
-                world.playSound(this, pos, SoundEvents.WET_SPONGE_DRIES, SoundSource.BLOCKS, 1.0F, 1.0F);
-            }
-        } else {
-
+  protected void update(Level world, BlockPos pos) {
+    BlockState blockState =
+        entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+    Block block = blockState.getBlock();
+    if (block instanceof SpongeBlock spongeBlock) {
+      if (this.absorbWater(world, pos)) {
+        this.setCustomDisplayBlockState(Optional.of(Blocks.WET_SPONGE.defaultBlockState()));
+        world.playSound(this, pos, SoundEvents.SPONGE_ABSORB, SoundSource.BLOCKS, 1.0F, 1.0F);
+        this.setCorrespondingItem(MRMinecarts.WET_SPONGE_MINECART.item().get());
+        // Trigger advancement for any nearby players
+        if (world instanceof ServerLevel serverLevel) {
+          serverLevel
+              .getEntitiesOfClass(ServerPlayer.class, this.getBoundingBox().inflate(8))
+              .forEach(p -> MRModCriteria.SPONGE_ABSORBED.get().trigger(p));
         }
-    }
+      }
+    } else if (block instanceof WetSpongeBlock) {
 
-    @Override
-    protected @NonNull Vec3 applyNaturalSlowdown(@NonNull Vec3 movement) {
-        BlockState blockState = entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-        if (blockState.getBlock() instanceof WetSpongeBlock)
-            movement = this.getDeltaMovement().multiply(0.5, 0.0, 0.5);
-        return super.applyNaturalSlowdown(movement);
-    }
+      if (level().dimensionType().attributes().contains(EnvironmentAttributes.WATER_EVAPORATES)) {
+        this.setCustomDisplayBlockState(Optional.of(Blocks.SPONGE.defaultBlockState()));
+        world.playSound(this, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+        this.setCorrespondingItem(MRMinecarts.SPONGE_MINECART.item().get());
 
-    @Override
-    public void load(@NonNull ValueInput nbt) {
-        super.load(nbt);
-        this.absorbRadius = nbt.getInt("absort_radius").orElse(6);
-        this.absorbRadius = nbt.getInt("absort_limit").orElse(64);
-    }
+      } else if (level() instanceof ServerLevel serverLevel
+          && serverLevel.getRandom().nextInt(4096)
+              < serverLevel.getGameRules().get(GameRules.RANDOM_TICK_SPEED)) {
+        this.setCustomDisplayBlockState(Optional.of(Blocks.SPONGE.defaultBlockState()));
+        world.playSound(this, pos, SoundEvents.WET_SPONGE_DRIES, SoundSource.BLOCKS, 1.0F, 1.0F);
+      }
+    } else {
 
-    @Override
-    public void saveWithoutId(ValueOutput nbt) {
-        nbt.putInt("absort_radius", this.absorbRadius);
-        nbt.putInt("absort_limit", this.absorbLimit);
-        super.saveWithoutId(nbt);
     }
+  }
 
-    private boolean absorbWater(Level level, BlockPos startPos) {
-        BlockState spongeState = level.getBlockState(startPos);
-        return BlockPos.breadthFirstTraversal(startPos, 6, 65, (pos, consumer) -> {
-            for (Direction direction : DIRECTIONS) {
+  @Override
+  protected @NonNull Vec3 applyNaturalSlowdown(@NonNull Vec3 movement) {
+    BlockState blockState =
+        entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+    if (blockState.getBlock() instanceof WetSpongeBlock)
+      movement = this.getDeltaMovement().multiply(0.5, 0.0, 0.5);
+    return super.applyNaturalSlowdown(movement);
+  }
+
+  @Override
+  public void load(@NonNull ValueInput nbt) {
+    super.load(nbt);
+    this.absorbRadius = nbt.getInt("absort_radius").orElse(6);
+    this.absorbRadius = nbt.getInt("absort_limit").orElse(64);
+  }
+
+  @Override
+  public void saveWithoutId(ValueOutput nbt) {
+    nbt.putInt("absort_radius", this.absorbRadius);
+    nbt.putInt("absort_limit", this.absorbLimit);
+    super.saveWithoutId(nbt);
+  }
+
+  private boolean absorbWater(Level level, BlockPos startPos) {
+    BlockState spongeState = level.getBlockState(startPos);
+    return BlockPos.breadthFirstTraversal(
+            startPos,
+            6,
+            65,
+            (pos, consumer) -> {
+              for (Direction direction : DIRECTIONS) {
                 consumer.accept(pos.relative(direction));
-            }
-        }, pos -> {
-            if (pos.equals(startPos)) {
+              }
+            },
+            pos -> {
+              if (pos.equals(startPos)) {
                 return BlockPos.TraversalNodeStatus.ACCEPT;
-            } else {
+              } else {
                 BlockState state = level.getBlockState(pos);
                 FluidState fluidState = level.getFluidState(pos);
                 if (!spongeState.canBeHydrated(level, startPos, fluidState, pos)) {
-                    return BlockPos.TraversalNodeStatus.SKIP;
-                } else if (state.getBlock() instanceof BucketPickup bucketPickup && !bucketPickup.pickupBlock(null, level, pos, state).isEmpty()) {
-                    return BlockPos.TraversalNodeStatus.ACCEPT;
+                  return BlockPos.TraversalNodeStatus.SKIP;
+                } else if (state.getBlock() instanceof BucketPickup bucketPickup
+                    && !bucketPickup.pickupBlock(null, level, pos, state).isEmpty()) {
+                  return BlockPos.TraversalNodeStatus.ACCEPT;
                 } else {
-                    if (state.getBlock() instanceof LiquidBlock) {
-                        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                    } else {
-                        if (!state.is(Blocks.KELP) && !state.is(Blocks.KELP_PLANT) && !state.is(Blocks.SEAGRASS) && !state.is(Blocks.TALL_SEAGRASS)) {
-                            return BlockPos.TraversalNodeStatus.SKIP;
-                        }
-
-                        BlockEntity blockEntity = state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
-                        dropResources(state, level, pos, blockEntity);
-                        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                  if (state.getBlock() instanceof LiquidBlock) {
+                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                  } else {
+                    if (!state.is(Blocks.KELP)
+                        && !state.is(Blocks.KELP_PLANT)
+                        && !state.is(Blocks.SEAGRASS)
+                        && !state.is(Blocks.TALL_SEAGRASS)) {
+                      return BlockPos.TraversalNodeStatus.SKIP;
                     }
 
-                    return BlockPos.TraversalNodeStatus.ACCEPT;
+                    BlockEntity blockEntity =
+                        state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
+                    dropResources(state, level, pos, blockEntity);
+                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                  }
+
+                  return BlockPos.TraversalNodeStatus.ACCEPT;
                 }
-            }
-        }) > 1;
-    }
+              }
+            })
+        > 1;
+  }
 }

@@ -22,29 +22,43 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ProjectileDispenseBehavior.class)
 public class ProjectileDispenseBehaviorMixin {
-    @Shadow
-    @Final
-    private ProjectileItem projectileItem;
+  @Shadow @Final private ProjectileItem projectileItem;
 
-    @Shadow
-    @Final
-    private ProjectileItem.DispenseConfig dispenseConfig;
+  @Shadow @Final private ProjectileItem.DispenseConfig dispenseConfig;
 
-    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;spawnProjectileUsingShoot(Lnet/minecraft/world/entity/projectile/Projectile;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;DDDFF)Lnet/minecraft/world/entity/projectile/Projectile;"), cancellable = true)
-    private void injectCustomShoot(BlockSource source, ItemStack dispensed, CallbackInfoReturnable<ItemStack> cir, @Local ServerLevel level, @Local Position position, @Local Direction direction) {
-        Entity entity = ((IMinecartSource) (Object) source).mincartrevolution_neo$getMinecart();
-        if (entity instanceof DispenserMinecartEntity minecart) {
-            boolean isClockwise = !minecart.isOnRails();
-            Vec3 shotVector = minecart.getOffsetPreciseVector(isClockwise);
-            Projectile projectile = this.projectileItem.asProjectile(level, position, dispensed, direction);
-            Projectile.spawnProjectileUsingShoot(
-                    projectile, level, dispensed,
-                    shotVector.x, shotVector.y, shotVector.z,
-                    this.dispenseConfig.power(), this.dispenseConfig.uncertainty()
-            );
+  @Inject(
+      method = "execute",
+      at =
+          @At(
+              value = "INVOKE",
+              target =
+                  "Lnet/minecraft/world/entity/projectile/Projectile;spawnProjectileUsingShoot(Lnet/minecraft/world/entity/projectile/Projectile;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;DDDFF)Lnet/minecraft/world/entity/projectile/Projectile;"),
+      cancellable = true)
+  private void injectCustomShoot(
+      BlockSource source,
+      ItemStack dispensed,
+      CallbackInfoReturnable<ItemStack> cir,
+      @Local ServerLevel level,
+      @Local Position position,
+      @Local Direction direction) {
+    Entity entity = ((IMinecartSource) (Object) source).mincartrevolution_neo$getMinecart();
+    if (entity instanceof DispenserMinecartEntity minecart) {
+      boolean isClockwise = !minecart.isOnRails();
+      Vec3 shotVector = minecart.getOffsetPreciseVector(isClockwise);
+      Projectile projectile =
+          this.projectileItem.asProjectile(level, position, dispensed, direction);
+      Projectile.spawnProjectileUsingShoot(
+          projectile,
+          level,
+          dispensed,
+          shotVector.x,
+          shotVector.y,
+          shotVector.z,
+          this.dispenseConfig.power(),
+          this.dispenseConfig.uncertainty());
 
-            dispensed.shrink(1);
-            cir.setReturnValue(dispensed);
-        }
+      dispensed.shrink(1);
+      cir.setReturnValue(dispensed);
     }
+  }
 }

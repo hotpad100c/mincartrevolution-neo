@@ -6,8 +6,7 @@ import net.minecraft.world.level.Level;
 
 public class ClientSimLevelFactory {
 
-    public static Level create(ClientLevel level, CompatFriendlyBlockMinecartEntity entity) {
-        return new SimulatedClientLevel(level, entity);
-    }
-
+  public static Level create(ClientLevel level, CompatFriendlyBlockMinecartEntity entity) {
+    return new SimulatedClientLevel(level, entity);
+  }
 }

@@ -12,19 +12,24 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
-    @WrapOperation(
-            method = "extractVisibleEntities",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;shouldRender(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z"
-            )
-    )
-    private boolean minecartrevolution$horizontalOnlyCull(
-            EntityRenderDispatcher instance, Entity entity, Frustum culler, double camX, double camY, double camZ, Operation<Boolean> original
-    ) {
-        if (entity instanceof BeaconMinecartEntity) {
-            return true;
-        }
-        return instance.shouldRender(entity, culler, camX, camY, camZ);
+  @WrapOperation(
+      method = "extractVisibleEntities",
+      at =
+          @At(
+              value = "INVOKE",
+              target =
+                  "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;shouldRender(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z"))
+  private boolean minecartrevolution$horizontalOnlyCull(
+      EntityRenderDispatcher instance,
+      Entity entity,
+      Frustum culler,
+      double camX,
+      double camY,
+      double camZ,
+      Operation<Boolean> original) {
+    if (entity instanceof BeaconMinecartEntity) {
+      return true;
     }
+    return instance.shouldRender(entity, culler, camX, camY, camZ);
+  }
 }

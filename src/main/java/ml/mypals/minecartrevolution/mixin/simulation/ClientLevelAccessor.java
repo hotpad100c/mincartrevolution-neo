@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ClientLevel.class)
 public interface ClientLevelAccessor {
-    @Accessor("connection")
-    ClientPacketListener minecartRevolution$getConnection();
+  @Accessor("connection")
+  ClientPacketListener minecartRevolution$getConnection();
 }

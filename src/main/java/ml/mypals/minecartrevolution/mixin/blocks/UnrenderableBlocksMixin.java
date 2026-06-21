@@ -10,15 +10,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(value = {DecoratedPotBlock.class, BannerBlock.class,
-        PlayerHeadBlock.class, SkullBlock.class})
+@Mixin(
+    value = {DecoratedPotBlock.class, BannerBlock.class, PlayerHeadBlock.class, SkullBlock.class})
 public abstract class UnrenderableBlocksMixin extends BaseEntityBlock {
-    public UnrenderableBlocksMixin(Properties settings) {
-        super(settings);
-    }
+  public UnrenderableBlocksMixin(Properties settings) {
+    super(settings);
+  }
 
-    @Override
-    protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
-        return RenderShape.MODEL;
-    }
+  @Override
+  protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
+    return RenderShape.MODEL;
+  }
 }

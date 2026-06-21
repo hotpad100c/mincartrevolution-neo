@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import java.util.Optional;
 import ml.mypals.minecartrevolution.helper.SofaMinecartClientHelper;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
@@ -13,65 +14,71 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Optional;
-
 public class SofaMinecartEntity extends SingleBlockMinecartEntity {
-    private int movingTicks = 0;
+  private int movingTicks = 0;
 
-    public SofaMinecartEntity(EntityType<? extends SofaMinecartEntity> entityType, Level world) {
-        super(entityType, world);
-    }
+  public SofaMinecartEntity(EntityType<? extends SofaMinecartEntity> entityType, Level world) {
+    super(entityType, world);
+  }
 
-    @Override
-    public @NonNull BlockState getDefaultDisplayBlockState() {
-        return Blocks.WHITE_CARPET.defaultBlockState();
-    }
+  @Override
+  public @NonNull BlockState getDefaultDisplayBlockState() {
+    return Blocks.WHITE_CARPET.defaultBlockState();
+  }
 
-    public SofaMinecartEntity(EntityType<? extends SofaMinecartEntity> minecart, Level world, double x, double y, double z, MinecartWithBlockItem correspondingItem) {
-        super(minecart, world, x, y, z, correspondingItem);
-        setCustomDisplayBlockState(Optional.of(Blocks.WHITE_CARPET.defaultBlockState()));
-    }
+  public SofaMinecartEntity(
+      EntityType<? extends SofaMinecartEntity> minecart,
+      Level world,
+      double x,
+      double y,
+      double z,
+      MinecartWithBlockItem correspondingItem) {
+    super(minecart, world, x, y, z, correspondingItem);
+    setCustomDisplayBlockState(Optional.of(Blocks.WHITE_CARPET.defaultBlockState()));
+  }
 
-    @Override
-    public void tick() {
-        super.tick();
+  @Override
+  public void tick() {
+    super.tick();
 
-        if (this.level().isClientSide()) {
-            SofaMinecartClientHelper.handleClientMusicLogic(this, this.movingTicks);
-        } else {
-            if (hasPassenger(e -> e instanceof Player)) {
-                this.getPassengers().forEach(entity -> {
-                    if (entity instanceof Player player) {
-                        boolean isFastEnough = this.getDeltaMovement().horizontalDistanceSqr() > 0.3;
-                        if (movingTicks >= 100 && isFastEnough) {
-                            MRModCriteria.SOFA_AWAY.get().trigger((ServerPlayer) player);
-                        }
-                        if (isFastEnough) {
-                            movingTicks++;
-                            if (movingTicks >= 100) movingTicks = 100;
-                        } else {
-                            movingTicks = 0;
-                        }
+    if (this.level().isClientSide()) {
+      SofaMinecartClientHelper.handleClientMusicLogic(this, this.movingTicks);
+    } else {
+      if (hasPassenger(e -> e instanceof Player)) {
+        this.getPassengers()
+            .forEach(
+                entity -> {
+                  if (entity instanceof Player player) {
+                    boolean isFastEnough = this.getDeltaMovement().horizontalDistanceSqr() > 0.3;
+                    if (movingTicks >= 100 && isFastEnough) {
+                      MRModCriteria.SOFA_AWAY.get().trigger((ServerPlayer) player);
                     }
+                    if (isFastEnough) {
+                      movingTicks++;
+                      if (movingTicks >= 100) movingTicks = 100;
+                    } else {
+                      movingTicks = 0;
+                    }
+                  }
                 });
-            }
-        }
+      }
     }
+  }
 
-    @Override
-    public void remove(@NonNull RemovalReason reason) {
-        if (this.level().isClientSide()) {
-            SofaMinecartClientHelper.stopAndResetMusic();
-        }
-        super.remove(reason);
+  @Override
+  public void remove(@NonNull RemovalReason reason) {
+    if (this.level().isClientSide()) {
+      SofaMinecartClientHelper.stopAndResetMusic();
     }
+    super.remove(reason);
+  }
 
-    @Override
-    public @NonNull Vec3 getPassengerRidingPosition(@NonNull Entity passenger) {
-        return super.getPassengerRidingPosition(passenger).add(0, 0.3f, 0);
-    }
+  @Override
+  public @NonNull Vec3 getPassengerRidingPosition(@NonNull Entity passenger) {
+    return super.getPassengerRidingPosition(passenger).add(0, 0.3f, 0);
+  }
 
-    public void setMovingTicks(int ticks) {
-        this.movingTicks = ticks;
-    }
+  public void setMovingTicks(int ticks) {
+    this.movingTicks = ticks;
+  }
 }

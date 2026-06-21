@@ -9,17 +9,22 @@ import net.minecraft.world.inventory.MenuType;
 import org.jspecify.annotations.NonNull;
 
 public class MinecartChestMenu extends ChestMenu {
-    private final IMinecartContainer entity;
+  private final IMinecartContainer entity;
 
-    public MinecartChestMenu(MenuType<?> menuType, int containerId, Inventory inventory, Container container, int rows, IMinecartContainer entity) {
-        super(menuType, containerId, inventory, container, rows);
-        this.entity = entity;
-    }
+  public MinecartChestMenu(
+      MenuType<?> menuType,
+      int containerId,
+      Inventory inventory,
+      Container container,
+      int rows,
+      IMinecartContainer entity) {
+    super(menuType, containerId, inventory, container, rows);
+    this.entity = entity;
+  }
 
-    @Override
-    public void removed(@NonNull Player player) {
-        super.removed(player);
-        this.entity.minecartrevolution$OnContainerClosed(player.level(), player);
-    }
-
+  @Override
+  public void removed(@NonNull Player player) {
+    super.removed(player);
+    this.entity.minecartrevolution$OnContainerClosed(player.level(), player);
+  }
 }
