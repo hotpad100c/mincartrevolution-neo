@@ -1,154 +1,103 @@
 {
   "item.minecartrevolution.wrench": "Minecart Wrench",
-  "item.minecartrevolution.wrench.empty": "Block can not be adjust",
-  "item.minecartrevolution.wrench.select": "Now editing: %s",
+  "item.minecartrevolution.wrench.empty": "No adjustable block in the minecart",
+  "item.minecartrevolution.wrench.select": "Currently editing property: %s",
   "item.minecartrevolution.wrench.set": "Set %s to %s",
-  "item.minecartrevolution.minecart_with_block": "%s %s",
+  "item.minecartrevolution.minecart_with_block": "%s%s",
   "entity.minecartrevolution.cobweb_minecart": "Cobweb Minecart",
   "entity.minecartrevolution.dragon_egg_minecart": "Dragon Egg Minecart",
-  "entity.minecartrevolution.trapped_chest_minecart": "Trapped Chest Minecart",
-  "entity.minecartrevolution.minecart_with_block": "Minecart With Block",
-  "entity.minecartrevolution.shulker_minecart": "Shulker Minecart",
+  "entity.minecartrevolution.minecart_with_block": "Minecart with Block",
   "entity.minecartrevolution.harmful_minecart": "Dangerous Minecart",
   "entity.minecartrevolution.barrel_minecart": "Barrel Minecart",
-  "entity.minecartrevolution.presher_plate_minecart": "Presher Plate Minecart",
-  "entity.minecartrevolution.golden_presher_plate_minecart": "Light Weight Presher Plate Minecart",
-  "entity.minecartrevolution.iron_presher_plate_minecart": "Heavy Weight Presher Plate Minecart",
-  "entity.minecartrevolution.jukebox_minecart": "Jukebox Minecart",
   "entity.minecartrevolution.working_minecart": "Working Minecart",
-  "entity.minecartrevolution.white_wool_minecart": "Wool Minecart",
+  "entity.minecartrevolution.white_wool_minecart": "White Wool Minecart",
   "itemGroup.minecartrevolution": "Minecart Revolution",
   "item.minecartrevolution.minecart_picker": "Sticky Minecart",
   "entity.minecartrevolution.minecart_picker": "Sticky Minecart",
-
   "advancement.minecartrevolution.got_block_minecart.title": "Minecart Revolution",
-  "advancement.minecartrevolution.got_block_minecart.description": "Which update added this??",
-
-  "advancement.minecartrevolution.got_jukebox_minecart.title": "On the Rails",
+  "advancement.minecartrevolution.got_block_minecart.description": "Which version got updated??",
+  "advancement.minecartrevolution.got_jukebox_minecart.title": "Lingering Melody",
   "advancement.minecartrevolution.got_jukebox_minecart.description": "Obtain a Jukebox Minecart",
-
-  "advancement.minecartrevolution.got_amethyst_minecart.title": "Crystal Clear Reception",
-  "advancement.minecartrevolution.got_amethyst_minecart.description": "Place an Amethyst Minecart near a Jukebox Minecart to relay its music further",
-
-  "advancement.minecartrevolution.got_observer_minecart.title": "Patience Required",
-  "advancement.minecartrevolution.got_observer_minecart.description": "Place an Observer inside a minecart to get the Langton's Ant Minecart",
-
-  "advancement.minecartrevolution.got_lava_proof_minecart.title": "The Floor is Lava!",
-  "advancement.minecartrevolution.got_lava_proof_minecart.description": "Drift across lava on an Obsidian Minecart",
-
-  "advancement.minecartrevolution.craft_dragon_egg_minecart.title": "Is That a Cradle?",
-  "advancement.minecartrevolution.craft_dragon_egg_minecart.description": "It needs a little excitement",
-
-  "advancement.minecartrevolution.got_dangerous_minecart.title": "Hostile",
-  "advancement.minecartrevolution.got_dangerous_minecart.description": "I better not get too close...",
-
-  "advancement.minecartrevolution.got_lava_minecart.title": "Don't Look Down",
-  "advancement.minecartrevolution.got_lava_minecart.description": "A lava minecart. We strongly advise against offering anyone a ride.",
-
-  "advancement.minecartrevolution.got_campfire_minecart.title": "Campfire on Wheels",
-  "advancement.minecartrevolution.got_campfire_minecart.description": "Nothing says 'cozy' quite like a fire hazard rolling down the track.",
-
-  "advancement.minecartrevolution.ride_dragon_egg_minecart.title": "Egg Sitting",
-  "advancement.minecartrevolution.ride_dragon_egg_minecart.description": "Ride a Dragon Egg Minecart",
-
-  "advancement.minecartrevolution.move_on_jukebox_minecart.title": "Music on the Move",
-  "advancement.minecartrevolution.move_on_jukebox_minecart.description": "Ride a moving Jukebox Minecart on tour",
-
+  "advancement.minecartrevolution.got_amethyst_minecart.title": "Resonance!",
+  "advancement.minecartrevolution.got_amethyst_minecart.description": "Place an Amethyst Minecart near a Jukebox Minecart to extend its music broadcast range",
+  "advancement.minecartrevolution.got_observer_minecart.title": "You Need Patience",
+  "advancement.minecartrevolution.got_observer_minecart.description": "Put an Observer in the minecart to obtain a Redstone Ant Minecart",
+  "advancement.minecartrevolution.got_lava_proof_minecart.title": "The Ground Is Lava Now!",
+  "advancement.minecartrevolution.got_lava_proof_minecart.description": "Ride an Obsidian Minecart drifting on lava",
+  "advancement.minecartrevolution.craft_dragon_egg_minecart.title": "Is This a Cradle?",
+  "advancement.minecartrevolution.craft_dragon_egg_minecart.description": "It needs some excitement",
+  "advancement.minecartrevolution.got_dangerous_minecart.title": "Full of Hostility",
+  "advancement.minecartrevolution.got_dangerous_minecart.description": "I'd better not get too close..",
+  "advancement.minecartrevolution.got_lava_minecart.title": "Nothing Cozier Than a Rolling Fire Hazard",
+  "advancement.minecartrevolution.got_lava_minecart.description": "Lava Minecart. We strongly recommend not playing with it",
+  "advancement.minecartrevolution.ride_dragon_egg_minecart.title": "Hatch the Egg",
+  "advancement.minecartrevolution.ride_dragon_egg_minecart.description": "Sit on the Dragon Egg Minecart",
+  "advancement.minecartrevolution.move_on_jukebox_minecart.title": "Music on the Rails",
+  "advancement.minecartrevolution.move_on_jukebox_minecart.description": "Ride a moving Jukebox Minecart for a concert tour",
   "advancement.minecartrevolution.sofa_away_logic.title": "Sofa Away!!!",
   "advancement.minecartrevolution.sofa_away_logic.description": "Sit on a moving Sofa Minecart for 5 seconds and enjoy the music",
-
-  "advancement.minecartrevolution.no_gravity_logic.title": "Light as a Feather",
-  "advancement.minecartrevolution.no_gravity_logic.description": "Place wool inside a minecart to make it weightless",
-
-  "advancement.minecartrevolution.is_that_babel_tower.title": "Is That the Tower of Babel?",
-  "advancement.minecartrevolution.is_that_babel_tower.description": "Stack more than 10 minecarts using Rail Minecarts",
-
+  "advancement.minecartrevolution.no_gravity_logic.title": "Light as Wool",
+  "advancement.minecartrevolution.no_gravity_logic.description": "Put wool in the minecart to make it lightweight",
+  "advancement.minecartrevolution.is_that_babel_tower.title": "Tower of Babel",
+  "advancement.minecartrevolution.is_that_babel_tower.description": "Minecart stack exceeds 10 layers, this doesn't look stable",
   "advancement.minecartrevolution.babel.title": "Babel",
-  "advancement.minecartrevolution.babel.description": "Experience the collapse of a minecart tower taller than 24 layers",
-
-  "advancement.minecartrevolution.got_sponge_minecart.title": "Rolling Mop Bucket",
-  "advancement.minecartrevolution.got_sponge_minecart.description": "Turn a sponge into a minecart, because why carry a bucket when you can drive one?",
-
-  "advancement.minecartrevolution.sponge_absorbed.title": "Traveling Drought",
-  "advancement.minecartrevolution.sponge_absorbed.description": "Your sponge minecart just drank the whole area dry. Thirsty little cart.",
-
-  "advancement.minecartrevolution.got_barrel_minecart.title": "Rolling in Barrels",
-  "advancement.minecartrevolution.got_barrel_minecart.description": "Not the monkey kind. A barrel minecart for all your mobile storage needs.",
-
-  "advancement.minecartrevolution.got_trapped_chest_minecart.title": "Suspicious Delivery",
-  "advancement.minecartrevolution.got_trapped_chest_minecart.description": "A chest on wheels that shocks anyone who opens it. Great for trolling friends.",
-
-  "advancement.minecartrevolution.got_copper_chest_minecart.title": "Oxidized Express",
-  "advancement.minecartrevolution.got_copper_chest_minecart.description": "A copper chest minecart. It'll look a bit different in a few weeks.",
-
-  "advancement.minecartrevolution.got_shulker_minecart.title": "The Purple Box of Surprise",
-  "advancement.minecartrevolution.got_shulker_minecart.description": "A shulker on rails. Your inventory thanks you for the extra breathing room.",
-
-  "advancement.minecartrevolution.got_ender_chest_minecart.title": "Pocket Dimension on Rails",
-  "advancement.minecartrevolution.got_ender_chest_minecart.description": "Your personal vault is now also a vehicle. Peak efficiency.",
-
-  "advancement.minecartrevolution.got_dispenser_minecart.title": "Armed and Rolling",
-  "advancement.minecartrevolution.got_dispenser_minecart.description": "A dispenser on wheels. Please aim responsibly... or don't.",
-
-  "advancement.minecartrevolution.got_beacon_minecart.title": "The Light at the End of the Track",
-  "advancement.minecartrevolution.got_beacon_minecart.description": "A beacon minecart that buffs everyone nearby. Who needs a pyramid?",
-
-  "advancement.minecartrevolution.beacon_activated.title": "Mobile Spa Day",
-  "advancement.minecartrevolution.beacon_activated.description": "Your beacon minecart is dispensing free buffs to all nearby players. It's basically a rolling therapy session.",
-
-  "advancement.minecartrevolution.got_honey_minecart.title": "Sticky Situation",
-  "advancement.minecartrevolution.got_honey_minecart.description": "A honey block minecart. Drive carefully — it tends to get a little attached.",
-
-  "advancement.minecartrevolution.honey_stuck.title": "Stuck in Traffic",
-  "advancement.minecartrevolution.honey_stuck.description": "Your honey minecart is now one with the wall. It's not going anywhere. Neither are you.",
-
-  "advancement.minecartrevolution.got_portal_minecart.title": "Portal on the Go",
-  "advancement.minecartrevolution.got_portal_minecart.description": "Who needs a fixed portal when you can take it for a ride?",
-
-  "advancement.minecartrevolution.portal_teleport.title": "Express Lane to the Nether",
-  "advancement.minecartrevolution.portal_teleport.description": "You just got teleported by a minecart. That's not how trains usually work.",
-
-  "advancement.minecartrevolution.got_ender_portal_minecart.title": "The End is Near... and Mobile",
-  "advancement.minecartrevolution.got_ender_portal_minecart.description": "An End Portal Minecart. You've gone too far. No turning back now.",
-
-  "advancement.minecartrevolution.got_magnet_minecart.title": "Attractive Personality",
-  "advancement.minecartrevolution.got_magnet_minecart.description": "A lodestone minecart that pulls items toward it. Finally, a minecart with good vibes.",
-
-  "advancement.minecartrevolution.got_piston_minecart.title": "Push Comes to Shove",
-  "advancement.minecartrevolution.got_piston_minecart.description": "A piston on rails. It will push things. Whether you want it to or not.",
-
-  "advancement.minecartrevolution.got_scaffold_minecart.title": "Scaffolding on Wheels",
-  "advancement.minecartrevolution.got_scaffold_minecart.description": "Now you can bring the construction site to you. OSHA has left the chat.",
-
+  "advancement.minecartrevolution.babel.description": "The minecart tower collapses after exceeding 24 layers",
+  "advancement.minecartrevolution.got_sponge_minecart.title": "Mobile Mop Bucket",
+  "advancement.minecartrevolution.got_sponge_minecart.description": "Put a sponge in the minecart, because why carry a bucket when you can drive it around",
+  "advancement.minecartrevolution.sponge_absorbed.title": "Stay Dry",
+  "advancement.minecartrevolution.sponge_absorbed.description": "The Sponge Minecart drank the whole area dry, what a thirsty little cart",
+  "advancement.minecartrevolution.got_barrel_minecart.title": "Barrel Roll",
+  "advancement.minecartrevolution.got_barrel_minecart.description": "Do a barrel roll！",
+  "advancement.minecartrevolution.got_trapped_chest_minecart.title": "Suspicious Minecart",
+  "advancement.minecartrevolution.got_trapped_chest_minecart.description": "Obtain a Trapped Chest Minecart",
+  "advancement.minecartrevolution.got_copper_chest_minecart.title": "Aged Express",
+  "advancement.minecartrevolution.got_copper_chest_minecart.description": "Obtain a Copper Chest Minecart",
+  "advancement.minecartrevolution.got_shulker_minecart.title": "Surprise Box",
+  "advancement.minecartrevolution.got_shulker_minecart.description": "Shulker Box hitched a ride on the minecart",
+  "advancement.minecartrevolution.got_ender_chest_minecart.title": "Interdimensional Storage",
+  "advancement.minecartrevolution.got_ender_chest_minecart.description": "Share inventories between same-named Ender Chest Minecarts, or just your personal mobile vault",
+  "advancement.minecartrevolution.got_dispenser_minecart.title": "Armed Train",
+  "advancement.minecartrevolution.got_dispenser_minecart.description": "Dispenser on wheels. Please aim responsibly... or don't",
+  "advancement.minecartrevolution.got_beacon_minecart.title": "Light at the End of the Rails",
+  "advancement.minecartrevolution.got_beacon_minecart.description": "Beacon Minecart, can charge on a beacon base",
+  "advancement.minecartrevolution.beacon_activated.title": "Mobile Spa Center",
+  "advancement.minecartrevolution.beacon_activated.description": "Basically a mobile wellness center",
+  "advancement.minecartrevolution.got_honey_minecart.title": "Gooey Minecart",
+  "advancement.minecartrevolution.got_honey_minecart.description": "Honey Minecart, it gets attached easily",
+  "advancement.minecartrevolution.honey_stuck.title": "Splat!",
+  "advancement.minecartrevolution.honey_stuck.description": "Your Honey Minecart has fused with the wall and can't go anywhere now.",
+  "advancement.minecartrevolution.got_portal_minecart.title": "Portal Minecart",
+  "advancement.minecartrevolution.got_portal_minecart.description": "Minecarts don't usually work like this...",
+  "advancement.minecartrevolution.portal_teleport.title": "Warp I",
+  "advancement.minecartrevolution.portal_teleport.description": "Activate a same-named Nether Portal Minecart, it will teleport nearby entities with it",
+  "advancement.minecartrevolution.got_ender_portal_minecart.title": "Warp II",
+  "advancement.minecartrevolution.got_ender_portal_minecart.description": "Activate a same-named End Portal Minecart to teleport entities, it will also take a large piece of land with it",
+  "advancement.minecartrevolution.got_magnet_minecart.title": "Magnetic",
+  "advancement.minecartrevolution.got_magnet_minecart.description": "A minecart with magnetic attraction",
+  "advancement.minecartrevolution.got_piston_minecart.title": "Pushing Forward",
+  "advancement.minecartrevolution.got_piston_minecart.description": "It pushes things around wildly.",
+  "advancement.minecartrevolution.got_scaffold_minecart.title": "Shopping Cart",
+  "advancement.minecartrevolution.got_scaffold_minecart.description": "Right-click to put in items",
   "advancement.minecartrevolution.got_cobweb_minecart.title": "Slow Zone",
-  "advancement.minecartrevolution.got_cobweb_minecart.description": "A cobweb minecart. Perfect for making everyone around you feel like they're wading through syrup.",
-
-  "advancement.minecartrevolution.got_water_minecart.title": "Splash Zone",
-  "advancement.minecartrevolution.got_water_minecart.description": "A minecart full of water. Mind the splash damage... and the passengers.",
-
-  "advancement.minecartrevolution.got_mob_head_minecart.title": "Head of the Line",
-  "advancement.minecartrevolution.got_mob_head_minecart.description": "A dragon head on a minecart. Villagers will not be amused.",
-
-  "advancement.minecartrevolution.got_enchanting_table_minecart.title": "Enchant on the Fly",
-  "advancement.minecartrevolution.got_enchanting_table_minecart.description": "A rolling enchanting table. Now you can get that Sharpness V between stops.",
-
-  "advancement.minecartrevolution.got_anvil_minecart.title": "This Seems Safe",
-  "advancement.minecartrevolution.got_anvil_minecart.description": "An anvil minecart. Gravity plus momentum — what could possibly go wrong?",
-
-  "advancement.minecartrevolution.ride_anvil_minecart.title": "Daredevil's Throne",
-  "advancement.minecartrevolution.ride_anvil_minecart.description": "You actually sat on the anvil minecart. We salute your bravery. Or your recklessness.",
-
-  "advancement.minecartrevolution.got_crafting_table_minecart.title": "Craft on the Move",
-  "advancement.minecartrevolution.got_crafting_table_minecart.description": "A crafting table minecart. Your daily commute just became your workshop.",
-
-  "advancement.minecartrevolution.got_smithing_table_minecart.title": "Smithing While Commuting",
-  "advancement.minecartrevolution.got_smithing_table_minecart.description": "A smithing table on rails. Your upgrade addiction now has zero downtime.",
-
-  "advancement.minecartrevolution.got_picker_minecart.title": "Sticky Fingers",
-  "advancement.minecartrevolution.got_picker_minecart.description": "A minecart that picks up everything it rolls over. Like a very ambitious Roomba.",
-
-  "message.minecartrevolution.chain_selected": "Minecart selected! Right-click another minecart to link with chain.",
-  "message.minecartrevolution.chain_linked": "Minecarts linked with chain!",
-  "message.minecartrevolution.chain_broken": "Chain broken.",
-  "message.minecartrevolution.chain_already_chained": "One of these minecarts is already chained! Break the existing chain first."
+  "advancement.minecartrevolution.got_cobweb_minecart.description": "Cobweb Minecart, can stick to all sorts of things",
+  "advancement.minecartrevolution.got_water_minecart.title": "Sprinkler Cart",
+  "advancement.minecartrevolution.got_water_minecart.description": "A minecart filled with water, splashes water when it shakes...",
+  "advancement.minecartrevolution.got_mob_head_minecart.title": "First-Class Train",
+  "advancement.minecartrevolution.got_mob_head_minecart.description": "Put a head on the minecart... no one will like this",
+  "advancement.minecartrevolution.got_enchanting_table_minecart.title": "Enchant on the Go",
+  "advancement.minecartrevolution.got_enchanting_table_minecart.description": "A rolling Enchanting Table, now you can apply Sharpness V while on the move",
+  "advancement.minecartrevolution.got_anvil_minecart.title": "Anvil Minecart",
+  "advancement.minecartrevolution.got_anvil_minecart.description": "Looks really heavy",
+  "advancement.minecartrevolution.ride_anvil_minecart.title": "Big Fortune",
+  "advancement.minecartrevolution.ride_anvil_minecart.description": "Now I feel like smashing 100 people!",
+  "advancement.minecartrevolution.got_crafting_table_minecart.title": "Mobile Workshop",
+  "advancement.minecartrevolution.got_crafting_table_minecart.description": "Craft anytime, anywhere",
+  "advancement.minecartrevolution.got_smithing_table_minecart.title": "Commuter Smithing",
+  "advancement.minecartrevolution.got_smithing_table_minecart.description": "Smith anytime, anywhere",
+  "advancement.minecartrevolution.got_picker_minecart.title": "Sticky Minecart",
+  "advancement.minecartrevolution.got_picker_minecart.description": "Actively sucks up the block above when on an activated rail",
+  "message.minecartrevolution.chain_selected": "Minecart selected! Right-click another minecart to link it with a chain.",
+  "message.minecartrevolution.chain_linked": "Minecarts have been linked with a chain!",
+  "message.minecartrevolution.chain_broken": "Chain has been broken.",
+  "message.minecartrevolution.chain_already_chained": "One of the minecarts is already chained! Please break the existing chain first."
 }
