@@ -1,26 +1,22 @@
 {
-  "parent": "minecraft:got_block_minecart",
-  "criteria": {
-    "is_that_babel_tower_criterion": {
-      "trigger": "minecartrevolution:is_that_babel_tower"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.is_that_babel_tower.description"
-    },
-    "frame": "challenge",
-    "icon": {
-      "id": "minecartrevolution:normal_rail"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.is_that_babel_tower.title"
-    }
-  },
-  "requirements": [
-    [
-      "is_that_babel_tower_criterion"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_block_minecart",
+	"criteria": {
+		"is_that_babel_tower_criterion": {
+			"trigger": "minecartrevolution:is_that_babel_tower"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.is_that_babel_tower.description"
+		},
+		"frame": "challenge",
+		"icon": {
+			"id": "minecartrevolution:normal_rail"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.is_that_babel_tower.title"
+		}
+	},
+	"requirements": [["is_that_babel_tower_criterion"]],
+	"sends_telemetry_event": true
 }

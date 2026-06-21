@@ -1,26 +1,22 @@
 {
-  "parent": "minecraft:got_sponge_minecart",
-  "criteria": {
-    "sponge_absorbed_criterion": {
-      "trigger": "minecartrevolution:sponge_absorbed"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.sponge_absorbed.description"
-    },
-    "frame": "challenge",
-    "icon": {
-      "id": "minecraft:wet_sponge"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.sponge_absorbed.title"
-    }
-  },
-  "requirements": [
-    [
-      "sponge_absorbed_criterion"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_sponge_minecart",
+	"criteria": {
+		"sponge_absorbed_criterion": {
+			"trigger": "minecartrevolution:sponge_absorbed"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.sponge_absorbed.description"
+		},
+		"frame": "challenge",
+		"icon": {
+			"id": "minecraft:wet_sponge"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.sponge_absorbed.title"
+		}
+	},
+	"requirements": [["sponge_absorbed_criterion"]],
+	"sends_telemetry_event": true
 }
