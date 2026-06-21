@@ -41,7 +41,7 @@ import static net.minecraft.world.item.Items.IRON_CHAIN;
 public class MRAdvancementProvider {
 
     private static final String PREFIX = "advancement.minecartrevolution.";
-    private static final Identifier BG_TEXTURE = Identifier.fromNamespaceAndPath(MODID, "gui/advancements/backgrounds/minecart.png");
+    private static final Identifier BG_TEXTURE = Identifier.fromNamespaceAndPath(MODID, "gui/advancements/backgrounds/advancements");
 
     private static Component title(String advancementId) {
         return Component.translatable(PREFIX + advancementId + ".title");
@@ -51,7 +51,6 @@ public class MRAdvancementProvider {
         return Component.translatable(PREFIX + advancementId + ".description");
     }
 
-    /** Helper: craft-trigger advancement using BlockCartCraftedCriterion */
     private static AdvancementHolder craftAdv(
             AdvancementHolder parent,
             net.minecraft.world.level.ItemLike icon,

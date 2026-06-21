@@ -160,6 +160,7 @@ public class MinecartInteractionEventHandler {
                 level.playSound(null, minecart.blockPosition(), SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             } else {
+                if(held.is(Items.SHEARS)) return;
                 MinecartChainManager.startSelection(player, minecart);
                 sendOverlayMessage(player,
                         Component.translatable("message.minecartrevolution.chain_selected"));
