@@ -1,30 +1,26 @@
 {
-  "criteria": {
-    "craft_block_minecart": {
-      "conditions": {
-        "anything_is_ok": true,
-        "entity": "entity.minecartrevolution.block_minecart"
-      },
-      "trigger": "minecartrevolution:block_cart_crafted"
-    }
-  },
-  "display": {
-    "background": "minecartrevolution:gui/advancements/backgrounds/advancements",
-    "description": {
-      "translate": "advancement.minecartrevolution.got_block_minecart.description"
-    },
-    "frame": "goal",
-    "icon": {
-      "id": "minecraft:minecart"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.got_block_minecart.title"
-    }
-  },
-  "requirements": [
-    [
-      "craft_block_minecart"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"criteria": {
+		"craft_block_minecart": {
+			"conditions": {
+				"anything_is_ok": true,
+				"entity": "entity.minecartrevolution.block_minecart"
+			},
+			"trigger": "minecartrevolution:block_cart_crafted"
+		}
+	},
+	"display": {
+		"background": "minecartrevolution:gui/advancements/backgrounds/advancements",
+		"description": {
+			"translate": "advancement.minecartrevolution.got_block_minecart.description"
+		},
+		"frame": "goal",
+		"icon": {
+			"id": "minecraft:minecart"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.got_block_minecart.title"
+		}
+	},
+	"requirements": [["craft_block_minecart"]],
+	"sends_telemetry_event": true
 }

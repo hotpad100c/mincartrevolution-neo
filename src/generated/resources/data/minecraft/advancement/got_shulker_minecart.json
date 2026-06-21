@@ -1,29 +1,25 @@
 {
-  "parent": "minecraft:got_block_minecart",
-  "criteria": {
-    "craft_got_shulker_minecart": {
-      "conditions": {
-        "entity": "entity.minecartrevolution.shulker_minecart"
-      },
-      "trigger": "minecartrevolution:block_cart_crafted"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.got_shulker_minecart.description"
-    },
-    "frame": "challenge",
-    "icon": {
-      "id": "minecartrevolution:minecart_shulker"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.got_shulker_minecart.title"
-    }
-  },
-  "requirements": [
-    [
-      "craft_got_shulker_minecart"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_block_minecart",
+	"criteria": {
+		"craft_got_shulker_minecart": {
+			"conditions": {
+				"entity": "entity.minecartrevolution.shulker_minecart"
+			},
+			"trigger": "minecartrevolution:block_cart_crafted"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.got_shulker_minecart.description"
+		},
+		"frame": "challenge",
+		"icon": {
+			"id": "minecartrevolution:minecart_shulker"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.got_shulker_minecart.title"
+		}
+	},
+	"requirements": [["craft_got_shulker_minecart"]],
+	"sends_telemetry_event": true
 }

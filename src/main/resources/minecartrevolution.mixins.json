@@ -1,53 +1,53 @@
 {
-  "required": true,
-  "package": "ml.mypals.minecartrevolution.mixin",
-  "compatibilityLevel": "JAVA_25",
-  "mixins": [
-    "AbstractContainerMenuMixin",
-    "ItemStackMixin",
-    "LevelMixin",
-    "RedstoneViewMixin",
-    "blocks.BlockSourceMixin",
-    "blocks.EndPortalCreationMixin",
-    "blocks.LavaBlockMixin",
-    "blocks.NetherPortalCreationMixin",
-    "blocks.PistonStructureResolverMixin",
-    "blocks.PistonBlockInvoker",
-    "blocks.ProjectileDispenseBehaviorMixin",
-    "blocks.UnrenderableBlocksMixin",
-    "entity.EntityMixin",
-    "entity.OldMinecartBehaviourMixin",
-    "entity.PiglinMixin",
-    "level.ServerLevelMixin",
-    "light.LevelChunkMixin",
-    "minecart.AbstractMinecartMixin",
-    "minecart.ChestMinecartMixin",
-    "minecart.MinecartMixin",
-    "minecart.furnace.FurnaceMinecartMixin",
-    "simulation.BlockEntityAccessor",
-    "simulation.LevelAccessor",
-    "simulation.ServerAccessor",
-    "simulation.ServerLevelAccessor"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "overwrites": {
-    "requireAnnotations": true
-  },
-  "client": [
-    "blocks.BlockRenderManagerMixin",
-    "client.AbstractMinecartRendererMixin",
-    "client.BlockModelRenderStateAccessor",
-    "client.GameRendererMixin",
-    "client.ItemModelResolverMixin",
-    "client.LevelRendererMixin",
-    "client.MinecartRenderStateMixin",
-    "client.SoundBufferLibraryMixin",
-    "client.SoundManagerMixin",
-    "level.ClientLevelMixin",
-    "light.LevelRendererMixin",
-    "simulation.ClientLevelAccessor",
-    "simulation.LevelRendererAccessor"
-  ]
+	"required": true,
+	"package": "ml.mypals.minecartrevolution.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"AbstractContainerMenuMixin",
+		"ItemStackMixin",
+		"LevelMixin",
+		"RedstoneViewMixin",
+		"blocks.BlockSourceMixin",
+		"blocks.EndPortalCreationMixin",
+		"blocks.LavaBlockMixin",
+		"blocks.NetherPortalCreationMixin",
+		"blocks.PistonStructureResolverMixin",
+		"blocks.PistonBlockInvoker",
+		"blocks.ProjectileDispenseBehaviorMixin",
+		"blocks.UnrenderableBlocksMixin",
+		"entity.EntityMixin",
+		"entity.OldMinecartBehaviourMixin",
+		"entity.PiglinMixin",
+		"level.ServerLevelMixin",
+		"light.LevelChunkMixin",
+		"minecart.AbstractMinecartMixin",
+		"minecart.ChestMinecartMixin",
+		"minecart.MinecartMixin",
+		"minecart.furnace.FurnaceMinecartMixin",
+		"simulation.BlockEntityAccessor",
+		"simulation.LevelAccessor",
+		"simulation.ServerAccessor",
+		"simulation.ServerLevelAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	},
+	"client": [
+		"blocks.BlockRenderManagerMixin",
+		"client.AbstractMinecartRendererMixin",
+		"client.BlockModelRenderStateAccessor",
+		"client.GameRendererMixin",
+		"client.ItemModelResolverMixin",
+		"client.LevelRendererMixin",
+		"client.MinecartRenderStateMixin",
+		"client.SoundBufferLibraryMixin",
+		"client.SoundManagerMixin",
+		"level.ClientLevelMixin",
+		"light.LevelRendererMixin",
+		"simulation.ClientLevelAccessor",
+		"simulation.LevelRendererAccessor"
+	]
 }

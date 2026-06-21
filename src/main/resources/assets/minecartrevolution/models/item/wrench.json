@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "minecartrevolution:item/wrench"
-  }
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "minecartrevolution:item/wrench"
+	}
 }
