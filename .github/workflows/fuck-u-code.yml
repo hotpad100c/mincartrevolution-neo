@@ -1,0 +1,19 @@
+name: Fuck U Code
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Go 1.25
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+      - name: Display Go version
+        run: go version
+      - name: Install fuck-u-code
+        run: go install github.com/Done-0/fuck-u-code/cmd/fuck-u-code@latest
+      - name: analyze
+        run: fuck-u-code analyze --markdown
