@@ -11,6 +11,7 @@ import ml.mypals.minecartrevolution.advancements.criterion.NoGravityCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.PortalMinecartTeleportCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.SofaAwayCriterion;
 import ml.mypals.minecartrevolution.advancements.criterion.SpongeAbsorbedCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.*;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -31,7 +32,8 @@ public class MRModCriteria {
             .register("is_that_babel_tower", BabelTowerCriterion::new);
     public static final DeferredHolder<CriterionTrigger<?>, BabelCriterion> BABEL = TRIGGERS
             .register("babel", BabelCriterion::new);
-
+    public static final DeferredHolder<CriterionTrigger<?>, DjangoUnchainedCriterion> DJANGO_UNCHAINED = TRIGGERS.
+            register("django_unchained", DjangoUnchainedCriterion::new);
     // Behavior-triggered criteria
     public static final DeferredHolder<CriterionTrigger<?>, SpongeAbsorbedCriterion> SPONGE_ABSORBED = TRIGGERS
             .register("sponge_absorbed", SpongeAbsorbedCriterion::new);

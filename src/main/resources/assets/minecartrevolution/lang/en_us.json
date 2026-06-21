@@ -96,6 +96,8 @@
   "advancement.minecartrevolution.got_smithing_table_minecart.description": "Smith anytime, anywhere",
   "advancement.minecartrevolution.got_picker_minecart.title": "Sticky Minecart",
   "advancement.minecartrevolution.got_picker_minecart.description": "Actively sucks up the block above when on an activated rail",
+  "advancement.minecartrevolution.django_unchained.title": "Django Unchained",
+  "advancement.minecartrevolution.django_unchained.description": "Literally.",
   "message.minecartrevolution.chain_selected": "Minecart selected! Right-click another minecart to link it with a chain.",
   "message.minecartrevolution.chain_linked": "Minecarts have been linked with a chain!",
   "message.minecartrevolution.chain_broken": "Chain has been broken.",

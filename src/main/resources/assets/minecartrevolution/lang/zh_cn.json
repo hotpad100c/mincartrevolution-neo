@@ -139,6 +139,9 @@
   "advancement.minecartrevolution.got_picker_minecart.title": "黏着矿车",
   "advancement.minecartrevolution.got_picker_minecart.description": "在激活铁轨上主动吸取上方的方块",
 
+  "advancement.minecartrevolution.django_unchained.title": "被解救的姜戈",
+  "advancement.minecartrevolution.django_unchained.description": "字面意思",
+
   "message.minecartrevolution.chain_selected": "已选择矿车！右键另一个矿车以使用锁链连接。",
   "message.minecartrevolution.chain_linked": "矿车已用锁链连接！",
   "message.minecartrevolution.chain_broken": "锁链已断开。",

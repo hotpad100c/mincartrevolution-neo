@@ -37,6 +37,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.byColor;
+import static ml.mypals.minecartrevolution.registeries.MRModCriteria.DJANGO_UNCHAINED;
 import static net.minecraft.world.item.Items.IRON_CHAIN;
 
 @EventBusSubscriber(modid = "minecartrevolution")
@@ -151,6 +152,9 @@ public class MinecartInteractionEventHandler {
 
         if (selectedId == null) {
             if (alreadyChained && held.is(Items.SHEARS)) {
+                if (minecart.getName().getString().equalsIgnoreCase("django")) {
+                    DJANGO_UNCHAINED.get().trigger((ServerPlayer) player);
+                }
                 MinecartChainManager.breakChain(level, minecart);
                 sendOverlayMessage(player,
                         Component.translatable("message.minecartrevolution.chain_broken"));
