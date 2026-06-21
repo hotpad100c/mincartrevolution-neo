@@ -65,13 +65,15 @@ public class MinecartInteractionEventHandler {
             return;
         }
         if (!player.isShiftKeyDown()) {
-            if (!(interacted instanceof AbstractMinecart minecart))
-                return;
-            if (!world.isClientSide()) {
-                handleIronChain(player, minecart, held, (ServerLevel) world);
+            if (held.getItem().equals(IRON_CHAIN)||held.getItem().equals(SHEARS)) {
+                if (!(interacted instanceof AbstractMinecart minecart))
+                    return;
+                if (!world.isClientSide()) {
+                    handleIronChain(player, minecart, held, (ServerLevel) world);
+                }
+                event.setCancellationResult(InteractionResult.SUCCESS);
+                event.setCanceled(true);
             }
-            event.setCancellationResult(InteractionResult.SUCCESS);
-            event.setCanceled(true);
         } else {
             interact(player, event.getHand(), (AbstractMinecart) interacted, world);
         }
