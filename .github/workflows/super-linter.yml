@@ -54,7 +54,7 @@ jobs:
           FIX_JSON: true
           FIX_MARKDOWN: true
           FIX_NATURAL_LANGUAGE: true
-          FIX_FIX_GITHUB_ACTIONS_ZIZMOR: true
+          FIX_GITHUB_ACTIONS_ZIZMOR: true
 
       - name: Check for changes
         id: changes
