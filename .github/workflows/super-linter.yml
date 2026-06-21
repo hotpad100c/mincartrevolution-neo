@@ -54,6 +54,8 @@ jobs:
           FIX_JSON: true
           FIX_MARKDOWN: true
           FIX_NATURAL_LANGUAGE: true
+          FIX_BIOME_FORMAT: true
+
 
       - name: Check for changes
         id: changes
