@@ -6,7 +6,6 @@
     }
   },
   "display": {
-    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
       "translate": "advancement.minecartrevolution.is_that_babel_tower.description"
     },

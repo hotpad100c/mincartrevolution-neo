@@ -6,7 +6,6 @@
     }
   },
   "display": {
-    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
       "translate": "advancement.minecartrevolution.sofa_away_logic.description"
     },

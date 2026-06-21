@@ -9,7 +9,7 @@
     }
   },
   "display": {
-    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "background": "minecartrevolution:gui/advancements/backgrounds/minecart",
     "description": {
       "translate": "advancement.minecartrevolution.got_block_minecart.description"
     },

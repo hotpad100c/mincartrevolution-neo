@@ -6,7 +6,6 @@
     }
   },
   "display": {
-    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
       "translate": "advancement.minecartrevolution.no_gravity_logic.description"
     },

@@ -9,7 +9,6 @@
     }
   },
   "display": {
-    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
       "translate": "advancement.minecartrevolution.craft_dragon_egg_minecart.description"
     },

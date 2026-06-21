@@ -26,10 +26,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
+
 public class MRAdvancementProvider {
 
     private static final String PREFIX = "advancement.minecartrevolution.";
-    private static final Identifier BG_TEXTURE = Identifier.withDefaultNamespace("textures/gui/advancements/backgrounds/adventure.png");
+    private static final Identifier BG_TEXTURE = Identifier.fromNamespaceAndPath(MODID,"gui/advancements/backgrounds/minecart.png");
     private static Component title(String advancementId) {
         return Component.translatable(PREFIX + advancementId + ".title");
     }
@@ -68,7 +70,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.JUKEBOX_MINECART.item().get(),
                         title("got_jukebox_minecart"),
                         desc("got_jukebox_minecart"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -89,7 +91,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.OBSERVER_MINECART.item().get(),
                         title("got_observer_minecart"),
                         desc("got_observer_minecart"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -110,7 +112,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.OBSIDIAN_MINECART.item().get(),
                         title("got_lava_proof_minecart"),
                         desc("got_lava_proof_minecart"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -131,7 +133,7 @@ public class MRAdvancementProvider {
                         Items.DRAGON_EGG,
                         title("craft_dragon_egg_minecart"),
                         desc("craft_dragon_egg_minecart"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -152,7 +154,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.CACTUS_MINECART.item(),
                         title("got_dangerous_minecart"),
                         desc("got_dangerous_minecart"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -173,7 +175,7 @@ public class MRAdvancementProvider {
                         Items.DRAGON_EGG,
                         title("ride_dragon_egg_minecart"),
                         desc("ride_dragon_egg_minecart"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -199,7 +201,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.JUKEBOX_MINECART.item().get(),
                         title("move_on_jukebox_minecart"),
                         desc("move_on_jukebox_minecart"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -219,7 +221,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.SOFA_MINECART.item().get(),
                         title("sofa_away_logic"),
                         desc("sofa_away_logic"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -234,7 +236,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.WOOL_MINECART.item().get(),
                         title("no_gravity_logic"),
                         desc("no_gravity_logic"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -249,7 +251,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.NORMAL_RAIL_MINECART.item().get(),
                         title("is_that_babel_tower"),
                         desc("is_that_babel_tower"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -264,7 +266,7 @@ public class MRAdvancementProvider {
                         MRMinecarts.NORMAL_RAIL_MINECART.item().get(),
                         title("babel"),
                         desc("babel"),
-                        BG_TEXTURE,
+                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
