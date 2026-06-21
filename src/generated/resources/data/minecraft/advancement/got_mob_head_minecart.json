@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "craft_got_mob_head_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.mob_head_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancement.minecartrevolution.got_mob_head_minecart.description"
+    },
+    "icon": {
+      "id": "minecartrevolution:minecart_mob_head"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.got_mob_head_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_got_mob_head_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

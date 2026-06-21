@@ -63,7 +63,14 @@ public class NetherPortalCreationMixin {
             if (!minecarts.isEmpty()) {
                 Minecart minecart = minecarts.getFirst();
                 minecart.remove(Entity.RemovalReason.DISCARDED);
-                level.addFreshEntity(new NetherPortalMinecartEntity(MRMinecarts.PORTAL_MINECART.entity().get(), minecart.level(), minecart.getX(),minecart.getY(),minecart.getZ(),MRMinecarts.PORTAL_MINECART.item().asItem()));
+                NetherPortalMinecartEntity netherPortalMinecart = new NetherPortalMinecartEntity(MRMinecarts.PORTAL_MINECART.entity().get(), minecart.level(), minecart.getX(),minecart.getY(),minecart.getZ(),MRMinecarts.PORTAL_MINECART.item().asItem());
+                level.addFreshEntity(netherPortalMinecart);
+                if (level instanceof ServerLevel serverLevel) {
+                    net.minecraft.world.entity.player.Player player = serverLevel.getNearestPlayer(minecart, 10.0);
+                    if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                        ml.mypals.minecartrevolution.registeries.MRModCriteria.BLOCK_CART_CRAFTED.get().trigger(serverPlayer, netherPortalMinecart);
+                    }
+                }
                 level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2, 0);
                 toUpdate.add(pos);
             }

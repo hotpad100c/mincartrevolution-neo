@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:got_dangerous_minecart",
+  "criteria": {
+    "craft_got_lava_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.lava_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancement.minecartrevolution.got_lava_minecart.description"
+    },
+    "icon": {
+      "id": "minecartrevolution:minecart_lava"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.got_lava_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_got_lava_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

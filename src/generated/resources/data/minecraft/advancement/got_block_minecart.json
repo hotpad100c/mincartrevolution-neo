@@ -9,7 +9,7 @@
     }
   },
   "display": {
-    "background": "minecartrevolution:gui/advancements/backgrounds/minecart.png",
+    "background": "minecartrevolution:gui/advancements/backgrounds/advancements",
     "description": {
       "translate": "advancement.minecartrevolution.got_block_minecart.description"
     },

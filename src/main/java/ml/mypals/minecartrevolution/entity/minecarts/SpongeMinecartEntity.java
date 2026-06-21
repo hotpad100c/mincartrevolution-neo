@@ -27,6 +27,9 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
+import ml.mypals.minecartrevolution.registeries.MRModCriteria;
+import net.minecraft.server.level.ServerPlayer;
+
 import static net.minecraft.world.level.block.Block.dropResources;
 
 public class SpongeMinecartEntity extends SingleBlockMinecartEntity {
@@ -69,6 +72,11 @@ public class SpongeMinecartEntity extends SingleBlockMinecartEntity {
                 this.setCustomDisplayBlockState(Optional.of(Blocks.WET_SPONGE.defaultBlockState()));
                 world.playSound(this, pos, SoundEvents.SPONGE_ABSORB, SoundSource.BLOCKS, 1.0F, 1.0F);
                 this.setCorrespondingItem(MRMinecarts.WET_SPONGE_MINECART.item().get());
+                // Trigger advancement for any nearby players
+                if (world instanceof ServerLevel serverLevel) {
+                    serverLevel.getEntitiesOfClass(ServerPlayer.class, this.getBoundingBox().inflate(8))
+                            .forEach(p -> MRModCriteria.SPONGE_ABSORBED.get().trigger(p));
+                }
             }
         } else if (block instanceof WetSpongeBlock) {
 

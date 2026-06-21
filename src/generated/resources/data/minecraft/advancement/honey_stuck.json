@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:got_honey_minecart",
+  "criteria": {
+    "honey_stuck_criterion": {
+      "trigger": "minecartrevolution:honey_stuck"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.minecartrevolution.honey_stuck.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "minecraft:honey_block"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.honey_stuck.title"
+    }
+  },
+  "requirements": [
+    [
+      "honey_stuck_criterion"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

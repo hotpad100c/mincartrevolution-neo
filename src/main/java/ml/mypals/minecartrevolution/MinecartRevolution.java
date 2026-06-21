@@ -122,6 +122,7 @@ public class MinecartRevolution {
     private void commonSetup(FMLCommonSetupEvent event) {
         registerDispenserBehaviors();
         MinecartChainManager.chainEntityTypeSupplier = MRMinecarts.CHAIN_ENTITY;
+        ml.mypals.minecartrevolution.behaviours.MinecartTransformManager.init();
     }
 
 

@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:got_jukebox_minecart",
+  "criteria": {
+    "craft_got_amethyst_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.amethyst_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.minecartrevolution.got_amethyst_minecart.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "minecartrevolution:minecart_amethyst"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.got_amethyst_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_got_amethyst_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

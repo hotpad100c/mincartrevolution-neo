@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "craft_got_enchanting_table_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.enchanting_table_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancement.minecartrevolution.got_enchanting_table_minecart.description"
+    },
+    "icon": {
+      "id": "minecartrevolution:minecart_enchanting_table"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.got_enchanting_table_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_got_enchanting_table_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

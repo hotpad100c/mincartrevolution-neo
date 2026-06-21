@@ -1,6 +1,7 @@
 package ml.mypals.minecartrevolution.events;
 
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
+import ml.mypals.minecartrevolution.entity.minecarts.functioning.PickerMinecartEntity;
 import ml.mypals.minecartrevolution.item.WrenchItem;
 import ml.mypals.minecartrevolution.manager.MinecartChainManager;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
@@ -38,7 +39,6 @@ import java.util.UUID;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.byColor;
 import static ml.mypals.minecartrevolution.registeries.MRModCriteria.DJANGO_UNCHAINED;
 import static net.minecraft.world.item.Items.IRON_CHAIN;
-import static net.minecraft.world.item.Items.SHEARS;
 
 @EventBusSubscriber(modid = "minecartrevolution")
 public class MinecartInteractionEventHandler {
@@ -48,13 +48,13 @@ public class MinecartInteractionEventHandler {
         Entity interacted = event.getTarget();
         Player player = event.getEntity();
         ItemStack held = event.getItemStack();
-        if (!(interacted instanceof AbstractMinecart))
+        if (!(interacted instanceof AbstractMinecart minecart))
             return;
 
-        if (held.is(Items.SLIME_BALL) && interacted.getType() == EntityType.MINECART && ((AbstractMinecart) interacted).getDisplayBlockState().isAir()) {
+        if (held.is(Items.SLIME_BALL) && interacted.getType() == EntityType.MINECART && minecart.getDisplayBlockState().isAir()) {
             if (!world.isClientSide()) {
-                ml.mypals.minecartrevolution.entity.minecarts.functioning.PickerMinecartEntity picker = new ml.mypals.minecartrevolution.entity.minecarts.functioning.PickerMinecartEntity(world, interacted.getX(), interacted.getY(), interacted.getZ());
-                MinecartTransformManager.configMinecartData(world, picker, (AbstractMinecart) interacted);
+                PickerMinecartEntity picker = new PickerMinecartEntity(world, interacted.getX(), interacted.getY(), interacted.getZ());
+                MinecartTransformManager.configMinecartData(world, picker, minecart);
                 if (!player.isCreative()) {
                     held.shrink(1);
                 }
@@ -67,9 +67,7 @@ public class MinecartInteractionEventHandler {
             return;
         }
         if (!player.isShiftKeyDown()) {
-            if (held.getItem().equals(IRON_CHAIN)||held.getItem().equals(SHEARS)) {
-                if (!(interacted instanceof AbstractMinecart minecart))
-                    return;
+            if (held.is(IRON_CHAIN) || held.is(Items.SHEARS)) {
                 if (!world.isClientSide()) {
                     handleIronChain(player, minecart, held, (ServerLevel) world);
                 }
@@ -77,7 +75,7 @@ public class MinecartInteractionEventHandler {
                 event.setCanceled(true);
             }
         } else {
-            interact(player, event.getHand(), (AbstractMinecart) interacted, world);
+            interact(player, event.getHand(), minecart, world);
         }
     }
 
@@ -89,21 +87,20 @@ public class MinecartInteractionEventHandler {
         if (player.isSecondaryUseActive()) {
             if (!stackInHand.isEmpty()) {
                 if (stackInHand.getItem() instanceof BlockItem blockItem && interacted.getDisplayBlockState().isAir()) {
-                    interacted.setCustomDisplayBlockState(
-                            Optional.of(blockItem.getBlock().defaultBlockState()));
+                    interacted.setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
 
                     player.swing(hand);
-                    interacted.playSound(blockItem.getBlock().defaultBlockState()
-                            .getSoundType(world, interacted.getOnPos(), player).getPlaceSound(), 1, 1);
+                    interacted.playSound(blockItem.getBlock().defaultBlockState().getSoundType(world, interacted.getOnPos(), player).getPlaceSound(), 1, 1);
 
+                    AbstractMinecart finalCart = interacted;
                     if (!world.isClientSide()) {
-                        MinecartTransformManager.checkForTransform(world, interacted.position(), blockItem, interacted,
+                        finalCart = MinecartTransformManager.checkForTransform(world, interacted.position(), blockItem, interacted,
                                 stackInHand);
                         stackInHand.consume(1, player);
                     }
 
                     if (player instanceof ServerPlayer serverPlayerEntity) {
-                        MRModCriteria.BLOCK_CART_CRAFTED.get().trigger(serverPlayerEntity, interacted);
+                        MRModCriteria.BLOCK_CART_CRAFTED.get().trigger(serverPlayerEntity, finalCart);
                         boolean flag = false;
                         for (DyeColor color : DyeColor.values()) {
                             Block block = byColor(color);
@@ -118,13 +115,17 @@ public class MinecartInteractionEventHandler {
                         && bucketItem.getContent() != Fluids.EMPTY
                         && interacted.getDisplayBlockState().isAir()) {
                     Fluid fluid = bucketItem.getContent();
+                    AbstractMinecart finalCart = interacted;
                     if (!world.isClientSide()) {
-                        MinecartTransformManager.checkForTransform(world, interacted.position(), stackInHand.getItem(),
+                        finalCart = MinecartTransformManager.checkForTransform(world, interacted.position(), stackInHand.getItem(),
                                 interacted, stackInHand);
                         stackInHand.shrink(1);
                         player.getInventory().add(new ItemStack(Items.BUCKET));
                     }
-                    playBucketSound(fluid, world, interacted);
+                    if (player instanceof ServerPlayer serverPlayerEntity) {
+                        MRModCriteria.BLOCK_CART_CRAFTED.get().trigger(serverPlayerEntity, finalCart);
+                    }
+                    playBucketSound(fluid, world, finalCart);
                 }
             }
         }
@@ -150,16 +151,16 @@ public class MinecartInteractionEventHandler {
         boolean alreadyChained = MinecartChainManager.isMinecartChained(level, minecart);
 
         if (selectedId == null) {
-            if (alreadyChained && !held.is(IRON_CHAIN)) {
+            if (alreadyChained && held.is(Items.SHEARS)) {
                 if (minecart.getName().getString().equalsIgnoreCase("django")) {
                     DJANGO_UNCHAINED.get().trigger((ServerPlayer) player);
                 }
                 MinecartChainManager.breakChain(level, minecart);
-                sendOverlayMessage(player,
-                        Component.translatable("message.minecartrevolution.chain_broken"));
-                level.playSound(null, minecart.blockPosition(),
-                        SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+                sendOverlayMessage(player, Component.translatable("message.minecartrevolution.chain_broken"));
+                level.playSound(null, minecart.blockPosition(), SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+
             } else {
+                if(held.is(Items.SHEARS)) return;
                 MinecartChainManager.startSelection(player, minecart);
                 sendOverlayMessage(player,
                         Component.translatable("message.minecartrevolution.chain_selected"));

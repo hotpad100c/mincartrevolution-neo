@@ -2,6 +2,8 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import ml.mypals.minecartrevolution.registeries.MRModCriteria;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.Item;
@@ -86,6 +88,11 @@ public class HoneyMinecartEntity extends SingleBlockMinecartEntity {
                         0.3, 0.3, 0.3,
                         0.05
                 );
+                // Trigger advancement for the riding player, if any
+                this.getPassengers().stream()
+                        .filter(e -> e instanceof ServerPlayer)
+                        .map(e -> (ServerPlayer) e)
+                        .forEach(p -> MRModCriteria.HONEY_STUCK.get().trigger(p));
             }
         });
         return super.onCollision(position, target, actual, delta);
@@ -107,6 +114,10 @@ public class HoneyMinecartEntity extends SingleBlockMinecartEntity {
         });
     }
 
+    @Override
+    public float getCollisionSensitive() {
+        return 0.002f;
+    }
     @Override
     public @NonNull ItemStack getPickResult() {
         return MRMinecarts.HONEY_MINECART.item().get().getDefaultInstance();
