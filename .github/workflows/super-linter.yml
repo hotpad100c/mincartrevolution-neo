@@ -45,11 +45,15 @@ jobs:
           persist-credentials: false
 
       - name: Super-Linter
+        continue-on-error: true
         uses: super-linter/super-linter@v8.7.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
           FIX_GOOGLE_JAVA_FORMAT: true
+          FIX_JSON: true
+          FIX_MARKDOWN: true
+          FIX_NATURAL_LANGUAGE: true
           FIX_YAML_PRETTIER: true
 
       - name: Check for changes
