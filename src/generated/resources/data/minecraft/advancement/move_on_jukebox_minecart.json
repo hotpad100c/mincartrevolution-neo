@@ -1,30 +1,26 @@
 {
-  "parent": "minecraft:got_jukebox_minecart",
-  "criteria": {
-    "move_on_jukebox_minecart": {
-      "conditions": {
-        "entity": "entity.minecartrevolution.jukebox_minecart"
-      },
-      "trigger": "minecartrevolution:entity_moved"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.move_on_jukebox_minecart.description"
-    },
-    "frame": "challenge",
-    "hidden": true,
-    "icon": {
-      "id": "minecartrevolution:minecart_jukebox"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.move_on_jukebox_minecart.title"
-    }
-  },
-  "requirements": [
-    [
-      "move_on_jukebox_minecart"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_jukebox_minecart",
+	"criteria": {
+		"move_on_jukebox_minecart": {
+			"conditions": {
+				"entity": "entity.minecartrevolution.jukebox_minecart"
+			},
+			"trigger": "minecartrevolution:entity_moved"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.move_on_jukebox_minecart.description"
+		},
+		"frame": "challenge",
+		"hidden": true,
+		"icon": {
+			"id": "minecartrevolution:minecart_jukebox"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.move_on_jukebox_minecart.title"
+		}
+	},
+	"requirements": [["move_on_jukebox_minecart"]],
+	"sends_telemetry_event": true
 }

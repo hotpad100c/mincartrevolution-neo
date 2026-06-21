@@ -1,27 +1,23 @@
 {
-  "parent": "minecraft:got_block_minecart",
-  "criteria": {
-    "sofa_away_criterion": {
-      "trigger": "minecartrevolution:sofa_away"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.sofa_away_logic.description"
-    },
-    "frame": "challenge",
-    "hidden": true,
-    "icon": {
-      "id": "minecartrevolution:minecart_sofa"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.sofa_away_logic.title"
-    }
-  },
-  "requirements": [
-    [
-      "sofa_away_criterion"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_block_minecart",
+	"criteria": {
+		"sofa_away_criterion": {
+			"trigger": "minecartrevolution:sofa_away"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.sofa_away_logic.description"
+		},
+		"frame": "challenge",
+		"hidden": true,
+		"icon": {
+			"id": "minecartrevolution:minecart_sofa"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.sofa_away_logic.title"
+		}
+	},
+	"requirements": [["sofa_away_criterion"]],
+	"sends_telemetry_event": true
 }

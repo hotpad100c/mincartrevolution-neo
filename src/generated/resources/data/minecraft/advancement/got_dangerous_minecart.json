@@ -1,29 +1,25 @@
 {
-  "parent": "minecraft:got_block_minecart",
-  "criteria": {
-    "got_dangerous_minecart": {
-      "conditions": {
-        "entity": "entity.minecartrevolution.harmful_minecart"
-      },
-      "trigger": "minecartrevolution:block_cart_crafted"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.got_dangerous_minecart.description"
-    },
-    "frame": "challenge",
-    "icon": {
-      "id": "minecartrevolution:minecart_cactus"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.got_dangerous_minecart.title"
-    }
-  },
-  "requirements": [
-    [
-      "got_dangerous_minecart"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_block_minecart",
+	"criteria": {
+		"got_dangerous_minecart": {
+			"conditions": {
+				"entity": "entity.minecartrevolution.harmful_minecart"
+			},
+			"trigger": "minecartrevolution:block_cart_crafted"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.got_dangerous_minecart.description"
+		},
+		"frame": "challenge",
+		"icon": {
+			"id": "minecartrevolution:minecart_cactus"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.got_dangerous_minecart.title"
+		}
+	},
+	"requirements": [["got_dangerous_minecart"]],
+	"sends_telemetry_event": true
 }

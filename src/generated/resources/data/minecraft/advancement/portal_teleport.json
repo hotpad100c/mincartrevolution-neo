@@ -1,26 +1,22 @@
 {
-  "parent": "minecraft:got_portal_minecart",
-  "criteria": {
-    "portal_teleport_criterion": {
-      "trigger": "minecartrevolution:portal_minecart_teleport"
-    }
-  },
-  "display": {
-    "description": {
-      "translate": "advancement.minecartrevolution.portal_teleport.description"
-    },
-    "frame": "challenge",
-    "icon": {
-      "id": "minecraft:ender_pearl"
-    },
-    "title": {
-      "translate": "advancement.minecartrevolution.portal_teleport.title"
-    }
-  },
-  "requirements": [
-    [
-      "portal_teleport_criterion"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "minecraft:got_portal_minecart",
+	"criteria": {
+		"portal_teleport_criterion": {
+			"trigger": "minecartrevolution:portal_minecart_teleport"
+		}
+	},
+	"display": {
+		"description": {
+			"translate": "advancement.minecartrevolution.portal_teleport.description"
+		},
+		"frame": "challenge",
+		"icon": {
+			"id": "minecraft:ender_pearl"
+		},
+		"title": {
+			"translate": "advancement.minecartrevolution.portal_teleport.title"
+		}
+	},
+	"requirements": [["portal_teleport_criterion"]],
+	"sends_telemetry_event": true
 }
