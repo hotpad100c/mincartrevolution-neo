@@ -1,0 +1,71 @@
+---
+name: Lint
+
+on:
+  push:
+    branches-ignore:
+      - auto-lint-*
+
+jobs:
+  fix-lint-issues:
+    permissions:
+      contents: write
+      statuses: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Super-Linter
+        uses: super-linter/super-linter@v8.7.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FIX_GOOGLE_JAVA_FORMAT: true
+          FIX_YAML_PRETTIER: true
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "NEW_BRANCH=auto-lint-${{ github.run_id }}-${{ github.run_attempt }}" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push linting fixes
+        if: steps.changes.outputs.has_changes == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.NEW_BRANCH }}
+          create_branch: true
+          commit_message: "chore: fix linting issues"
+          commit_user_name: super-linter
+          commit_user_email: super-linter@super-linter.dev
+
+      - name: Ensure auto-lint label exists
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh label create auto-lint --force || true
+
+      - name: Close old auto-lint PRs and create new one
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr list --state open --label auto-lint --json number \
+            --jq '.[].number' | while read -r pr_num; do
+              gh pr close "$pr_num" --comment "Superseded by a newer auto-lint PR."
+          done
+          gh pr create \
+            --title "chore: fix linting issues" \
+            --body "Automated linting fixes. Please review." \
+            --base ${{ github.ref_name }} \
+            --head ${{ env.NEW_BRANCH }} \
+            --label auto-lint
