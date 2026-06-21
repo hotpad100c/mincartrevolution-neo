@@ -36,7 +36,6 @@ jobs:
       contents: write
       statuses: write
       pull-requests: write
-      actions: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -50,11 +49,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
+          FILTER_REGEX_EXCLUDE: .*\.github/workflows/.*
           FIX_GOOGLE_JAVA_FORMAT: true
           FIX_JSON: true
           FIX_MARKDOWN: true
           FIX_NATURAL_LANGUAGE: true
-          FIX_GITHUB_ACTIONS_ZIZMOR: true
 
       - name: Check for changes
         id: changes
