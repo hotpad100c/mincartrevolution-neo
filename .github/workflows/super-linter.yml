@@ -93,8 +93,7 @@ jobs:
           if [ -n "$prs" ]; then
             echo "$prs" | while read -r pr_num branch_name; do
               gh pr close "$pr_num" --comment "Superseded by a newer auto-lint PR."
-              echo "Deleting branch: $branch_name"
-              gh api "repos/${{ github.repository }}/git/refs/heads/$branch_name" --method DELETE
+              git push origin --delete "$branch_name" || true
             done
           fi
           gh pr create \
