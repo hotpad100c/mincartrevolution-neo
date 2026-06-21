@@ -4,5 +4,5 @@ import net.minecraft.client.renderer.entity.state.MinecartRenderState;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PortalMinecartRenderState extends MinecartRenderState {
-    public BlockState portalBlock;
+  public BlockState portalBlock;
 }

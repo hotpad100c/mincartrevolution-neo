@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CompatFriendlyBlockRenderState extends MinecartRenderState {
-    public BlockEntityRenderState beRenderState;
-    public BlockEntity be;
-    public LevelRenderState levelRenderState;
-    public CompatFriendlyBlockMinecartEntity minecart;
+  public BlockEntityRenderState beRenderState;
+  public BlockEntity be;
+  public LevelRenderState levelRenderState;
+  public CompatFriendlyBlockMinecartEntity minecart;
 }

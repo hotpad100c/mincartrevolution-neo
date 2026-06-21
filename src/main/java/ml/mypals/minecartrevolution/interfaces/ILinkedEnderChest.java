@@ -3,7 +3,7 @@ package ml.mypals.minecartrevolution.interfaces;
 import net.minecraft.world.Container;
 
 public interface ILinkedEnderChest {
-    Container getContainer();
+  Container getContainer();
 
-    boolean isLinked();
+  boolean isLinked();
 }

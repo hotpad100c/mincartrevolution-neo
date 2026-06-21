@@ -1,4 +1,3 @@
 package ml.mypals.minecartrevolution.mixin.entity;
 
-public class VillagerHostilesSensorMixin {
-}
+public class VillagerHostilesSensorMixin {}
