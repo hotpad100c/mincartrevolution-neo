@@ -93,7 +93,7 @@ jobs:
               gh pr close "$pr_num" --comment "Superseded by a newer auto-lint PR."
           done
           git fetch --prune origin
-          git branch -r --list 'origin/auto-lint-*' | sed 's|origin/||' | grep -vxF "$NEW_BRANCH" | while read -r branch; do
+          git branch -r --list 'origin/auto-lint-*' | sed 's|origin/||' | grep -vxF '${{ env.NEW_BRANCH }}' | while read -r branch; do
               git push origin --delete "$branch" || true
           done
           gh pr create \
