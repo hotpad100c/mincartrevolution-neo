@@ -115,6 +115,10 @@ public class HoneyMinecartEntity extends SingleBlockMinecartEntity {
     }
 
     @Override
+    public float getCollisionSensitive() {
+        return 0.002f;
+    }
+    @Override
     public @NonNull ItemStack getPickResult() {
         return MRMinecarts.HONEY_MINECART.item().get().getDefaultInstance();
     }

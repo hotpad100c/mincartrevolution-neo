@@ -51,7 +51,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     public boolean keepUpdatingLight = false;
     private boolean firstTickUpdateLight = true;
     private int oldLight = 0;
-    public double mass = 1D;
+    public double mass = 0.1D;
     private boolean movingEntities = false;
     public VariantBlockMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
@@ -521,14 +521,16 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
                 e -> e != this.getControllingPassenger())) {
             if (movement.dot(entity.position().subtract(pos)) > 0) {
                 this.setDeltaMovement(movement.scale(0.89D));
-                entity.setDeltaMovement(movement.normalize().scale(this.mass * 4D * movement.length()).add(entity.getDeltaMovement()));
+                entity.setDeltaMovement(movement.normalize().scale(getMass() * 1.5D * movement.length()).add(entity.getDeltaMovement()));
                 if (entity instanceof LivingEntity) {
-                    // I can't find more accurate dying description to describe "The entity was hit into air by XX minecart (placed by XX)"
                     entity.hurtServer((ServerLevel)this.level(), entity.damageSources().flyIntoWall(),
-                            (float)(this.mass * 6D * movement.length()));
+                            (float)(getMass() * 4D * movement.length()));
                 }
             }
         }
+    }
+    public float getMass(){
+        return 0.1f;
     }
 }
 
