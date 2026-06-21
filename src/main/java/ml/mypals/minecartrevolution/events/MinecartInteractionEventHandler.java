@@ -156,10 +156,9 @@ public class MinecartInteractionEventHandler {
                     DJANGO_UNCHAINED.get().trigger((ServerPlayer) player);
                 }
                 MinecartChainManager.breakChain(level, minecart);
-                sendOverlayMessage(player,
-                        Component.translatable("message.minecartrevolution.chain_broken"));
-                level.playSound(null, minecart.blockPosition(),
-                        SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+                sendOverlayMessage(player, Component.translatable("message.minecartrevolution.chain_broken"));
+                level.playSound(null, minecart.blockPosition(), SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+
             } else {
                 MinecartChainManager.startSelection(player, minecart);
                 sendOverlayMessage(player,
