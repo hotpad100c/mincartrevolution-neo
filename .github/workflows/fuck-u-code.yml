@@ -16,4 +16,4 @@ jobs:
       - name: Install fuck-u-code
         run: go install github.com/Done-0/fuck-u-code/cmd/fuck-u-code@latest
       - name: analyze
-        run: fuck-u-code analyze --markdown
+        run: fuck-u-code analyze -v -m -t 10 > $GITHUB_STEP_SUMMARY
