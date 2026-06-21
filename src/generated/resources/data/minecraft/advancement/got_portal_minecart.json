@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "craft_got_portal_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.nether_portal_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.minecartrevolution.got_portal_minecart.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "minecartrevolution:minecart_nether_portal"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.got_portal_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_got_portal_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

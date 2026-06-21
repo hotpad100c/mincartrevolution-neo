@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:got_barrel_minecart",
+  "criteria": {
+    "craft_got_copper_chest_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.copper_chest_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancement.minecartrevolution.got_copper_chest_minecart.description"
+    },
+    "icon": {
+      "id": "minecartrevolution:minecart_copper_chest"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.got_copper_chest_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_got_copper_chest_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

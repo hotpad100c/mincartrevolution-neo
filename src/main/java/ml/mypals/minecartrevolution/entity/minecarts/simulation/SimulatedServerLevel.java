@@ -21,6 +21,7 @@ import net.minecraft.world.attribute.EnvironmentAttributeSystem;
 import net.minecraft.world.clock.ServerClockManager;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
@@ -49,6 +51,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class SimulatedServerLevel extends ServerLevel {
     private final ServerLevel wrapped;
@@ -247,6 +250,41 @@ public class SimulatedServerLevel extends ServerLevel {
     @Override
     public @NonNull LevelTicks<Fluid> getFluidTicks() {
         return new SimulatedServerTickAccess<>(this.getLevel(), wrapped.getFluidTicks(), minecart, minecart.pendingFluidTicks);
+    }
+
+    public boolean addFreshEntity(@NonNull Entity entity) {
+        return wrapped.addFreshEntity(entity);
+    }
+
+    public boolean addWithUUID(@NonNull Entity entity) {
+        return wrapped.addWithUUID(entity);
+    }
+
+    public void addDuringTeleport(@NonNull Entity entity) {
+        wrapped.addDuringTeleport(entity);
+    }
+
+
+
+
+    public <T extends Entity> void getEntities(@NonNull EntityTypeTest<Entity, T> type, @NonNull Predicate<? super T> selector, @NonNull List<? super T> result, int maxResults) {
+        wrapped.getEntities(type, selector, result, maxResults);
+    }
+
+    public @NonNull List<? extends EnderDragon> getDragons() {
+        return wrapped.getDragons();
+    }
+
+    public @NonNull List<ServerPlayer> getPlayers(@NonNull Predicate<? super ServerPlayer> selector) {
+        return wrapped.getPlayers(selector, Integer.MAX_VALUE);
+    }
+
+    public @NonNull List<ServerPlayer> getPlayers(@NonNull Predicate<? super ServerPlayer> selector, int maxResults) {
+        return wrapped.getPlayers(selector, maxResults);
+    }
+
+    public @Nullable ServerPlayer getRandomPlayer() {
+        return wrapped.getRandomPlayer();
     }
 
 }

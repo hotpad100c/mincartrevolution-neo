@@ -20,7 +20,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -89,11 +89,6 @@ public class MinecartTransformManager {
             m.setInitialPos(pos.x, pos.y, pos.z);
             return m;
         });
-        register(Items.AIR, (w, pos) -> {
-            AbstractMinecart m = new Minecart(EntityType.MINECART, w);
-            m.setInitialPos(pos.x, pos.y, pos.z);
-            return m;
-        });
 
         AnnotationManager manager = new AnnotationManager(MinecartMapper.class, ElementType.FIELD);
         List<ModFileScanData.AnnotationData> annotationData = manager.find();
@@ -109,7 +104,9 @@ public class MinecartTransformManager {
                 throw new IllegalArgumentException("MinecartMapper annotation must be on a static field", e);
             }
         }
+    }
 
+    public static void init() {
         for (MRMinecarts.MinecartEntry<?, ?> entry : MRMinecarts.MINECARTS) {
             Item corItem = entry.item().get();
             if (entry.spawnFactory() != null) {
@@ -143,6 +140,9 @@ public class MinecartTransformManager {
             }
         }
         AbstractMinecart minecart = factory.createMinecart(world, pos);
+        if (minecart.getDisplayBlockState().isAir() && item instanceof net.minecraft.world.item.BlockItem blockItem) {
+            minecart.setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
+        }
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
         return doExtraCheck(minecart, handStack);
@@ -154,6 +154,9 @@ public class MinecartTransformManager {
         AbstractMinecart minecart = factory.createMinecart(world, pos);
         if (minecart == null)
             return null;
+        if (minecart.getDisplayBlockState().isAir() && item instanceof net.minecraft.world.item.BlockItem blockItem) {
+            minecart.setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
+        }
         Component name = handStack.getCustomName();
         minecart.setCustomName(name);
         return doExtraCheck(minecart, handStack);
@@ -173,8 +176,8 @@ public class MinecartTransformManager {
 
     public static AbstractMinecart checkForTransform(Level level, Vec3 pos, Item item, AbstractMinecart original,
             ItemStack handStack) {
-        AbstractMinecart minecart = spawnFromItem(level, item, pos, handStack);
-        return configMinecartData(level, minecart, original);
+        AbstractMinecart newMinecart = spawnFromItem(level, item, pos, handStack);
+        return configMinecartData(level, newMinecart, original);
     }
 
     public static AbstractMinecart checkForTransform(Level level, Vec3 pos, Block block, AbstractMinecart original,
@@ -204,8 +207,12 @@ public class MinecartTransformManager {
             ValueInput valueInput = TagValueInput.create(reporter, level.registryAccess(), nbtCompound);
             ValueInput valueInput1 = TagValueInput.create(reporter, level.registryAccess(), nbtCompound1);
 
+            BlockState correctState = minecart.getDisplayBlockState();
             minecart.load(valueInput);
             minecart.load(valueInput1);
+            if (!correctState.isAir() && minecart.getDisplayBlockState().isAir()) {
+                minecart.setCustomDisplayBlockState(Optional.of(correctState));
+            }
             minecart.setPortalCooldown(original.getPortalCooldown());
             minecart.portalProcess = original.portalProcess;
 

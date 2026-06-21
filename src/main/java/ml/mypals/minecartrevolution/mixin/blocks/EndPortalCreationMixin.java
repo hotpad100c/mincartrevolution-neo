@@ -28,12 +28,16 @@ import java.util.Set;
 public class EndPortalCreationMixin {
 
     @WrapOperation(method = "useOn", at = @At(ordinal = 1, target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", value = "INVOKE"))
-    public boolean createPortalBlocks(Level level, BlockPos pos, BlockState blockState, int updateFlags, Operation<Boolean> original) {
+    public boolean createPortalBlocks(Level level, BlockPos pos, BlockState blockState, int updateFlags, Operation<Boolean> original, @Local(argsOnly = true) net.minecraft.world.item.context.UseOnContext context) {
         List<Minecart> minecarts = level.getEntitiesOfClass(Minecart.class, AABB.of(BoundingBox.fromCorners(pos, pos)));
         if (!minecarts.isEmpty()) {
             Minecart minecart = minecarts.getFirst();
             minecart.remove(Entity.RemovalReason.DISCARDED);
-            level.addFreshEntity(new EnderPortalMinecartEntity(MRMinecarts.ENDER_PORTAL_MINECART.entity().get(), minecart.level(), minecart.getX(),minecart.getY(),minecart.getZ(),MRMinecarts.ENDER_PORTAL_MINECART.item().asItem()));
+            EnderPortalMinecartEntity enderPortalMinecart = new EnderPortalMinecartEntity(MRMinecarts.ENDER_PORTAL_MINECART.entity().get(), minecart.level(), minecart.getX(),minecart.getY(),minecart.getZ(),MRMinecarts.ENDER_PORTAL_MINECART.item().asItem());
+            level.addFreshEntity(enderPortalMinecart);
+            if (context.getPlayer() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                ml.mypals.minecartrevolution.registeries.MRModCriteria.BLOCK_CART_CRAFTED.get().trigger(serverPlayer, enderPortalMinecart);
+            }
             return level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
         return original.call(level, pos, blockState,updateFlags);

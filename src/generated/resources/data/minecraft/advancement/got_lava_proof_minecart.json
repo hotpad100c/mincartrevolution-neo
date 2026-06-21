@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:got_block_minecart",
   "criteria": {
-    "craft_lava_proof_minecart": {
+    "craft_got_lava_proof_minecart": {
       "conditions": {
         "entity": "entity.minecartrevolution.obsidian_minecart"
       },
@@ -22,7 +22,7 @@
   },
   "requirements": [
     [
-      "craft_lava_proof_minecart"
+      "craft_got_lava_proof_minecart"
     ]
   ],
   "sends_telemetry_event": true

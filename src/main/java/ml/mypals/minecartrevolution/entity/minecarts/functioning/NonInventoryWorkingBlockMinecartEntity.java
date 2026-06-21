@@ -44,19 +44,13 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
         super(entityType, world);
     }
 
-    @Override
-    public @NonNull BlockState getDefaultDisplayBlockState() {
-        return Blocks.CRAFTING_TABLE.defaultBlockState();
-    }
 
     public NonInventoryWorkingBlockMinecartEntity(EntityType<? extends AbstractMinecart> minecart, Level world, double x, double y, double z, Item item) {
         super(minecart, world, x, y, z, item);
     }
 
     private Item getItem() {
-        BlockState displayBlock = this.entityData
-                .get(DATA_ID_CUSTOM_DISPLAY_BLOCK)
-                .orElse(Blocks.AIR.defaultBlockState());
+        BlockState displayBlock = this.getDisplayBlockState();
         Block block = displayBlock.getBlock();
         return switch (block) {
             case SmithingTableBlock ignored -> MRMinecarts.SMITHING_TABLE_MINECART.item().get();
@@ -67,7 +61,7 @@ public class NonInventoryWorkingBlockMinecartEntity extends VariantBlockMinecart
             case GrindstoneBlock ignored -> MRMinecarts.GRINDSTONE_MINECART.item().get();
             case AnvilBlock ignored -> MRMinecarts.ANVIL_MINECART.item().get();
             case EnchantingTableBlock ignored -> MRMinecarts.ENCHANTING_TABLE_MINECART.item().get();
-            default -> super.getPickResult().getItem();
+            default -> MRMinecarts.CRAFTING_TABLE_MINECART.item().get();
         };
     }
 

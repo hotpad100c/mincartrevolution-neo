@@ -1,8 +1,10 @@
 package ml.mypals.minecartrevolution.entity.minecarts.fluidcarts;
 
+import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -74,17 +76,15 @@ public class NetherPortalMinecartEntity extends PortalMinecartEntity {
     private void tickEventCharging(ServerLevel serverLevel) {
         float progress = (float) teleportEventTimer / EVENT_DURATION;
 
-        this.noPhysics = true;
         this.setYRot(this.getYRot() + 2.0f + 4.0f * progress);
 
         this.setHurtDir(-this.getHurtDir());
         this.setHurtTime(10);
         this.setDamage(50.0F);
 
+
         List<Entity> nearby = getNearbyEventEntities();
         for (Entity entity : nearby) {
-            entity.noPhysics = true;
-            entity.setDeltaMovement(Vec3.ZERO);
 
             serverLevel.sendParticles(
                     ParticleTypes.PORTAL,
@@ -168,6 +168,10 @@ public class NetherPortalMinecartEntity extends PortalMinecartEntity {
             entity.fallDistance = 0;
             entity.hurtMarked = true;
             entity.setPortalCooldown(PORTAL_COOLDOWN);
+            // Trigger advancement if the teleported entity is a player
+            if (entity instanceof ServerPlayer serverPlayer) {
+                MRModCriteria.PORTAL_MINECART_TELEPORT.get().trigger(serverPlayer);
+            }
         }
 
         for (Entity entity : targetEntities) {

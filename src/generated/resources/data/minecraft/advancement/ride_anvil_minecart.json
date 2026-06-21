@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:got_anvil_minecart",
+  "criteria": {
+    "ride_anvil_minecart": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "vehicle": {
+                "type": "minecartrevolution:anvil_minecart",
+                "passenger": {
+                  "type": "minecraft:player"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.minecartrevolution.ride_anvil_minecart.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "minecraft:anvil"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.ride_anvil_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "ride_anvil_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

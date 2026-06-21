@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.entity.minecarts.functioning;
 import net.minecraft.world.item.ItemStack;
 import ml.mypals.minecartrevolution.entity.minecarts.VariantBlockMinecartEntity;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
+import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,6 +38,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
+import net.minecraft.server.level.ServerPlayer;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,6 +64,8 @@ public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements 
     private boolean isBlocked = false;
     private List<BeaconBeamOwner.Section> beamSections = new ArrayList<>();
     private List<BeaconBeamOwner.Section> checkingBeamSections = new ArrayList<>();
+    /** Tracks players who have already received the beacon-activated advancement this session */
+    private final java.util.Set<java.util.UUID> advancementTriggeredFor = new java.util.HashSet<>();
 
     private static @Nullable Holder<MobEffect> filterEffect(@Nullable Holder<MobEffect> effect) {
         return VALID_EFFECTS.contains(effect) ? effect : null;
@@ -297,6 +301,11 @@ public class BeaconMinecartEntity extends VariantBlockMinecartEntity implements 
 
         for (Player player : players) {
             player.addEffect(new MobEffectInstance(primary, duration, amplifier, true, true));
+            // Fire beacon-activated advancement once per player per activation
+            if (player instanceof ServerPlayer sp && !advancementTriggeredFor.contains(sp.getUUID())) {
+                advancementTriggeredFor.add(sp.getUUID());
+                MRModCriteria.BEACON_ACTIVATED.get().trigger(sp);
+            }
         }
 
         if (this.levels >= 4 && !Objects.equals(primary, secondary) && secondary != null) {

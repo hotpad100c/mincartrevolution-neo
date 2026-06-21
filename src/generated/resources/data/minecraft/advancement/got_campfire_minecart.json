@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:got_dangerous_minecart",
+  "criteria": {
+    "craft_got_campfire_minecart": {
+      "conditions": {
+        "entity": "entity.minecartrevolution.harmful_minecart"
+      },
+      "trigger": "minecartrevolution:block_cart_crafted"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancement.minecartrevolution.got_campfire_minecart.description"
+    },
+    "icon": {
+      "id": "minecartrevolution:minecart_campfire"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.got_campfire_minecart.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_got_campfire_minecart"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

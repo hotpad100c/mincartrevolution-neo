@@ -70,7 +70,7 @@ public class CopperChestMinecartEntity extends BaseMinecartContainer implements 
 
     @Override
     public @NonNull BlockState getDefaultDisplayBlockState() {
-        return Blocks.TRAPPED_CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.NORTH);
+        return Blocks.COPPER_CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.NORTH);
     }
 
     @Override

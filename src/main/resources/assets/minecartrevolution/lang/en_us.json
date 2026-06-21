@@ -1,6 +1,6 @@
 {
   "item.minecartrevolution.wrench": "Minecart Wrench",
-  "item.minecartrevolution.wrench.empty": "Minecart is empty",
+  "item.minecartrevolution.wrench.empty": "Block can not be adjust",
   "item.minecartrevolution.wrench.select": "Now editing: %s",
   "item.minecartrevolution.wrench.set": "Set %s to %s",
   "item.minecartrevolution.minecart_with_block": "%s %s",
@@ -27,6 +27,9 @@
   "advancement.minecartrevolution.got_jukebox_minecart.title": "On the Rails",
   "advancement.minecartrevolution.got_jukebox_minecart.description": "Obtain a Jukebox Minecart",
 
+  "advancement.minecartrevolution.got_amethyst_minecart.title": "Crystal Clear Reception",
+  "advancement.minecartrevolution.got_amethyst_minecart.description": "Place an Amethyst Minecart near a Jukebox Minecart to relay its music further",
+
   "advancement.minecartrevolution.got_observer_minecart.title": "Patience Required",
   "advancement.minecartrevolution.got_observer_minecart.description": "Place an Observer inside a minecart to get the Langton's Ant Minecart",
 
@@ -38,6 +41,12 @@
 
   "advancement.minecartrevolution.got_dangerous_minecart.title": "Hostile",
   "advancement.minecartrevolution.got_dangerous_minecart.description": "I better not get too close...",
+
+  "advancement.minecartrevolution.got_lava_minecart.title": "Don't Look Down",
+  "advancement.minecartrevolution.got_lava_minecart.description": "A lava minecart. We strongly advise against offering anyone a ride.",
+
+  "advancement.minecartrevolution.got_campfire_minecart.title": "Campfire on Wheels",
+  "advancement.minecartrevolution.got_campfire_minecart.description": "Nothing says 'cozy' quite like a fire hazard rolling down the track.",
 
   "advancement.minecartrevolution.ride_dragon_egg_minecart.title": "Egg Sitting",
   "advancement.minecartrevolution.ride_dragon_egg_minecart.description": "Ride a Dragon Egg Minecart",
@@ -53,8 +62,90 @@
 
   "advancement.minecartrevolution.is_that_babel_tower.title": "Is That the Tower of Babel?",
   "advancement.minecartrevolution.is_that_babel_tower.description": "Stack more than 10 minecarts using Rail Minecarts",
+
   "advancement.minecartrevolution.babel.title": "Babel",
   "advancement.minecartrevolution.babel.description": "Experience the collapse of a minecart tower taller than 24 layers",
+
+  "advancement.minecartrevolution.got_sponge_minecart.title": "Rolling Mop Bucket",
+  "advancement.minecartrevolution.got_sponge_minecart.description": "Turn a sponge into a minecart, because why carry a bucket when you can drive one?",
+
+  "advancement.minecartrevolution.sponge_absorbed.title": "Traveling Drought",
+  "advancement.minecartrevolution.sponge_absorbed.description": "Your sponge minecart just drank the whole area dry. Thirsty little cart.",
+
+  "advancement.minecartrevolution.got_barrel_minecart.title": "Rolling in Barrels",
+  "advancement.minecartrevolution.got_barrel_minecart.description": "Not the monkey kind. A barrel minecart for all your mobile storage needs.",
+
+  "advancement.minecartrevolution.got_trapped_chest_minecart.title": "Suspicious Delivery",
+  "advancement.minecartrevolution.got_trapped_chest_minecart.description": "A chest on wheels that shocks anyone who opens it. Great for trolling friends.",
+
+  "advancement.minecartrevolution.got_copper_chest_minecart.title": "Oxidized Express",
+  "advancement.minecartrevolution.got_copper_chest_minecart.description": "A copper chest minecart. It'll look a bit different in a few weeks.",
+
+  "advancement.minecartrevolution.got_shulker_minecart.title": "The Purple Box of Surprise",
+  "advancement.minecartrevolution.got_shulker_minecart.description": "A shulker on rails. Your inventory thanks you for the extra breathing room.",
+
+  "advancement.minecartrevolution.got_ender_chest_minecart.title": "Pocket Dimension on Rails",
+  "advancement.minecartrevolution.got_ender_chest_minecart.description": "Your personal vault is now also a vehicle. Peak efficiency.",
+
+  "advancement.minecartrevolution.got_dispenser_minecart.title": "Armed and Rolling",
+  "advancement.minecartrevolution.got_dispenser_minecart.description": "A dispenser on wheels. Please aim responsibly... or don't.",
+
+  "advancement.minecartrevolution.got_beacon_minecart.title": "The Light at the End of the Track",
+  "advancement.minecartrevolution.got_beacon_minecart.description": "A beacon minecart that buffs everyone nearby. Who needs a pyramid?",
+
+  "advancement.minecartrevolution.beacon_activated.title": "Mobile Spa Day",
+  "advancement.minecartrevolution.beacon_activated.description": "Your beacon minecart is dispensing free buffs to all nearby players. It's basically a rolling therapy session.",
+
+  "advancement.minecartrevolution.got_honey_minecart.title": "Sticky Situation",
+  "advancement.minecartrevolution.got_honey_minecart.description": "A honey block minecart. Drive carefully — it tends to get a little attached.",
+
+  "advancement.minecartrevolution.honey_stuck.title": "Stuck in Traffic",
+  "advancement.minecartrevolution.honey_stuck.description": "Your honey minecart is now one with the wall. It's not going anywhere. Neither are you.",
+
+  "advancement.minecartrevolution.got_portal_minecart.title": "Portal on the Go",
+  "advancement.minecartrevolution.got_portal_minecart.description": "Who needs a fixed portal when you can take it for a ride?",
+
+  "advancement.minecartrevolution.portal_teleport.title": "Express Lane to the Nether",
+  "advancement.minecartrevolution.portal_teleport.description": "You just got teleported by a minecart. That's not how trains usually work.",
+
+  "advancement.minecartrevolution.got_ender_portal_minecart.title": "The End is Near... and Mobile",
+  "advancement.minecartrevolution.got_ender_portal_minecart.description": "An End Portal Minecart. You've gone too far. No turning back now.",
+
+  "advancement.minecartrevolution.got_magnet_minecart.title": "Attractive Personality",
+  "advancement.minecartrevolution.got_magnet_minecart.description": "A lodestone minecart that pulls items toward it. Finally, a minecart with good vibes.",
+
+  "advancement.minecartrevolution.got_piston_minecart.title": "Push Comes to Shove",
+  "advancement.minecartrevolution.got_piston_minecart.description": "A piston on rails. It will push things. Whether you want it to or not.",
+
+  "advancement.minecartrevolution.got_scaffold_minecart.title": "Scaffolding on Wheels",
+  "advancement.minecartrevolution.got_scaffold_minecart.description": "Now you can bring the construction site to you. OSHA has left the chat.",
+
+  "advancement.minecartrevolution.got_cobweb_minecart.title": "Slow Zone",
+  "advancement.minecartrevolution.got_cobweb_minecart.description": "A cobweb minecart. Perfect for making everyone around you feel like they're wading through syrup.",
+
+  "advancement.minecartrevolution.got_water_minecart.title": "Splash Zone",
+  "advancement.minecartrevolution.got_water_minecart.description": "A minecart full of water. Mind the splash damage... and the passengers.",
+
+  "advancement.minecartrevolution.got_mob_head_minecart.title": "Head of the Line",
+  "advancement.minecartrevolution.got_mob_head_minecart.description": "A dragon head on a minecart. Villagers will not be amused.",
+
+  "advancement.minecartrevolution.got_enchanting_table_minecart.title": "Enchant on the Fly",
+  "advancement.minecartrevolution.got_enchanting_table_minecart.description": "A rolling enchanting table. Now you can get that Sharpness V between stops.",
+
+  "advancement.minecartrevolution.got_anvil_minecart.title": "This Seems Safe",
+  "advancement.minecartrevolution.got_anvil_minecart.description": "An anvil minecart. Gravity plus momentum — what could possibly go wrong?",
+
+  "advancement.minecartrevolution.ride_anvil_minecart.title": "Daredevil's Throne",
+  "advancement.minecartrevolution.ride_anvil_minecart.description": "You actually sat on the anvil minecart. We salute your bravery. Or your recklessness.",
+
+  "advancement.minecartrevolution.got_crafting_table_minecart.title": "Craft on the Move",
+  "advancement.minecartrevolution.got_crafting_table_minecart.description": "A crafting table minecart. Your daily commute just became your workshop.",
+
+  "advancement.minecartrevolution.got_smithing_table_minecart.title": "Smithing While Commuting",
+  "advancement.minecartrevolution.got_smithing_table_minecart.description": "A smithing table on rails. Your upgrade addiction now has zero downtime.",
+
+  "advancement.minecartrevolution.got_picker_minecart.title": "Sticky Fingers",
+  "advancement.minecartrevolution.got_picker_minecart.description": "A minecart that picks up everything it rolls over. Like a very ambitious Roomba.",
 
   "message.minecartrevolution.chain_selected": "Minecart selected! Right-click another minecart to link with chain.",
   "message.minecartrevolution.chain_linked": "Minecarts linked with chain!",

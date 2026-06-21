@@ -16,7 +16,7 @@ import org.jspecify.annotations.NonNull;
 public class AnvilMinecart extends NonInventoryWorkingBlockMinecartEntity{
     public AnvilMinecart(EntityType<? extends AbstractMinecart> entityType, Level world) {
         super(entityType, world);
-        this.mass = 5D;
+        this.mass = 7D;
     }
 
     @Override
