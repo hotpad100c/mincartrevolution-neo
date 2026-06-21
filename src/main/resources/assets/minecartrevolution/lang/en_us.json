@@ -56,6 +56,9 @@
   "advancement.minecartrevolution.babel.title": "Babel",
   "advancement.minecartrevolution.babel.description": "Experience the collapse of a minecart tower taller than 24 layers",
 
+  "advancement.minecartrevolution.django_unchained.title": "Django Unchained",
+  "advancement.minecartrevolution.django_unchained.description": "Literally.",
+
   "message.minecartrevolution.chain_selected": "Minecart selected! Right-click another minecart to link with chain.",
   "message.minecartrevolution.chain_linked": "Minecarts linked with chain!",
   "message.minecartrevolution.chain_broken": "Chain broken.",

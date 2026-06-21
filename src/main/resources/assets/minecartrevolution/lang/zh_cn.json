@@ -51,6 +51,9 @@
   "advancement.minecartrevolution.babel.title": "巴别",
   "advancement.minecartrevolution.babel.description": "矿车塔超过24层后崩塌",
 
+  "advancement.minecartrevolution.django_unchained.title": "被解救的姜戈",
+  "advancement.minecartrevolution.django_unchained.description": "字面意思",
+
   "message.minecartrevolution.chain_selected": "已选择矿车！右键另一个矿车以使用锁链连接。",
   "message.minecartrevolution.chain_linked": "矿车已用锁链连接！",
   "message.minecartrevolution.chain_broken": "锁链已断开。",

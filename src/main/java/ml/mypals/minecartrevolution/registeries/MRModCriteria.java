@@ -1,12 +1,7 @@
 package ml.mypals.minecartrevolution.registeries;
 
 import ml.mypals.minecartrevolution.MinecartRevolution;
-import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.NoGravityCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.SofaAwayCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.BabelTowerCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.BabelCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.*;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -34,6 +29,8 @@ public class MRModCriteria {
             register("is_that_babel_tower", BabelTowerCriterion::new);
     public static final DeferredHolder<CriterionTrigger<?>, BabelCriterion> BABEL = TRIGGERS.
             register("babel", BabelCriterion::new);
+    public static final DeferredHolder<CriterionTrigger<?>, DjangoUnchainedCriterion> DJANGO_UNCHAINED = TRIGGERS.
+            register("django_unchained", DjangoUnchainedCriterion::new);
     public static void init() {
         System.out.println("MRModCriteria loaded");
     }

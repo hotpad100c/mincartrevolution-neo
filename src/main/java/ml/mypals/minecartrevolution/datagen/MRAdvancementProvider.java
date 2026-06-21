@@ -1,13 +1,8 @@
 package ml.mypals.minecartrevolution.datagen;
 
-import ml.mypals.minecartrevolution.advancements.criterion.BlockCartCraftedCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.MovingOnJukeboxCartCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.NoGravityCriterion;
+import ml.mypals.minecartrevolution.advancements.criterion.*;
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
-import ml.mypals.minecartrevolution.advancements.criterion.SofaAwayCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.BabelTowerCriterion;
-import ml.mypals.minecartrevolution.advancements.criterion.BabelCriterion;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -21,12 +16,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.ChainBlock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
+import static net.minecraft.world.item.Items.IRON_CHAIN;
 
 public class MRAdvancementProvider {
 
@@ -274,5 +271,20 @@ public class MRAdvancementProvider {
                 )
                 .addCriterion("babel_criterion", BabelCriterion.TriggerInstance.trigger())
                 .save(saver, "babel");
+
+        AdvancementHolder django_unchained = Advancement.Builder.advancement()
+                .parent(getBlockMinecart)
+                .display(
+                        IRON_CHAIN,
+                        title("django_unchained"),
+                        desc("django_unchained"),
+                        null,
+                        AdvancementType.CHALLENGE,
+                        true,
+                        true,
+                        true
+                )
+                .addCriterion("django_unchained_criterion", DjangoUnchainedCriterion.TriggerInstance.trigger())
+                .save(saver, "django_unchained");
     }
 }

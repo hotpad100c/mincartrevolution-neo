@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:got_block_minecart",
+  "criteria": {
+    "django_unchained_criterion": {
+      "trigger": "minecartrevolution:django_unchained"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.minecartrevolution.django_unchained.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "id": "minecraft:iron_chain"
+    },
+    "title": {
+      "translate": "advancement.minecartrevolution.django_unchained.title"
+    }
+  },
+  "requirements": [
+    [
+      "django_unchained_criterion"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
