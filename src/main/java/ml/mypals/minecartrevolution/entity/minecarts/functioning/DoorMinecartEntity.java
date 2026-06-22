@@ -55,10 +55,9 @@ public class DoorMinecartEntity extends SingleBlockMinecartEntity {
   @Override
   public void handleActive(ServerLevel level, int x, int y, int z, boolean powered) {
     BlockState blockState = getDisplayBlockState();
-    boolean currentOpen = blockState.getValue(BlockStateProperties.OPEN);
     boolean currentPowered = blockState.getValue(BlockStateProperties.POWERED);
 
-    if (powered != currentPowered || powered != currentOpen) {
+    if (powered != currentPowered) {
       BlockState newState =
           blockState
               .setValue(BlockStateProperties.OPEN, powered)
@@ -92,8 +91,7 @@ public class DoorMinecartEntity extends SingleBlockMinecartEntity {
 
     BlockState newState =
         blockState
-            .setValue(BlockStateProperties.OPEN, newOpen)
-            .setValue(BlockStateProperties.POWERED, newOpen);
+            .setValue(BlockStateProperties.OPEN, newOpen);
     this.setCustomDisplayBlockState(Optional.of(newState));
 
     SoundEvent sound =

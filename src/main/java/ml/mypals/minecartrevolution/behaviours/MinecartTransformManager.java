@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import ml.mypals.minecartrevolution.annotations.MinecartMapper;
 import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.DamageCausingMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.container.*;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.FluidMinecartEntity;
 import ml.mypals.minecartrevolution.manager.AnnotationManager;
@@ -15,6 +16,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.minecart.*;
@@ -257,6 +259,25 @@ public class MinecartTransformManager {
       minecart.setPosRaw(original.position().x, original.position().y, original.position().z);
       minecart.setDeltaMovement(original.getDeltaMovement());
       minecart.absSnapRotationTo(original.getYRot(), original.getXRot());
+
+      if (minecart instanceof DamageCausingMinecartEntity DAMAGE_CAUSING_MINECART) {
+          Block displayBlock = DAMAGE_CAUSING_MINECART.getDisplayBlockState().getBlock();
+
+          if (displayBlock == Blocks.MAGMA_BLOCK) {
+              DAMAGE_CAUSING_MINECART.damageType = DamageTypes.HOT_FLOOR;
+              DAMAGE_CAUSING_MINECART.damageAmount = 1.0f;
+              DAMAGE_CAUSING_MINECART.damageSource = DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
+          } else if (displayBlock == Blocks.CACTUS) {
+              DAMAGE_CAUSING_MINECART.damageType = DamageTypes.CACTUS;
+              DAMAGE_CAUSING_MINECART.damageAmount = 1.0f;
+              DAMAGE_CAUSING_MINECART.damageSource = DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
+          } else if (displayBlock == Blocks.CAMPFIRE || displayBlock == Blocks.SOUL_CAMPFIRE) {
+              DAMAGE_CAUSING_MINECART.damageType = DamageTypes.CAMPFIRE;
+              DAMAGE_CAUSING_MINECART.damageAmount = 2.0f;
+              DAMAGE_CAUSING_MINECART.damageSource = DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
+          }
+      }
+
       original.remove(Entity.RemovalReason.DISCARDED);
       level.addFreshEntity(minecart);
 

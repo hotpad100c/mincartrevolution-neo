@@ -12,13 +12,16 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.NonNull;
+
+import java.util.List;
 
 public class DamageCausingMinecartEntity extends SingleBlockMinecartEntity {
 
-  private float damageAmount;
-  private DamageSource damageSource;
-  private ResourceKey<DamageType> damageType;
+  public float damageAmount;
+  public DamageSource damageSource;
+  public ResourceKey<DamageType> damageType;
 
   public DamageCausingMinecartEntity(
       EntityType<? extends SingleBlockMinecartEntity> entityType, Level world) {
@@ -86,5 +89,37 @@ public class DamageCausingMinecartEntity extends SingleBlockMinecartEntity {
       case "campfire" -> DamageTypes.CAMPFIRE;
       default -> DamageTypes.GENERIC;
     };
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+
+    if (!this.level().isClientSide() && this.damageAmount > 0.0f) {
+      if (!this.getPassengers().isEmpty()) {
+        for (Entity passenger : this.getPassengers()) {
+          passenger.hurt(this.damageSource, this.damageAmount);
+        }
+      }
+      if (DamageTypes.CACTUS.equals(this.damageType)) {
+        AABB touchArea = this.getBoundingBox().inflate(0.05);
+        List<Entity> touchingEntities = this.level().getEntities(this, touchArea);
+
+        for (Entity entity : touchingEntities) {
+          entity.hurt(this.damageSource, this.damageAmount);
+        }
+      }
+      else if (DamageTypes.HOT_FLOOR.equals(this.damageType) || DamageTypes.CAMPFIRE.equals(this.damageType)) {
+        AABB topArea = this.getBoundingBox().move(0, 0.05, 0);
+        List<Entity> topEntities = this.level().getEntities(this, topArea);
+        for (Entity entity : topEntities) {
+          boolean isSteppingOnTop = entity.getY() >= this.getY() + 0.1;
+          boolean isNotSneaking = !entity.isSteppingCarefully();
+          if (isSteppingOnTop && isNotSneaking) {
+            entity.hurt(this.damageSource, this.damageAmount);
+          }
+        }
+      }
+    }
   }
 }

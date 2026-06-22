@@ -833,16 +833,23 @@ public class MRMinecarts {
           (entity, item) ->
               (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-  public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
-      SPRUCE_DOOR_MINECART =
+    public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem> PALE_DOOR_MINECART =
+            registerItemOnly(
+                    "pale_oak_door",
+                    IRON_DOOR_MINECART.entity(),
+                    p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.PALE_OAK_DOOR),
+                    MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+                    (entity, item) ->
+                            (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+
+  public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem> SPRUCE_DOOR_MINECART =
           registerItemOnly(
               "spruce_door",
               IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.SPRUCE_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
-                  (w, pos) ->
-                      new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                  (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem> BIRCH_DOOR_MINECART =
       registerItemOnly(
@@ -901,7 +908,7 @@ public class MRMinecarts {
       CHERRY_DOOR_MINECART =
           registerItemOnly(
               "cherry_door",
-              IRON_DOOR_MINECART.entity(),
+               IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.CHERRY_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
