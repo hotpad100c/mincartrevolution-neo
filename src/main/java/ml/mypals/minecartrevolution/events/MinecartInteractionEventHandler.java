@@ -73,7 +73,7 @@ public class MinecartInteractionEventHandler {
       return;
     }
     if (!player.isShiftKeyDown()) {
-      if (held.is(IRON_CHAIN) || held.is(Items.SHEARS)) {
+      if (held.is(Items.IRON_CHAIN) || held.is(Items.SHEARS)) {
         if (!world.isClientSide()) {
           handleIronChain(player, minecart, held, (ServerLevel) world);
         }
