@@ -2,7 +2,6 @@ package ml.mypals.minecartrevolution.events;
 
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.byColor;
 import static ml.mypals.minecartrevolution.registeries.MRModCriteria.DJANGO_UNCHAINED;
-import static net.minecraft.world.item.Items.IRON_CHAIN;
 
 import java.util.Optional;
 import java.util.UUID;
