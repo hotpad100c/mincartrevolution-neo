@@ -822,47 +822,64 @@ public class MRMinecarts {
           p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.IRON_DOOR),
           MinecartWithBlockItem.DISPENSER_BEHAVIOR,
           (entity, item) ->
-              (w, pos) ->
-                  new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+              (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem> OAK_DOOR_MINECART =
-      registerItemOnly("oak_door", IRON_DOOR_MINECART.entity(),
+      registerItemOnly(
+          "oak_door",
+          IRON_DOOR_MINECART.entity(),
           p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OAK_DOOR),
           MinecartWithBlockItem.DISPENSER_BEHAVIOR,
           (entity, item) ->
               (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-  public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem> SPRUCE_DOOR_MINECART =
-      registerItemOnly("spruce_door", IRON_DOOR_MINECART.entity(),
-          p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.SPRUCE_DOOR),
-          MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-          (entity, item) ->
-              (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+  public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
+      SPRUCE_DOOR_MINECART =
+          registerItemOnly(
+              "spruce_door",
+              IRON_DOOR_MINECART.entity(),
+              p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.SPRUCE_DOOR),
+              MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+              (entity, item) ->
+                  (w, pos) ->
+                      new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem> BIRCH_DOOR_MINECART =
-      registerItemOnly("birch_door", IRON_DOOR_MINECART.entity(),
+      registerItemOnly(
+          "birch_door",
+          IRON_DOOR_MINECART.entity(),
           p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.BIRCH_DOOR),
           MinecartWithBlockItem.DISPENSER_BEHAVIOR,
           (entity, item) ->
               (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-  public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem> JUNGLE_DOOR_MINECART =
-      registerItemOnly("jungle_door", IRON_DOOR_MINECART.entity(),
-          p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.JUNGLE_DOOR),
-          MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-          (entity, item) ->
-              (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+  public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
+      JUNGLE_DOOR_MINECART =
+          registerItemOnly(
+              "jungle_door",
+              IRON_DOOR_MINECART.entity(),
+              p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.JUNGLE_DOOR),
+              MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+              (entity, item) ->
+                  (w, pos) ->
+                      new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
-  public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem> ACACIA_DOOR_MINECART =
-      registerItemOnly("acacia_door", IRON_DOOR_MINECART.entity(),
-          p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.ACACIA_DOOR),
-          MinecartWithBlockItem.DISPENSER_BEHAVIOR,
-          (entity, item) ->
-              (w, pos) -> new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+  public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
+      ACACIA_DOOR_MINECART =
+          registerItemOnly(
+              "acacia_door",
+              IRON_DOOR_MINECART.entity(),
+              p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.ACACIA_DOOR),
+              MinecartWithBlockItem.DISPENSER_BEHAVIOR,
+              (entity, item) ->
+                  (w, pos) ->
+                      new DoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       DARK_OAK_DOOR_MINECART =
-          registerItemOnly("dark_oak_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "dark_oak_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.DARK_OAK_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -871,7 +888,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       MANGROVE_DOOR_MINECART =
-          registerItemOnly("mangrove_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "mangrove_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.MANGROVE_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -880,7 +899,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       CHERRY_DOOR_MINECART =
-          registerItemOnly("cherry_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "cherry_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.CHERRY_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -889,7 +910,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       BAMBOO_DOOR_MINECART =
-          registerItemOnly("bamboo_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "bamboo_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.BAMBOO_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -898,7 +921,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       CRIMSON_DOOR_MINECART =
-          registerItemOnly("crimson_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "crimson_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.CRIMSON_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -907,7 +932,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       WARPED_DOOR_MINECART =
-          registerItemOnly("warped_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "warped_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WARPED_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -916,7 +943,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       COPPER_DOOR_MINECART =
-          registerItemOnly("copper_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "copper_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.COPPER_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -925,7 +954,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       EXPOSED_COPPER_DOOR_MINECART =
-          registerItemOnly("exposed_copper_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "exposed_copper_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.EXPOSED_COPPER_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -934,7 +965,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       WEATHERED_COPPER_DOOR_MINECART =
-          registerItemOnly("weathered_copper_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "weathered_copper_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WEATHERED_COPPER_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -943,7 +976,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       OXIDIZED_COPPER_DOOR_MINECART =
-          registerItemOnly("oxidized_copper_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "oxidized_copper_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OXIDIZED_COPPER_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -952,7 +987,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       WAXED_COPPER_DOOR_MINECART =
-          registerItemOnly("waxed_copper_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "waxed_copper_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WAXED_COPPER_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -961,7 +998,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       WAXED_EXPOSED_COPPER_DOOR_MINECART =
-          registerItemOnly("waxed_exposed_copper_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "waxed_exposed_copper_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WAXED_EXPOSED_COPPER_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -970,7 +1009,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       WAXED_WEATHERED_COPPER_DOOR_MINECART =
-          registerItemOnly("waxed_weathered_copper_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "waxed_weathered_copper_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WAXED_WEATHERED_COPPER_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -979,7 +1020,9 @@ public class MRMinecarts {
 
   public static final MinecartEntry<DoorMinecartEntity, MinecartWithBlockItem>
       WAXED_OXIDIZED_COPPER_DOOR_MINECART =
-          registerItemOnly("waxed_oxidized_copper_door", IRON_DOOR_MINECART.entity(),
+          registerItemOnly(
+              "waxed_oxidized_copper_door",
+              IRON_DOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WAXED_OXIDIZED_COPPER_DOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
@@ -995,198 +1038,216 @@ public class MRMinecarts {
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       OAK_TRAPDOOR_MINECART =
-          registerItemOnly("oak_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "oak_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OAK_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       SPRUCE_TRAPDOOR_MINECART =
-          registerItemOnly("spruce_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "spruce_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.SPRUCE_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       BIRCH_TRAPDOOR_MINECART =
-          registerItemOnly("birch_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "birch_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.BIRCH_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       JUNGLE_TRAPDOOR_MINECART =
-          registerItemOnly("jungle_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "jungle_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.JUNGLE_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       ACACIA_TRAPDOOR_MINECART =
-          registerItemOnly("acacia_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "acacia_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.ACACIA_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       DARK_OAK_TRAPDOOR_MINECART =
-          registerItemOnly("dark_oak_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "dark_oak_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.DARK_OAK_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       MANGROVE_TRAPDOOR_MINECART =
-          registerItemOnly("mangrove_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "mangrove_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.MANGROVE_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       CHERRY_TRAPDOOR_MINECART =
-          registerItemOnly("cherry_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "cherry_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.CHERRY_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       BAMBOO_TRAPDOOR_MINECART =
-          registerItemOnly("bamboo_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "bamboo_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.BAMBOO_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       CRIMSON_TRAPDOOR_MINECART =
-          registerItemOnly("crimson_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "crimson_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.CRIMSON_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       WARPED_TRAPDOOR_MINECART =
-          registerItemOnly("warped_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "warped_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WARPED_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       COPPER_TRAPDOOR_MINECART =
-          registerItemOnly("copper_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "copper_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.COPPER_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       EXPOSED_COPPER_TRAPDOOR_MINECART =
-          registerItemOnly("exposed_copper_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "exposed_copper_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.EXPOSED_COPPER_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       WEATHERED_COPPER_TRAPDOOR_MINECART =
-          registerItemOnly("weathered_copper_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "weathered_copper_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WEATHERED_COPPER_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       OXIDIZED_COPPER_TRAPDOOR_MINECART =
-          registerItemOnly("oxidized_copper_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "oxidized_copper_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.OXIDIZED_COPPER_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       WAXED_COPPER_TRAPDOOR_MINECART =
-          registerItemOnly("waxed_copper_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "waxed_copper_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WAXED_COPPER_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       WAXED_EXPOSED_COPPER_TRAPDOOR_MINECART =
-          registerItemOnly("waxed_exposed_copper_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "waxed_exposed_copper_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       WAXED_WEATHERED_COPPER_TRAPDOOR_MINECART =
-          registerItemOnly("waxed_weathered_copper_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "waxed_weathered_copper_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   public static final MinecartEntry<TrapdoorMinecartEntity, MinecartWithBlockItem>
       WAXED_OXIDIZED_COPPER_TRAPDOOR_MINECART =
-          registerItemOnly("waxed_oxidized_copper_trapdoor", IRON_TRAPDOOR_MINECART.entity(),
+          registerItemOnly(
+              "waxed_oxidized_copper_trapdoor",
+              IRON_TRAPDOOR_MINECART.entity(),
               p -> new MinecartWithBlockItem(p.stacksTo(1), Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR),
               MinecartWithBlockItem.DISPENSER_BEHAVIOR,
               (entity, item) ->
                   (w, pos) ->
-                      new TrapdoorMinecartEntity(
-                          entity.get(), w, pos.x, pos.y, pos.z, item.get()));
+                      new TrapdoorMinecartEntity(entity.get(), w, pos.x, pos.y, pos.z, item.get()));
 
   @SuppressWarnings("unchecked")
   public static final DeferredHolder<EntityType<?>, EntityType<ChainEntity>> CHAIN_ENTITY =
