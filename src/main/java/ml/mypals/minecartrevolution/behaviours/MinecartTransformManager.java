@@ -261,21 +261,24 @@ public class MinecartTransformManager {
       minecart.absSnapRotationTo(original.getYRot(), original.getXRot());
 
       if (minecart instanceof DamageCausingMinecartEntity DAMAGE_CAUSING_MINECART) {
-          Block displayBlock = DAMAGE_CAUSING_MINECART.getDisplayBlockState().getBlock();
+        Block displayBlock = DAMAGE_CAUSING_MINECART.getDisplayBlockState().getBlock();
 
-          if (displayBlock == Blocks.MAGMA_BLOCK) {
-              DAMAGE_CAUSING_MINECART.damageType = DamageTypes.HOT_FLOOR;
-              DAMAGE_CAUSING_MINECART.damageAmount = 1.0f;
-              DAMAGE_CAUSING_MINECART.damageSource = DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
-          } else if (displayBlock == Blocks.CACTUS) {
-              DAMAGE_CAUSING_MINECART.damageType = DamageTypes.CACTUS;
-              DAMAGE_CAUSING_MINECART.damageAmount = 1.0f;
-              DAMAGE_CAUSING_MINECART.damageSource = DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
-          } else if (displayBlock == Blocks.CAMPFIRE || displayBlock == Blocks.SOUL_CAMPFIRE) {
-              DAMAGE_CAUSING_MINECART.damageType = DamageTypes.CAMPFIRE;
-              DAMAGE_CAUSING_MINECART.damageAmount = 2.0f;
-              DAMAGE_CAUSING_MINECART.damageSource = DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
-          }
+        if (displayBlock == Blocks.MAGMA_BLOCK) {
+          DAMAGE_CAUSING_MINECART.damageType = DamageTypes.HOT_FLOOR;
+          DAMAGE_CAUSING_MINECART.damageAmount = 1.0f;
+          DAMAGE_CAUSING_MINECART.damageSource =
+              DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
+        } else if (displayBlock == Blocks.CACTUS) {
+          DAMAGE_CAUSING_MINECART.damageType = DamageTypes.CACTUS;
+          DAMAGE_CAUSING_MINECART.damageAmount = 1.0f;
+          DAMAGE_CAUSING_MINECART.damageSource =
+              DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
+        } else if (displayBlock == Blocks.CAMPFIRE || displayBlock == Blocks.SOUL_CAMPFIRE) {
+          DAMAGE_CAUSING_MINECART.damageType = DamageTypes.CAMPFIRE;
+          DAMAGE_CAUSING_MINECART.damageAmount = 2.0f;
+          DAMAGE_CAUSING_MINECART.damageSource =
+              DAMAGE_CAUSING_MINECART.damageSources().source(DAMAGE_CAUSING_MINECART.damageType);
+        }
       }
 
       original.remove(Entity.RemovalReason.DISCARDED);

@@ -40,15 +40,15 @@ public class DoorTrapdoorEntityMapper {
                 pos.z(),
                 MRMinecarts.OAK_DOOR_MINECART.item().get()));
     DOOR_TRAPDOOR_MINECARTS.put(
-            Blocks.PALE_OAK_DOOR,
-            (world, pos) ->
-                    new DoorMinecartEntity(
-                            MRMinecarts.IRON_DOOR_MINECART.entity().get(),
-                            world,
-                            pos.x(),
-                            pos.y(),
-                            pos.z(),
-                            MRMinecarts.PALE_DOOR_MINECART.item().get()));
+        Blocks.PALE_OAK_DOOR,
+        (world, pos) ->
+            new DoorMinecartEntity(
+                MRMinecarts.IRON_DOOR_MINECART.entity().get(),
+                world,
+                pos.x(),
+                pos.y(),
+                pos.z(),
+                MRMinecarts.PALE_DOOR_MINECART.item().get()));
     DOOR_TRAPDOOR_MINECARTS.put(
         Blocks.SPRUCE_DOOR,
         (world, pos) ->

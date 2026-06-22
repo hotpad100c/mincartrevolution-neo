@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import java.util.List;
 import ml.mypals.minecartrevolution.item.MinecartWithBlockItem;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,8 +15,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.NonNull;
-
-import java.util.List;
 
 public class DamageCausingMinecartEntity extends SingleBlockMinecartEntity {
 
@@ -108,8 +107,8 @@ public class DamageCausingMinecartEntity extends SingleBlockMinecartEntity {
         for (Entity entity : touchingEntities) {
           entity.hurt(this.damageSource, this.damageAmount);
         }
-      }
-      else if (DamageTypes.HOT_FLOOR.equals(this.damageType) || DamageTypes.CAMPFIRE.equals(this.damageType)) {
+      } else if (DamageTypes.HOT_FLOOR.equals(this.damageType)
+          || DamageTypes.CAMPFIRE.equals(this.damageType)) {
         AABB topArea = this.getBoundingBox().move(0, 0.05, 0);
         List<Entity> topEntities = this.level().getEntities(this, topArea);
         for (Entity entity : topEntities) {

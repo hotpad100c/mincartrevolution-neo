@@ -89,9 +89,7 @@ public class DoorMinecartEntity extends SingleBlockMinecartEntity {
     boolean currentlyOpen = blockState.getValue(BlockStateProperties.OPEN);
     boolean newOpen = !currentlyOpen;
 
-    BlockState newState =
-        blockState
-            .setValue(BlockStateProperties.OPEN, newOpen);
+    BlockState newState = blockState.setValue(BlockStateProperties.OPEN, newOpen);
     this.setCustomDisplayBlockState(Optional.of(newState));
 
     SoundEvent sound =
