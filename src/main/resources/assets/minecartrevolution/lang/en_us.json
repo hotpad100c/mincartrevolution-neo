@@ -3,7 +3,7 @@
 	"item.minecartrevolution.wrench.empty": "No adjustable block in the minecart",
 	"item.minecartrevolution.wrench.select": "Currently editing property: %s",
 	"item.minecartrevolution.wrench.set": "Set %s to %s",
-	"item.minecartrevolution.minecart_with_block": "%s%s",
+	"item.minecartrevolution.minecart_with_block": "%s %s",
 	"entity.minecartrevolution.cobweb_minecart": "Cobweb Minecart",
 	"entity.minecartrevolution.dragon_egg_minecart": "Dragon Egg Minecart",
 	"entity.minecartrevolution.minecart_with_block": "Minecart with Block",

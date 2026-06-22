@@ -60,5 +60,8 @@ public class MRModEntityRenderers {
 
     registerRenderers.registerEntityRenderer(
         MRMinecarts.PICKER_MINECART.entity().get(), context -> new PickerMinecartRenderer(context));
+
+    registerRenderers.registerEntityRenderer(
+        MRMinecarts.IRON_DOOR_MINECART.entity().get(), DoorMinecartRenderer::new);
   }
 }
