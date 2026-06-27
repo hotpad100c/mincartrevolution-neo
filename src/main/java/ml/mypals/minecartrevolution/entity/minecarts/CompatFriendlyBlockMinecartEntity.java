@@ -172,14 +172,13 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
   }
 
   @Override
-  public ItemStack addDataToStack(ItemStack stack) {
+  public void addDataToStack(ItemStack stack) {
     if (blockEntityTag != null && blockEntity != null) {
       TypedEntityData<BlockEntityType<?>> customData =
           TypedEntityData.of(this.blockEntity.getType(), blockEntityTag);
       stack.set(DataComponents.BLOCK_ENTITY_DATA, customData);
     }
 
-    return stack;
   }
 
   @Override
@@ -279,7 +278,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
   @Override
   public @NonNull InteractionResult interact(
-      Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+          @NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
     boolean safeToInteract = getDisplayBlockState().is(SAFE_TO_INTERACT);
     if (player.isSprinting()
         || player.isShiftKeyDown()

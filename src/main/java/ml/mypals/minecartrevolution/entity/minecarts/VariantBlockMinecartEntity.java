@@ -161,8 +161,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         "item.minecartrevolution.minecart_with_block", blockName, cartName);
   }
 
-  public ItemStack addDataToStack(ItemStack stack) {
-    return stack;
+  public void addDataToStack(ItemStack stack) {
   }
 
   @Override

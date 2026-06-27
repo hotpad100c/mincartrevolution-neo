@@ -151,7 +151,7 @@ public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
   }
 
   @Override
-  public ItemStack addDataToStack(ItemStack originalStack) {
+  public void addDataToStack(ItemStack originalStack) {
     /*if(originalStack.isEmpty() || originalStack.getItem() != Items.JUKEBOX || this.disc.isEmpty()) {
         return originalStack;
     }
@@ -160,7 +160,6 @@ public class JukeboxMinecartEntity extends SingleBlockMinecartEntity
     originalStack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(blockEntityTag));*/
     dropRecord();
     playOrStop(false);
-    return originalStack;
   }
 
   public void dropRecord() {
