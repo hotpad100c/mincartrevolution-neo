@@ -52,6 +52,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   private int oldLight = 0;
   public double mass = 0.1D;
   private boolean movingEntities = false;
+  private Vec3 lastTickPos;
+  private float lastTickRot = Float.NaN;
 
   public VariantBlockMinecartEntity(
       EntityType<? extends AbstractMinecart> entityType, Level world) {
@@ -420,10 +422,20 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   }
 
   public void moveEntitiesAbove() {
-    Vec3 movement = this.position().subtract(this.xOld, this.yOld, this.zOld);
-    float deltaRot = this.getYRot() - this.yRotO;
+    if (this.lastTickPos == null) {
+      this.lastTickPos = new Vec3(this.xOld, this.yOld, this.zOld);
+    }
+    if (Float.isNaN(this.lastTickRot)) {
+      this.lastTickRot = this.yRotO;
+    }
+    Vec3 movement = this.position().subtract(this.lastTickPos);
+    float deltaRot = this.getYRot() - this.lastTickRot;
 
-    if (movement.lengthSqr() < 1.0E-7 && Math.abs(deltaRot) < 1.0E-5) return;
+    if (movement.lengthSqr() < 1.0E-7 && Math.abs(deltaRot) < 1.0E-5) {
+      this.lastTickPos = this.position();
+      this.lastTickRot = this.getYRot();
+      return;
+    }
 
     double topY = this.getBoundingBox().maxY;
     double oldTopY = topY - movement.y;
@@ -454,7 +466,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
         Vec3 previousPos = entity.position();
 
-        Vec3 offset = new Vec3(entity.getX() - this.xOld, 0, entity.getZ() - this.zOld);
+        Vec3 offset = new Vec3(entity.getX() - this.lastTickPos.x, 0, entity.getZ() - this.lastTickPos.z);
         double rad = Math.toRadians(deltaRot);
         double cos = Math.cos(rad);
         double sin = Math.sin(rad);
@@ -493,6 +505,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
       }
     } finally {
       this.movingEntities = false;
+      this.lastTickPos = this.position();
+      this.lastTickRot = this.getYRot();
     }
   }
 

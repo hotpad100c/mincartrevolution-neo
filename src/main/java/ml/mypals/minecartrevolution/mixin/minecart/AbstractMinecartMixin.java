@@ -86,6 +86,13 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
     }
   }
 
+  @Inject(method = "isPushable", at = @At("HEAD"), cancellable = true)
+  private void isPushable(CallbackInfoReturnable<Boolean> cir) {
+    if (!this.isOnRails() && !this.onGround()) {
+      cir.setReturnValue(false);
+    }
+  }
+
   @Inject(method = "getMaxSpeed", at = @At("HEAD"), cancellable = true)
   private void getMaxSpeed(ServerLevel level, CallbackInfoReturnable<Double> cir) {
     cir.setReturnValue(0.3d);
