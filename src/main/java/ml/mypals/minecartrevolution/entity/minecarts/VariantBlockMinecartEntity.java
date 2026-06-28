@@ -163,8 +163,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         "item.minecartrevolution.minecart_with_block", blockName, cartName);
   }
 
-  public void addDataToStack(ItemStack stack) {
-  }
+  public void addDataToStack(ItemStack stack) {}
 
   @Override
   public @NonNull InteractionResult interact(
@@ -466,7 +465,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
         Vec3 previousPos = entity.position();
 
-        Vec3 offset = new Vec3(entity.getX() - this.lastTickPos.x, 0, entity.getZ() - this.lastTickPos.z);
+        Vec3 offset =
+            new Vec3(entity.getX() - this.lastTickPos.x, 0, entity.getZ() - this.lastTickPos.z);
         double rad = Math.toRadians(deltaRot);
         double cos = Math.cos(rad);
         double sin = Math.sin(rad);
