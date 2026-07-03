@@ -1,4 +1,10 @@
 {
 	"replace": false,
-	"values": ["beecrasy:sequencer", "beecrasy:honey_press", "beecrasy:skep", "minecraft:brewing_stand", "simple_path_finder:path_finder_block"]
+	"values": [
+		"beecrasy:sequencer",
+		"beecrasy:honey_press",
+		"beecrasy:skep",
+		"minecraft:brewing_stand",
+		"simple_path_finder:path_finder_block"
+	]
 }
