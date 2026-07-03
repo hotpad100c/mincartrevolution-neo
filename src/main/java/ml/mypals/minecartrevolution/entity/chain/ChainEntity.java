@@ -36,10 +36,10 @@ public class ChainEntity extends Entity {
 
   public final List<ChainSegment> segments = new ArrayList<>();
 
-  private static final EntityDataAccessor<OptionalInt> MINECART_A_ID = SynchedEntityData.defineId(ChainEntity.class,
-      EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
-  private static final EntityDataAccessor<OptionalInt> MINECART_B_ID = SynchedEntityData.defineId(ChainEntity.class,
-      EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
+  private static final EntityDataAccessor<OptionalInt> MINECART_A_ID =
+      SynchedEntityData.defineId(ChainEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
+  private static final EntityDataAccessor<OptionalInt> MINECART_B_ID =
+      SynchedEntityData.defineId(ChainEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
 
   private UUID minecartAUuid;
   private UUID minecartBUuid;
@@ -94,10 +94,8 @@ public class ChainEntity extends Entity {
     if (!level().isClientSide()) {
       cartA = findMinecartByUuid(minecartAUuid);
       cartB = findMinecartByUuid(minecartBUuid);
-      if (cartA != null)
-        this.entityData.set(MINECART_A_ID, OptionalInt.of(cartA.getId()));
-      if (cartB != null)
-        this.entityData.set(MINECART_B_ID, OptionalInt.of(cartB.getId()));
+      if (cartA != null) this.entityData.set(MINECART_A_ID, OptionalInt.of(cartA.getId()));
+      if (cartB != null) this.entityData.set(MINECART_B_ID, OptionalInt.of(cartB.getId()));
     } else {
       cartA = findMinecartById(this.entityData.get(MINECART_A_ID).orElse(-1));
       cartB = findMinecartById(this.entityData.get(MINECART_B_ID).orElse(-1));
@@ -148,14 +146,11 @@ public class ChainEntity extends Entity {
         ChainSegment b = segments.get(i + 1);
         Vec3 delta = b.position.subtract(a.position);
         double dist = delta.length();
-        if (dist < 0.0001)
-          continue;
+        if (dist < 0.0001) continue;
         double correction = (dist - TARGET_SEGMENT_SPACING) / dist * 0.5;
         Vec3 corr = delta.scale(correction);
-        if (i > 0)
-          a.position = a.position.add(corr);
-        if (i < segments.size() - 2)
-          b.position = b.position.subtract(corr);
+        if (i > 0) a.position = a.position.add(corr);
+        if (i < segments.size() - 2) b.position = b.position.subtract(corr);
       }
       segments.getFirst().position = attachA;
       segments.getLast().position = attachB;
@@ -180,39 +175,31 @@ public class ChainEntity extends Entity {
             mpos.set(
                 (int) Math.floor(sx) + dx, (int) Math.floor(sy) + dy, (int) Math.floor(sz) + dz);
             BlockState state = level().getBlockState(mpos);
-            if (state.isAir())
-              continue;
+            if (state.isAir()) continue;
             VoxelShape shape = state.getCollisionShape(level(), mpos);
-            if (shape.isEmpty())
-              continue;
+            if (shape.isEmpty()) continue;
             AABB blockBox = shape.bounds().move(mpos);
 
-            boolean inside = sx >= blockBox.minX
-                && sx <= blockBox.maxX
-                && sy >= blockBox.minY
-                && sy <= blockBox.maxY
-                && sz >= blockBox.minZ
-                && sz <= blockBox.maxZ;
-            if (!inside)
-              continue;
+            boolean inside =
+                sx >= blockBox.minX
+                    && sx <= blockBox.maxX
+                    && sy >= blockBox.minY
+                    && sy <= blockBox.maxY
+                    && sz >= blockBox.minZ
+                    && sz <= blockBox.maxZ;
+            if (!inside) continue;
 
             double margin = 0.02;
             double nx = sx, ny = sy, nz = sz;
 
-            if (oy > blockBox.maxY)
-              ny = blockBox.maxY + margin;
-            else if (oy < blockBox.minY)
-              ny = blockBox.minY - margin;
+            if (oy > blockBox.maxY) ny = blockBox.maxY + margin;
+            else if (oy < blockBox.minY) ny = blockBox.minY - margin;
 
-            if (ox > blockBox.maxX)
-              nx = blockBox.maxX + margin;
-            else if (ox < blockBox.minX)
-              nx = blockBox.minX - margin;
+            if (ox > blockBox.maxX) nx = blockBox.maxX + margin;
+            else if (ox < blockBox.minX) nx = blockBox.minX - margin;
 
-            if (oz > blockBox.maxZ)
-              nz = blockBox.maxZ + margin;
-            else if (oz < blockBox.minZ)
-              nz = blockBox.minZ - margin;
+            if (oz > blockBox.maxZ) nz = blockBox.maxZ + margin;
+            else if (oz < blockBox.minZ) nz = blockBox.minZ - margin;
 
             seg.position = new Vec3(nx, ny, nz);
             sx = nx;
@@ -251,8 +238,7 @@ public class ChainEntity extends Entity {
   }
 
   private void ensureSegmentCount(int count, Vec3 attachA, Vec3 attachB, double distance) {
-    if (segments.size() == count)
-      return;
+    if (segments.size() == count) return;
     if (segments.isEmpty()) {
       for (int i = 0; i < count; i++) {
         double t = (double) i / Math.max(count - 1, 1);
@@ -284,28 +270,23 @@ public class ChainEntity extends Entity {
   }
 
   private AbstractMinecart findMinecartByUuid(UUID uuid) {
-    if (uuid == null)
-      return null;
+    if (uuid == null) return null;
     if (level() instanceof ServerLevel sl) {
       Entity entity = sl.getEntity(uuid);
-      if (entity instanceof AbstractMinecart cart && cart.isAlive())
-        return cart;
+      if (entity instanceof AbstractMinecart cart && cart.isAlive()) return cart;
     }
     return null;
   }
 
   private AbstractMinecart findMinecartById(int id) {
-    if (id == -1)
-      return null;
+    if (id == -1) return null;
     Entity entity = level().getEntity(id);
-    if (entity instanceof AbstractMinecart cart && cart.isAlive())
-      return cart;
+    if (entity instanceof AbstractMinecart cart && cart.isAlive()) return cart;
     return null;
   }
 
   private void updateBounds() {
-    if (segments.isEmpty())
-      return;
+    if (segments.isEmpty()) return;
     Vec3 first = segments.getFirst().position;
     Vec3 last = segments.getLast().position;
     double minX = Math.min(first.x, last.x) - 0.5;
@@ -353,12 +334,10 @@ public class ChainEntity extends Entity {
   protected void readAdditionalSaveData(@NonNull ValueInput input) {
     long mostA = input.getLongOr("minecartAUuidMost", 0L);
     long leastA = input.getLongOr("minecartAUuidLeast", 0L);
-    if (mostA != 0 || leastA != 0)
-      minecartAUuid = new UUID(mostA, leastA);
+    if (mostA != 0 || leastA != 0) minecartAUuid = new UUID(mostA, leastA);
     long mostB = input.getLongOr("minecartBUuidMost", 0L);
     long leastB = input.getLongOr("minecartBUuidLeast", 0L);
-    if (mostB != 0 || leastB != 0)
-      minecartBUuid = new UUID(mostB, leastB);
+    if (mostB != 0 || leastB != 0) minecartBUuid = new UUID(mostB, leastB);
   }
 
   @Override
