@@ -61,7 +61,6 @@ public class MagnetMinecartEntity extends SingleBlockMinecartEntity {
 
   @Override
   public void activateMinecart(@NonNull ServerLevel level, int x, int y, int z, boolean powered) {
-
     handleActive(level, x, y, z, powered);
   }
 

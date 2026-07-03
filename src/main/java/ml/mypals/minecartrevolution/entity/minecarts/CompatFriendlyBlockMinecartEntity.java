@@ -153,6 +153,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     if (DATA_ID_BLOCK_ENTITY_NBT.equals(key)) {
       CompoundTag tag = this.entityData.get(DATA_ID_BLOCK_ENTITY_NBT);
       this.blockEntityTag = tag;
+      if(blockEntity == null) refreshBlockEntity();
       if (this.blockEntity != null && !tag.isEmpty()) {
         this.blockEntity.loadWithComponents(
             TagValueInput.create(ProblemReporter.DISCARDING, registryAccess(), tag));
@@ -187,48 +188,49 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
     Level simLevel = simulatedLevel;
 
-    refreshBlockEntity();
-    if (this.blockEntity != null) {
-      ((BlockEntityAccessor) this.blockEntity).mr$setWorldPosition(this.blockPosition());
+    //refreshBlockEntity();
+    try {
+      if (this.blockEntity != null) {
+        ((BlockEntityAccessor) this.blockEntity).mr$setWorldPosition(this.blockPosition());
 
-      BlockState state = getDisplayBlockState();
-      BlockEntityTicker<BlockEntity> ticker =
-          state.getTicker(simLevel, (BlockEntityType<BlockEntity>) this.blockEntity.getType());
-      if (ticker != null) {
-        ticker.tick(simLevel, this.blockPosition(), state, this.blockEntity);
+        BlockState state = getDisplayBlockState();
+        BlockEntityTicker<BlockEntity> ticker = state.getTicker(simLevel, (BlockEntityType<BlockEntity>) this.blockEntity.getType());
+        if (ticker != null) {
+          ticker.tick(simLevel, this.blockPosition(), state, this.blockEntity);
+        }
       }
-    }
 
-    if (!simLevel.isClientSide()) {
-      long time = this.level().getGameTime();
-      pendingBlockTicks.removeIf(
-          tick -> {
-            if (tick.triggerTick() <= time) {
-              BlockState state = getDisplayBlockState();
-              if (state.is(tick.type())) {
-                state.tick((ServerLevel) simLevel, this.blockPosition(), this.level().getRandom());
-              }
-              return true;
-            }
-            return false;
-          });
-      pendingFluidTicks.removeIf(
-          tick -> {
-            if (tick.triggerTick() <= time) {
-              FluidState state = this.simulatedLevel.getFluidState(this.blockPosition());
-              BlockState blockState = getDisplayBlockState();
-              if (state.is(tick.type())) {
-                state.tick((ServerLevel) simLevel, this.blockPosition(), blockState);
-              }
-              return true;
-            }
-            return false;
-          });
-    } else {
-      BlockState blockState = getDisplayBlockState();
-      blockState.getBlock().animateTick(blockState, simLevel, blockPosition(), getRandom());
-    }
+      if (!simLevel.isClientSide()) {
+        long time = this.level().getGameTime();
+        pendingBlockTicks.removeIf(
+                tick -> {
+                  if (tick.triggerTick() <= time) {
+                    BlockState state = getDisplayBlockState();
+                    if (state.is(tick.type())) {
+                      state.tick((ServerLevel) simLevel, this.blockPosition(), this.level().getRandom());
+                    }
+                    return true;
+                  }
+                  return false;
+                });
+        pendingFluidTicks.removeIf(
+                tick -> {
+                  if (tick.triggerTick() <= time) {
+                    FluidState state = this.simulatedLevel.getFluidState(this.blockPosition());
+                    BlockState blockState = getDisplayBlockState();
+                    if (state.is(tick.type())) {
+                      state.tick((ServerLevel) simLevel, this.blockPosition(), blockState);
+                    }
+                    return true;
+                  }
+                  return false;
+                });
+      } else {
+        BlockState blockState = getDisplayBlockState();
+        blockState.getBlock().animateTick(blockState, simLevel, blockPosition(), getRandom());
+      }
 
+    }catch (Exception ignored){}
     super.tick();
   }
 
@@ -280,7 +282,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
   public @NonNull InteractionResult interact(
           @NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
     boolean safeToInteract = getDisplayBlockState().is(SAFE_TO_INTERACT);
-    if (player.isSprinting()
+    if(player.isSprinting()
         || player.isShiftKeyDown()
         || (!safeToInteract && blockEntity != null)) {
       return super.interact(player, hand, pos);
@@ -322,8 +324,12 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
   public void handleActive(ServerLevel level, int x, int y, int z, boolean powered) {
     if (activated != powered) {
       this.activated = powered;
-      getDisplayBlockState()
-          .handleNeighborChanged(simulatedLevel, blockPosition(), Blocks.AIR, null, false);
+      try {
+        getDisplayBlockState()
+                .handleNeighborChanged(simulatedLevel, blockPosition(), Blocks.AIR, null, false);
+      }catch(Exception ignored){
+
+      }
     }
   }
 
