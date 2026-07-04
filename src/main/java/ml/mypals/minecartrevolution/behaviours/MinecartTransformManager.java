@@ -279,8 +279,12 @@ public class MinecartTransformManager {
     if (handStack != null
         && abstractMinecartEntity instanceof CompatFriendlyBlockMinecartEntity simMinecart) {
       var beData = handStack.get(DataComponents.BLOCK_ENTITY_DATA);
+      var containerInfo = handStack.get(DataComponents.CONTAINER);
       if (beData != null) {
         simMinecart.setBlockEntityTag(beData.copyTagWithoutId());
+      }
+      if(containerInfo != null){
+          simMinecart.setContainerInfo(containerInfo);
       }
     }
     return abstractMinecartEntity;
