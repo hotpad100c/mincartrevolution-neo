@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BaseContainerBlockEntity.class)
 public interface BaseContainerBlockEntityAccessor {
-    @Invoker("getItems")
-    NonNullList<ItemStack> minecartRevolution$getItems();
+  @Invoker("getItems")
+  NonNullList<ItemStack> minecartRevolution$getItems();
 }
