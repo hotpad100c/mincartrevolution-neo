@@ -50,6 +50,8 @@
 		"trading_table:trading_table",
 		"beecrasy:bee_city_comb",
 		"beecrasy:bee_city_core",
-		"beecrasy:bee_city_queen"
+		"beecrasy:bee_city_queen",
+		"net_music_can_play_bili:lyric_projector",
+		"net_music_can_play_bili:video_projector"
 	]
 }
