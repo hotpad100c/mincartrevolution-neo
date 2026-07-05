@@ -1,20 +1,39 @@
 package ml.mypals.minecartrevolution.mixin;
 
 import java.util.List;
+import java.util.function.Predicate;
+
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
+import org.jspecify.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.swing.text.html.parser.Entity;
+
 @Mixin(Level.class)
 public abstract class LevelMixin implements LevelAccessor {
+  @Shadow
+  @Final
+  private boolean isClientSide;
+
+  @Shadow
+  public abstract <T extends net.minecraft.world.entity.Entity> List<T> getEntities(EntityTypeTest<net.minecraft.world.entity.Entity, T> type, AABB bb, Predicate<? super T> selector);
+
   @Inject(method = "markAndNotifyBlock", at = @At("TAIL"))
   private void mr$onBlockUpdated(
       BlockPos pos,
@@ -33,5 +52,15 @@ public abstract class LevelMixin implements LevelAccessor {
     for (BeaconMinecartEntity minecart : minecarts) {
       minecart.updateBeam();
     }
+  }
+  @WrapMethod(method = "getBlockEntity")
+  public @Nullable BlockEntity getBlockEntity(BlockPos pos, Operation<BlockEntity> original) {
+    BlockEntity blockEntity = original.call(pos);
+    if(blockEntity == null && isClientSide){
+      for(CompatFriendlyBlockMinecartEntity entity : getEntitiesOfClass(CompatFriendlyBlockMinecartEntity.class, AABB.encapsulatingFullBlocks(pos,pos))){
+        if(entity.blockEntity != null) return entity.blockEntity;
+      }
+    }
+    return blockEntity;
   }
 }

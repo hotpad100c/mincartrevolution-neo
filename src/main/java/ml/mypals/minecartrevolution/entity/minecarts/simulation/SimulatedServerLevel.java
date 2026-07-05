@@ -115,7 +115,10 @@ public class SimulatedServerLevel extends ServerLevel {
       long seed) {
     wrapped.playSeededSound(except, sourceEntity, sound, source, volume, pitch, seed);
   }
-
+  @Override
+  public @NonNull Holder<Biome> getBiome(@NonNull BlockPos pos) {
+    return wrapped.getBiome(pos);
+  }
   @Override
   public @NonNull BlockState getBlockState(BlockPos pos) {
     if (pos.equals(minecart.blockPosition())) {
