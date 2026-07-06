@@ -23,11 +23,19 @@ public abstract class ClientLevelMixin implements BlockAndTintGetter, IServerLev
   public PortalMinecartStorage mincartrevolution_neo$getPortalMinecartStorage() {
     return mincartrevolution_neo$portalMinecartStorage;
   }
-  @WrapOperation(method = "<init>",at = @At(target = "Lnet/neoforged/bus/api/IEventBus;post(Lnet/neoforged/bus/api/Event;)Lnet/neoforged/bus/api/Event;", value = "INVOKE"))
-  public <T extends Event> T blockSimulatedLevelLoadingEvent(IEventBus instance, T t, Operation<T> original){
-    if((Object)this instanceof SimulatedClientLevel){
+
+  @WrapOperation(
+      method = "<init>",
+      at =
+          @At(
+              target =
+                  "Lnet/neoforged/bus/api/IEventBus;post(Lnet/neoforged/bus/api/Event;)Lnet/neoforged/bus/api/Event;",
+              value = "INVOKE"))
+  public <T extends Event> T blockSimulatedLevelLoadingEvent(
+      IEventBus instance, T t, Operation<T> original) {
+    if ((Object) this instanceof SimulatedClientLevel) {
       return null;
-    }else {
+    } else {
       return original.call(instance, t);
     }
   }
