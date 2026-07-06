@@ -16,6 +16,7 @@
     "blocks.PistonStructureResolverMixin",
     "blocks.ProjectileDispenseBehaviorMixin",
     "blocks.UnrenderableBlocksMixin",
+    "entity.EntityAccessor",
     "entity.EntityMixin",
     "entity.OldMinecartBehaviourMixin",
     "entity.PiglinMixin",

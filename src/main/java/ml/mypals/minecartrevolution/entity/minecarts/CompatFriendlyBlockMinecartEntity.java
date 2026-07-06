@@ -6,25 +6,32 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import ml.mypals.minecartrevolution.MinecartRevolution;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.ClientSimLevelFactory;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedServerLevel;
 import ml.mypals.minecartrevolution.item.WrenchItem;
 import ml.mypals.minecartrevolution.mixin.blocks.BaseContainerBlockEntityAccessor;
 import ml.mypals.minecartrevolution.mixin.simulation.BlockEntityAccessor;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,6 +49,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.*;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.ScheduledTick;
@@ -51,7 +59,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntity
-    implements ICapabilityProvider {
+    implements ICapabilityProvider, ContainerEntity, PowerEmitterMinecartEntity {
   public BlockEntity blockEntity;
   public Level simulatedLevel;
   private CompoundTag blockEntityTag;
@@ -345,5 +353,124 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
   public @Nullable Object getCapability(@NonNull Object object, Object context) {
     return simulatedLevel.getCapability(
         (BlockCapability<? extends Object, ? super Object>) object, blockPosition(), context);
+  }
+
+  private Container getContainer(){
+    Container container = null;
+    if(blockEntity instanceof WorldlyContainerHolder){
+      container = ((WorldlyContainerHolder) blockEntity).getContainer(getDisplayBlockState(), simulatedLevel, blockEntity.getBlockPos());
+    }
+    if(blockEntity instanceof Container container1){
+      container = container1;
+    }
+    return container;
+  }
+  @Override
+  public int getContainerSize() {
+    Container container = getContainer();
+    return container == null?0:container.getContainerSize();
+  }
+
+  @Override
+  public @NonNull ItemStack getItem(int i) {
+    Container container = getContainer();
+    return container == null?ItemStack.EMPTY :container.getItem(i);
+  }
+  @Override
+  public @NonNull ItemStack removeItem(int i, int i1) {
+    Container container = getContainer();
+    return container == null ? ItemStack.EMPTY : container.removeItem(i, i1);
+  }
+
+  @Override
+  public @NonNull ItemStack removeItemNoUpdate(int i) {
+    Container container = getContainer();
+    return container == null ? ItemStack.EMPTY : container.removeItemNoUpdate(i);
+  }
+
+  @Override
+  public void setItem(int i, @NonNull ItemStack itemStack) {
+    Container container = getContainer();
+    if (container != null) {
+      container.setItem(i, itemStack);
+    }
+  }
+
+  @Override
+  public void setChanged() {
+    Container container = getContainer();
+    if (container != null) {
+      container.setChanged();
+    }
+  }
+
+  @Override
+  public boolean stillValid(@NonNull Player player) {
+    Container container = getContainer();
+    return container != null && container.stillValid(player);
+  }
+
+  @Override
+  public void clearContent() {
+    Container container = getContainer();
+    if (container != null) {
+      container.clearContent();
+    }
+  }
+
+  @Override
+  public @Nullable ResourceKey<LootTable> getContainerLootTable() {
+    return null;
+  }
+
+  @Override
+  public void setContainerLootTable(@Nullable ResourceKey<LootTable> resourceKey) {
+
+  }
+
+  @Override
+  public long getContainerLootTableSeed() {
+    return  0L;
+  }
+
+  @Override
+  public void setContainerLootTableSeed(long l) {
+
+  }
+
+  @Override
+  public @NonNull NonNullList<ItemStack> getItemStacks() {
+    Container container = getContainer();
+    BaseContainerBlockEntity baseContainerBlockEntity = null;
+    if(container instanceof BaseContainerBlockEntity blockEntity){
+      baseContainerBlockEntity = blockEntity;
+    }
+    return baseContainerBlockEntity == null ? NonNullList.create() :
+            ((BaseContainerBlockEntityAccessor)baseContainerBlockEntity).minecartRevolution$getItems();
+  }
+
+  @Override
+  public void clearItemStacks() {
+    Container container = getContainer();
+    if (container != null) {
+      container.clearContent();
+    }
+  }
+
+  @Override
+  public @Nullable AbstractContainerMenu createMenu(int i, @NonNull Inventory inventory, @NonNull Player player) {
+    Container container = getContainer();
+    BaseContainerBlockEntity baseContainerBlockEntity = null;
+    if(container instanceof BaseContainerBlockEntity blockEntity){
+      baseContainerBlockEntity = blockEntity;
+    }
+    return baseContainerBlockEntity == null ? null : baseContainerBlockEntity.createMenu(i, inventory, player);
+  }
+  @Override
+  public int getPowerStrength(Direction direction, BlockPos pos) {
+    BlockState state = getDisplayBlockState();
+    int signal = state.getSignal(simulatedLevel, pos, direction);
+    return state.shouldCheckWeakPower(simulatedLevel, pos, direction) ?
+            Math.max(signal, 0) : signal;
   }
 }
