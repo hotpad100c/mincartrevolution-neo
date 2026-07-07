@@ -27,9 +27,10 @@ public class RailMinecartEntity extends VariantBlockMinecartEntity {
   public @NonNull BlockState getDefaultDisplayBlockState() {
     return Blocks.RAIL.defaultBlockState();
   }
+
   @Override
-  public void moveEntitiesAbove() {
-  }
+  public void moveEntitiesAbove() {}
+
   public RailMinecartEntity(
       EntityType<? extends AbstractMinecart> minecart,
       Level world,

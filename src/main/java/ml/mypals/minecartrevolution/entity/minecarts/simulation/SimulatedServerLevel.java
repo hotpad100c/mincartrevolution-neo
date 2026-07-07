@@ -2,7 +2,6 @@ package ml.mypals.minecartrevolution.entity.minecarts.simulation;
 
 import java.util.*;
 import java.util.function.Predicate;
-
 import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.mixin.entity.EntityAccessor;
 import ml.mypals.minecartrevolution.mixin.simulation.ServerAccessor;
@@ -126,10 +125,12 @@ public class SimulatedServerLevel extends ServerLevel {
       long seed) {
     wrapped.playSeededSound(except, sourceEntity, sound, source, volume, pitch, seed);
   }
+
   @Override
   public @NonNull Holder<Biome> getBiome(@NonNull BlockPos pos) {
     return wrapped.getBiome(pos);
   }
+
   @Override
   public @NonNull BlockState getBlockState(BlockPos pos) {
     if (pos.equals(minecart.blockPosition())) {
@@ -328,18 +329,17 @@ public class SimulatedServerLevel extends ServerLevel {
   }
 
   public boolean addFreshEntity(@NonNull Entity entity) {
-    ((EntityAccessor)entity).minecartrevolution$setLevel(wrapped);
+    ((EntityAccessor) entity).minecartrevolution$setLevel(wrapped);
     return wrapped.addFreshEntity(entity);
   }
 
-
   public boolean addWithUUID(@NonNull Entity entity) {
-    ((EntityAccessor)entity).minecartrevolution$setLevel(wrapped);
+    ((EntityAccessor) entity).minecartrevolution$setLevel(wrapped);
     return wrapped.addWithUUID(entity);
   }
 
   public void addDuringTeleport(@NonNull Entity entity) {
-    ((EntityAccessor)entity).minecartrevolution$setLevel(wrapped);
+    ((EntityAccessor) entity).minecartrevolution$setLevel(wrapped);
     wrapped.addDuringTeleport(entity);
   }
 
@@ -367,10 +367,12 @@ public class SimulatedServerLevel extends ServerLevel {
   public @Nullable ServerPlayer getRandomPlayer() {
     return wrapped.getRandomPlayer();
   }
+
   @Override
-  public @NonNull RegistryAccess registryAccess(){
+  public @NonNull RegistryAccess registryAccess() {
     return wrapped.registryAccess();
   }
+
   @Override
   public @NonNull GameRules getGameRules() {
     return wrapped.getGameRules();
@@ -388,52 +390,53 @@ public class SimulatedServerLevel extends ServerLevel {
 
   @Override
   public <T extends ParticleOptions> int sendParticles(
-          @NonNull T particle,
-          double x,
-          double y,
-          double z,
-          int count,
-          double xDist,
-          double yDist,
-          double zDist,
-          double speed) {
+      @NonNull T particle,
+      double x,
+      double y,
+      double z,
+      int count,
+      double xDist,
+      double yDist,
+      double zDist,
+      double speed) {
     return wrapped.sendParticles(particle, x, y, z, count, xDist, yDist, zDist, speed);
   }
 
   @Override
   public <T extends ParticleOptions> int sendParticles(
-          @NonNull T particle,
-          boolean overrideLimiter,
-          boolean alwaysShow,
-          double x,
-          double y,
-          double z,
-          int count,
-          double xDist,
-          double yDist,
-          double zDist,
-          double speed) {
+      @NonNull T particle,
+      boolean overrideLimiter,
+      boolean alwaysShow,
+      double x,
+      double y,
+      double z,
+      int count,
+      double xDist,
+      double yDist,
+      double zDist,
+      double speed) {
     return wrapped.sendParticles(
-            particle, overrideLimiter, alwaysShow, x, y, z, count, xDist, yDist, zDist, speed);
+        particle, overrideLimiter, alwaysShow, x, y, z, count, xDist, yDist, zDist, speed);
   }
 
   @Override
   public <T extends ParticleOptions> boolean sendParticles(
-          @NonNull ServerPlayer player,
-          @NonNull T particle,
-          boolean overrideLimiter,
-          boolean alwaysShow,
-          double x,
-          double y,
-          double z,
-          int count,
-          double xDist,
-          double yDist,
-          double zDist,
-          double speed) {
+      @NonNull ServerPlayer player,
+      @NonNull T particle,
+      boolean overrideLimiter,
+      boolean alwaysShow,
+      double x,
+      double y,
+      double z,
+      int count,
+      double xDist,
+      double yDist,
+      double zDist,
+      double speed) {
     return wrapped.sendParticles(
-            player, particle, overrideLimiter, alwaysShow, x, y, z, count, xDist, yDist, zDist, speed);
+        player, particle, overrideLimiter, alwaysShow, x, y, z, count, xDist, yDist, zDist, speed);
   }
+
   @Override
   public void addNewPlayer(@NonNull ServerPlayer player) {
     wrapped.addNewPlayer(player);
@@ -445,7 +448,8 @@ public class SimulatedServerLevel extends ServerLevel {
   }
 
   @Override
-  public void removePlayerImmediately(@NonNull ServerPlayer player, Entity.@NonNull RemovalReason reason) {
+  public void removePlayerImmediately(
+      @NonNull ServerPlayer player, Entity.@NonNull RemovalReason reason) {
     wrapped.removePlayerImmediately(player, reason);
   }
 
@@ -525,7 +529,8 @@ public class SimulatedServerLevel extends ServerLevel {
   }
 
   @Override
-  public void neighborChanged(@NonNull BlockPos pos, @NonNull Block changedBlock, @Nullable Orientation orientation) {
+  public void neighborChanged(
+      @NonNull BlockPos pos, @NonNull Block changedBlock, @Nullable Orientation orientation) {
     wrapped.neighborChanged(pos, changedBlock, orientation);
   }
 
@@ -583,8 +588,9 @@ public class SimulatedServerLevel extends ServerLevel {
   public boolean isRaided(@NonNull BlockPos pos) {
     return wrapped.isRaided(pos);
   }
+
   @Override
-  public @NonNull String toString(){
+  public @NonNull String toString() {
     return "SimulatedServerLevelWrapped{" + wrapped.toString() + "}";
   }
 }

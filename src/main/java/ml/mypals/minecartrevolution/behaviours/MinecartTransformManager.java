@@ -283,8 +283,8 @@ public class MinecartTransformManager {
       if (beData != null) {
         simMinecart.setBlockEntityTag(beData.copyTagWithoutId());
       }
-      if(containerInfo != null){
-          simMinecart.setContainerInfo(containerInfo);
+      if (containerInfo != null) {
+        simMinecart.setContainerInfo(containerInfo);
       }
     }
     return abstractMinecartEntity;
