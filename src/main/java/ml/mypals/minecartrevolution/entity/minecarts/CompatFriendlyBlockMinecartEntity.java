@@ -303,7 +303,8 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
   @Override
   public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
-    boolean safeToInteract = FORCE_COMAPTERS.contains(player.getUUID()) || getDisplayBlockState().is(SAFE_TO_INTERACT);
+    boolean bypassWhiteList = level().isClientSide() && Config.FORCE_COMPATIBILITY.get() || FORCE_COMAPTERS.contains(player.getUUID());
+    boolean safeToInteract = bypassWhiteList || getDisplayBlockState().is(SAFE_TO_INTERACT);
     if(player.isSprinting()
         || player.isShiftKeyDown()
         || (!safeToInteract && blockEntity != null)) {

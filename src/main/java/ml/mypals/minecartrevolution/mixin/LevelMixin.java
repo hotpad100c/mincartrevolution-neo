@@ -57,7 +57,7 @@ public abstract class LevelMixin implements LevelAccessor {
   }
   @WrapMethod(method = "getBlockEntity")
   public @Nullable BlockEntity getBlockEntity(BlockPos pos, Operation<BlockEntity> original) {
-    if(!isClientSide || Config.FORCE_COMPATIBILITY.get() || !Minecraft.getInstance().isSameThread()) return original.call(pos);
+    if(!isClientSide || !Config.FORCE_COMPATIBILITY.get() || !Minecraft.getInstance().isSameThread()) return original.call(pos);
 
     CompatFriendlyBlockMinecartEntity cart = LastCartInteractionCache.LAST_INTERACTED;
     if(cart != null && cart.isAlive() && cart.blockPosition().equals(pos)){
@@ -67,9 +67,5 @@ public abstract class LevelMixin implements LevelAccessor {
       }
     }
     return original.call(pos);
-  }
-  @Unique
-  private boolean mincartrevolution_neo$isCausedByCartInteraction(){
-    return false;
   }
 }
