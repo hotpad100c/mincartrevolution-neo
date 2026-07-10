@@ -5,9 +5,13 @@ import static ml.mypals.minecartrevolution.registeries.MREntityDataSerializers.C
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+
 import ml.mypals.minecartrevolution.MinecartRevolution;
+import ml.mypals.minecartrevolution.config.Config;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.ClientSimLevelFactory;
+import ml.mypals.minecartrevolution.entity.minecarts.simulation.LastCartInteractionCache;
 import ml.mypals.minecartrevolution.entity.minecarts.simulation.SimulatedServerLevel;
 import ml.mypals.minecartrevolution.item.WrenchItem;
 import ml.mypals.minecartrevolution.mixin.blocks.BaseContainerBlockEntityAccessor;
@@ -27,7 +31,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.*;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
@@ -295,9 +301,8 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
   }
 
   @Override
-  public @NonNull InteractionResult interact(
-          @NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
-    boolean safeToInteract = getDisplayBlockState().is(SAFE_TO_INTERACT);
+  public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
+    boolean safeToInteract = Config.FORCE_COMPATIBILITY.getAsBoolean() || getDisplayBlockState().is(SAFE_TO_INTERACT);
     if(player.isSprinting()
         || player.isShiftKeyDown()
         || (!safeToInteract && blockEntity != null)) {
@@ -311,6 +316,9 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     Level simLevel = simulatedLevel;
 
     try {
+      if (level().isClientSide()){
+        LastCartInteractionCache.LAST_INTERACTED = this;
+      }
       return stack.isEmpty()
           ? block.useWithoutItem(
               simLevel,
@@ -327,6 +335,13 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     }
   }
 
+  @Override
+  public void moveEntitiesAbove(Consumer<Entity> consumer) {
+    super.moveEntitiesAbove((entity)->{
+      getDisplayBlockState().getBlock().stepOn(simulatedLevel, blockPosition(), getDisplayBlockState(), entity);
+      getDisplayBlockState().entityInside(simulatedLevel, blockPosition(), entity, InsideBlockEffectApplier.NOOP,true);
+    });
+  }
   @Override
   public void remove(@NonNull RemovalReason reason) {
     if (this.blockEntity != null) {

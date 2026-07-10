@@ -1,6 +1,8 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import java.util.List;
+import java.util.function.Consumer;
+
 import ml.mypals.minecartrevolution.registeries.MRModCriteria;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -28,7 +30,7 @@ public class RailMinecartEntity extends VariantBlockMinecartEntity {
     return Blocks.RAIL.defaultBlockState();
   }
   @Override
-  public void moveEntitiesAbove() {
+  public void moveEntitiesAbove(Consumer<Entity> consumer) {
   }
   public RailMinecartEntity(
       EntityType<? extends AbstractMinecart> minecart,

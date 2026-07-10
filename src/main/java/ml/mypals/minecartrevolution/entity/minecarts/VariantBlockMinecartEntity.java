@@ -1,6 +1,8 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
 import java.util.Optional;
+import java.util.function.Consumer;
+
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
@@ -309,7 +311,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   public void tick() {
     super.tick();
-    moveEntitiesAbove();
+    moveEntitiesAbove((_)->{});
     if (this.level().isClientSide()) {
       tickDynamicLight((ClientLevel) this.level());
     }
@@ -338,7 +340,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   protected void moveAlongTrack(@NonNull ServerLevel level) {
     super.moveAlongTrack(level);
-    moveEntitiesAbove();
+    moveEntitiesAbove((_)->{});
   }
 
   public int getLightLevel() {
@@ -410,7 +412,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     return true;
   }
 
-  public void moveEntitiesAbove() {
+  public void moveEntitiesAbove(Consumer<Entity> consumer) {
     if (this.lastTickPos == null) {
       this.lastTickPos = new Vec3(this.xOld, this.yOld, this.zOld);
     }
@@ -441,6 +443,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     this.movingEntities = true;
     try {
       for (Entity entity : level().getEntitiesOfClass(Entity.class, aabb)) {
+        consumer.accept(entity);
         if (entity == this
             || entity instanceof ChainEntity
             || entity.getVehicle() != null

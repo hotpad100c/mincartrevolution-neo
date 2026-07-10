@@ -101,5 +101,8 @@
 	"message.minecartrevolution.chain_selected": "Minecart selected! Right-click another minecart to link it with a chain.",
 	"message.minecartrevolution.chain_linked": "Minecarts have been linked with a chain!",
 	"message.minecartrevolution.chain_broken": "Chain has been broken.",
-	"message.minecartrevolution.chain_already_chained": "One of the minecarts is already chained! Please break the existing chain first."
+	"message.minecartrevolution.chain_already_chained": "One of the minecarts is already chained! Please break the existing chain first.",
+	"config.yourmod.force_compatibility": "Force Compatibility Mode",
+	"config.yourmod.force_compatibility.tooltip": "Enables an experimental compatibility workaround for all modded block entities inside minecarts. This may cause unexpected behavior, server disconnects, or client crashes. Enable only if necessary. Use at your own risk."
+
 }

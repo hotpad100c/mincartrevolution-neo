@@ -59,7 +59,7 @@ public class EnderPortalMinecartEntity extends NetherPortalMinecartEntity {
         getZ(),
         SoundEvents.END_PORTAL_SPAWN,
         this.getSoundSource(),
-        2F,
+        0.5f,
         1.0F);
     serverLevel.playSound(
         null,
@@ -68,7 +68,7 @@ public class EnderPortalMinecartEntity extends NetherPortalMinecartEntity {
         netherTarget.getZ(),
         SoundEvents.END_PORTAL_SPAWN,
         this.getSoundSource(),
-        2F,
+        0.5f,
         1.0F);
 
     if (netherTarget instanceof EnderPortalMinecartEntity enderTarget) {

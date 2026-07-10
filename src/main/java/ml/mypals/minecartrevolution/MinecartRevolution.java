@@ -8,6 +8,8 @@ import static ml.mypals.minecartrevolution.registeries.MRModItems.*;
 
 import com.mojang.logging.LogUtils;
 import java.util.List;
+
+import ml.mypals.minecartrevolution.config.Config;
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
 import ml.mypals.minecartrevolution.datagen.MRRecipeProvider;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.PortalMinecartEntity;
@@ -35,6 +37,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -78,6 +81,7 @@ public class MinecartRevolution {
     ENTITY_DATA_SERIALIZERS.register(modEventBus);
     MRDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
     NeoForge.EVENT_BUS.register(this);
+    modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
   }
 
   private void registerPayloads(final RegisterPayloadHandlersEvent event) {
