@@ -1,10 +1,9 @@
 package ml.mypals.minecartrevolution.mixin;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import java.util.List;
+import java.util.function.Predicate;
 import ml.mypals.minecartrevolution.config.Config;
 import ml.mypals.minecartrevolution.entity.minecarts.CompatFriendlyBlockMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.BeaconMinecartEntity;
@@ -22,19 +21,19 @@ import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Level.class)
 public abstract class LevelMixin implements LevelAccessor {
-  @Shadow
-  @Final
-  private boolean isClientSide;
+  @Shadow @Final private boolean isClientSide;
 
   @Shadow
-  public abstract <T extends net.minecraft.world.entity.Entity> List<T> getEntities(EntityTypeTest<net.minecraft.world.entity.Entity, T> type, AABB bb, Predicate<? super T> selector);
+  public abstract <T extends net.minecraft.world.entity.Entity> List<T> getEntities(
+      EntityTypeTest<net.minecraft.world.entity.Entity, T> type,
+      AABB bb,
+      Predicate<? super T> selector);
 
   @Inject(method = "markAndNotifyBlock", at = @At("TAIL"))
   private void mr$onBlockUpdated(
@@ -55,14 +54,17 @@ public abstract class LevelMixin implements LevelAccessor {
       minecart.updateBeam();
     }
   }
+
   @WrapMethod(method = "getBlockEntity")
   public @Nullable BlockEntity getBlockEntity(BlockPos pos, Operation<BlockEntity> original) {
-    if(!isClientSide || !Config.FORCE_COMPATIBILITY.get() || !Minecraft.getInstance().isSameThread()) return original.call(pos);
+    if (!isClientSide
+        || !Config.FORCE_COMPATIBILITY.get()
+        || !Minecraft.getInstance().isSameThread()) return original.call(pos);
 
     CompatFriendlyBlockMinecartEntity cart = LastCartInteractionCache.LAST_INTERACTED;
-    if(cart != null && cart.isAlive() && cart.blockPosition().equals(pos)){
+    if (cart != null && cart.isAlive() && cart.blockPosition().equals(pos)) {
       BlockEntity blockEntity = cart.blockEntity;
-      if(blockEntity != null){
+      if (blockEntity != null) {
         return blockEntity;
       }
     }

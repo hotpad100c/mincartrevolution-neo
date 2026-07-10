@@ -1,6 +1,5 @@
 package ml.mypals.minecartrevolution;
 
-import static ml.mypals.minecartrevolution.MinecartRevolution.FORCE_COMAPTERS;
 import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
 
 import java.net.URL;
@@ -51,7 +50,6 @@ import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jspecify.annotations.NonNull;
 
 // This class will not load on dedicated servers. Accessing client side code from here is safe.
@@ -105,7 +103,6 @@ public class MinecartRevolutionClient {
     event.register(BabelScramblePacket.TYPE, MinecartRevolutionClient::babelScrambleUpdate);
     event.register(MinecartCollisionPacket.TYPE, MinecartRevolutionClient::minecartCollisionUpdate);
     event.register(EnderPortalShakePacket.TYPE, MinecartRevolutionClient::enderPortalShakeUpdate);
-
   }
 
   @SubscribeEvent // on the mod event bus only on the physical client
@@ -181,12 +178,17 @@ public class MinecartRevolutionClient {
           }
         });
   }
-    @SubscribeEvent
-    public static void onConfigReload(ModConfigEvent.Reloading event) {
-        if (event.getConfig().getSpec() == Config.SPEC && Minecraft.getInstance().getConnection() != null) {
-            Minecraft.getInstance().getConnection().send(new ForceCompatRegisterPacket(Config.FORCE_COMPATIBILITY.get()));
-        }
+
+  @SubscribeEvent
+  public static void onConfigReload(ModConfigEvent.Reloading event) {
+    if (event.getConfig().getSpec() == Config.SPEC
+        && Minecraft.getInstance().getConnection() != null) {
+      Minecraft.getInstance()
+          .getConnection()
+          .send(new ForceCompatRegisterPacket(Config.FORCE_COMPATIBILITY.get()));
     }
+  }
+
   private static void babelScrambleUpdate(
       final ml.mypals.minecartrevolution.packets.BabelScramblePacket payload,
       final IPayloadContext context) {
