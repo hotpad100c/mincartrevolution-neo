@@ -7,12 +7,9 @@ import static ml.mypals.minecartrevolution.registeries.MRModCriteria.TRIGGERS;
 import static ml.mypals.minecartrevolution.registeries.MRModItems.*;
 
 import com.mojang.logging.LogUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javazoom.jl.player.Player;
 import ml.mypals.minecartrevolution.config.Config;
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
 import ml.mypals.minecartrevolution.datagen.MRRecipeProvider;
@@ -58,6 +55,7 @@ public class MinecartRevolution {
   // Directly reference a slf4j logger
   public static final Logger LOGGER = LogUtils.getLogger();
   public static List<UUID> FORCE_COMAPTERS = new ArrayList<>();
+
   public static Identifier id(String path) {
     return Identifier.fromNamespaceAndPath(MODID, path);
   }
@@ -91,13 +89,16 @@ public class MinecartRevolution {
     registrar.playToClient(BabelScramblePacket.TYPE, BabelScramblePacket.STREAM_CODEC);
     registrar.playToClient(EnderPortalShakePacket.TYPE, EnderPortalShakePacket.STREAM_CODEC);
     registrar.playToClient(MinecartCollisionPacket.TYPE, MinecartCollisionPacket.STREAM_CODEC);
-    registrar.playToServer(ForceCompatRegisterPacket.TYPE, ForceCompatRegisterPacket.STREAM_CODEC,((payload, context) -> {
-      if(payload.active()){
-        FORCE_COMAPTERS.add(context.player().getUUID());
-      }else {
-        FORCE_COMAPTERS.remove(context.player().getUUID());
-      }
-    }));
+    registrar.playToServer(
+        ForceCompatRegisterPacket.TYPE,
+        ForceCompatRegisterPacket.STREAM_CODEC,
+        ((payload, context) -> {
+          if (payload.active()) {
+            FORCE_COMAPTERS.add(context.player().getUUID());
+          } else {
+            FORCE_COMAPTERS.remove(context.player().getUUID());
+          }
+        }));
   }
 
   private void commonSetup(FMLCommonSetupEvent event) {
