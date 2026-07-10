@@ -375,6 +375,7 @@ public class SimulatedClientLevel extends ClientLevel {
   public int getSignal(@NotNull BlockPos pos, @NotNull Direction direction) {
     return minecart.activated ? 15 : 0;
   }
+
   @Override
   public void addEntity(@NonNull Entity entity) {
     wrapped.addEntity(entity);
@@ -387,33 +388,30 @@ public class SimulatedClientLevel extends ClientLevel {
 
   @Override
   public void playLocalSound(
-          @NonNull Entity sourceEntity,
-          @NonNull SoundEvent sound,
-          @NonNull SoundSource source,
-          float volume,
-          float pitch) {
+      @NonNull Entity sourceEntity,
+      @NonNull SoundEvent sound,
+      @NonNull SoundSource source,
+      float volume,
+      float pitch) {
     wrapped.playLocalSound(sourceEntity, sound, source, volume, pitch);
   }
 
   @Override
   public void playPlayerSound(
-          @NonNull SoundEvent sound,
-          @NonNull SoundSource source,
-          float volume,
-          float pitch) {
+      @NonNull SoundEvent sound, @NonNull SoundSource source, float volume, float pitch) {
     wrapped.playPlayerSound(sound, source, volume, pitch);
   }
 
   @Override
   public void playLocalSound(
-          double x,
-          double y,
-          double z,
-          @NonNull SoundEvent sound,
-          @NonNull SoundSource source,
-          float volume,
-          float pitch,
-          boolean distanceDelay) {
+      double x,
+      double y,
+      double z,
+      @NonNull SoundEvent sound,
+      @NonNull SoundSource source,
+      float volume,
+      float pitch,
+      boolean distanceDelay) {
     wrapped.playLocalSound(x, y, z, sound, source, volume, pitch, distanceDelay);
   }
 
@@ -459,10 +457,10 @@ public class SimulatedClientLevel extends ClientLevel {
 
   @Override
   public void trackExplosionEffects(
-          @NonNull Vec3 center,
-          float radius,
-          int blockCount,
-          @NonNull WeightedList<ExplosionParticleInfo> blockParticles) {
+      @NonNull Vec3 center,
+      float radius,
+      int blockCount,
+      @NonNull WeightedList<ExplosionParticleInfo> blockParticles) {
     wrapped.trackExplosionEffects(center, radius, blockCount, blockParticles);
   }
 
@@ -498,13 +496,13 @@ public class SimulatedClientLevel extends ClientLevel {
 
   @Override
   public void createFireworks(
-          double x,
-          double y,
-          double z,
-          double xd,
-          double yd,
-          double zd,
-          @NonNull List<FireworkExplosion> explosions) {
+      double x,
+      double y,
+      double z,
+      double xd,
+      double yd,
+      double zd,
+      @NonNull List<FireworkExplosion> explosions) {
     wrapped.createFireworks(x, y, z, xd, yd, zd, explosions);
   }
 
@@ -524,7 +522,8 @@ public class SimulatedClientLevel extends ClientLevel {
   }
 
   @Override
-  public void setBlocksDirty(@NonNull BlockPos pos, @NonNull BlockState oldState, @NonNull BlockState newState) {
+  public void setBlocksDirty(
+      @NonNull BlockPos pos, @NonNull BlockState oldState, @NonNull BlockState newState) {
     wrapped.setBlocksDirty(pos, oldState, newState);
   }
 
@@ -535,13 +534,14 @@ public class SimulatedClientLevel extends ClientLevel {
 
   @Override
   public void setSectionRangeDirty(
-          int minSectionX,
-          int minSectionY,
-          int minSectionZ,
-          int maxSectionX,
-          int maxSectionY,
-          int maxSectionZ) {
-    wrapped.setSectionRangeDirty(minSectionX, minSectionY, minSectionZ, maxSectionX, maxSectionY, maxSectionZ);
+      int minSectionX,
+      int minSectionY,
+      int minSectionZ,
+      int maxSectionX,
+      int maxSectionY,
+      int maxSectionZ) {
+    wrapped.setSectionRangeDirty(
+        minSectionX, minSectionY, minSectionZ, maxSectionX, maxSectionY, maxSectionZ);
   }
 
   @Override
@@ -556,9 +556,7 @@ public class SimulatedClientLevel extends ClientLevel {
 
   @Override
   public void addBreakingBlockEffect(
-          @NonNull BlockPos pos,
-          @NonNull Direction direction,
-          @Nullable HitResult hitResult) {
+      @NonNull BlockPos pos, @NonNull Direction direction, @Nullable HitResult hitResult) {
     wrapped.addBreakingBlockEffect(pos, direction, hitResult);
   }
 

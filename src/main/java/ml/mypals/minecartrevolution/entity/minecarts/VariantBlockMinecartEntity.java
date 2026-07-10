@@ -46,8 +46,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class VariantBlockMinecartEntity extends AbstractMinecart {
   public boolean activated = false;
@@ -167,8 +165,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         "item.minecartrevolution.minecart_with_block", blockName, cartName);
   }
 
-  public void addDataToStack(ItemStack stack) {
-  }
+  public void addDataToStack(ItemStack stack) {}
 
   @Override
   public @NonNull InteractionResult interact(
@@ -183,45 +180,45 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     if (player.isSecondaryUseActive()) {
-        if (this.hasCustomDisplay()) {
-          BlockState blockState = getDisplayBlockState();
+      if (this.hasCustomDisplay()) {
+        BlockState blockState = getDisplayBlockState();
 
-          if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
-            Block block = blockState.getBlock();
-            playSound(block.defaultBlockState().getSoundType().getBreakSound(), 1, 1);
-            player.swing(hand);
-            if (!this.level().isClientSide()) {
-              ItemStack stack = getCloneItemStack(blockState);
-              player.setItemInHand(hand, stack);
-              clear();
-            } else {
-              removeDynamicLight(this.blockPosition(), true);
-            }
+        if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
+          Block block = blockState.getBlock();
+          playSound(block.defaultBlockState().getSoundType().getBreakSound(), 1, 1);
+          player.swing(hand);
+          if (!this.level().isClientSide()) {
+            ItemStack stack = getCloneItemStack(blockState);
+            player.setItemInHand(hand, stack);
+            clear();
+          } else {
+            removeDynamicLight(this.blockPosition(), true);
           }
-          return InteractionResult.SUCCESS;
-        } else if (!stackInHand.isEmpty()) {
-          if (stackInHand.getItem() instanceof BlockItem blockItem) {
-            setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
-            player.swing(hand);
-            playSound(blockItem.getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1, 1);
-            if (!this.level().isClientSide()) {
-              MinecartTransformManager.checkForTransform(
-                      level(), position(), blockItem, this, stackInHand);
-              stackInHand.consume(1, player);
-            }
-          } else if (stackInHand.is(Items.WATER_BUCKET) || stackInHand.is(Items.LAVA_BUCKET)) {
-            if (!level().isClientSide()) {
-              stackInHand.consume(1, player);
-              player.getInventory().add(new ItemStack(Items.BUCKET));
-              transformTo(stackInHand.getItem());
-            }
-            playBucketSound(Blocks.WATER);
-            return InteractionResult.SUCCESS;
-          }
-          return InteractionResult.SUCCESS;
-        } else {
-          return InteractionResult.PASS;
         }
+        return InteractionResult.SUCCESS;
+      } else if (!stackInHand.isEmpty()) {
+        if (stackInHand.getItem() instanceof BlockItem blockItem) {
+          setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
+          player.swing(hand);
+          playSound(blockItem.getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1, 1);
+          if (!this.level().isClientSide()) {
+            MinecartTransformManager.checkForTransform(
+                level(), position(), blockItem, this, stackInHand);
+            stackInHand.consume(1, player);
+          }
+        } else if (stackInHand.is(Items.WATER_BUCKET) || stackInHand.is(Items.LAVA_BUCKET)) {
+          if (!level().isClientSide()) {
+            stackInHand.consume(1, player);
+            player.getInventory().add(new ItemStack(Items.BUCKET));
+            transformTo(stackInHand.getItem());
+          }
+          playBucketSound(Blocks.WATER);
+          return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.SUCCESS;
+      } else {
+        return InteractionResult.PASS;
+      }
     } else {
       player.swing(hand);
       return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
@@ -303,9 +300,9 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   public void handleActive(ServerLevel level, BlockPos blockPos, boolean powered) {
     handleActive(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), powered);
   }
+
   public void handleActive(ServerLevel level, int x, int y, int z, boolean powered) {
     this.activated = powered;
-
   }
 
   @Override
@@ -329,9 +326,9 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     }
 
     collideWithEntities();
-    if(activated && !level().isClientSide()){
+    if (activated && !level().isClientSide()) {
       BlockState rail = level().getBlockState(getCurrentBlockPosOrRailBelow());
-      if(!(rail.is(Blocks.ACTIVATOR_RAIL) && rail.getValue(PoweredRailBlock.POWERED))){
+      if (!(rail.is(Blocks.ACTIVATOR_RAIL) && rail.getValue(PoweredRailBlock.POWERED))) {
         handleActive((ServerLevel) level(), blockPosition(), false);
       }
     }
@@ -458,7 +455,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
         Vec3 previousPos = entity.position();
 
-        Vec3 offset = new Vec3(entity.getX() - this.lastTickPos.x, 0, entity.getZ() - this.lastTickPos.z);
+        Vec3 offset =
+            new Vec3(entity.getX() - this.lastTickPos.x, 0, entity.getZ() - this.lastTickPos.z);
         double rad = Math.toRadians(deltaRot);
         double cos = Math.cos(rad);
         double sin = Math.sin(rad);
