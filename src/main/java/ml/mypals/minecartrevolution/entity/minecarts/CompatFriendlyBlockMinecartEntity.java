@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import static ml.mypals.minecartrevolution.MinecartRevolution.FORCE_COMAPTERS;
 import static ml.mypals.minecartrevolution.registeries.MREntityDataSerializers.COMPOUND_TAG_SERIALIZER;
 
 import com.google.common.collect.Lists;
@@ -302,7 +303,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
   @Override
   public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
-    boolean safeToInteract = Config.FORCE_COMPATIBILITY.getAsBoolean() || getDisplayBlockState().is(SAFE_TO_INTERACT);
+    boolean safeToInteract = FORCE_COMAPTERS.contains(player.getUUID()) || getDisplayBlockState().is(SAFE_TO_INTERACT);
     if(player.isSprinting()
         || player.isShiftKeyDown()
         || (!safeToInteract && blockEntity != null)) {
@@ -316,7 +317,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     Level simLevel = simulatedLevel;
 
     try {
-      if (level().isClientSide()){
+      if (level().isClientSide() && Config.FORCE_COMPATIBILITY.get()){
         LastCartInteractionCache.LAST_INTERACTED = this;
       }
       return stack.isEmpty()

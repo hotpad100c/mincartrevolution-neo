@@ -1,5 +1,6 @@
 package ml.mypals.minecartrevolution;
 
+import static ml.mypals.minecartrevolution.MinecartRevolution.FORCE_COMAPTERS;
 import static ml.mypals.minecartrevolution.MinecartRevolution.MODID;
 
 import java.net.URL;
@@ -10,10 +11,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import ml.mypals.minecartrevolution.client.CameraShakeManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
 import ml.mypals.minecartrevolution.client.sound.ChainedJukeboxSoundInstance;
+import ml.mypals.minecartrevolution.config.Config;
 import ml.mypals.minecartrevolution.entity.minecarts.JukeboxMinecartEntity;
-import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
-import ml.mypals.minecartrevolution.packets.EnderPortalShakePacket;
-import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
+import ml.mypals.minecartrevolution.packets.*;
 import ml.mypals.minecartrevolution.registeries.MRModEntityRenderers;
 import ml.mypals.minecartrevolution.util.MusicUtils;
 import net.minecraft.client.Minecraft;
@@ -39,6 +39,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -50,6 +51,7 @@ import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jspecify.annotations.NonNull;
 
 // This class will not load on dedicated servers. Accessing client side code from here is safe.
@@ -101,10 +103,9 @@ public class MinecartRevolutionClient {
     }
     event.register(JukeboxUpdateS2CPacket.TYPE, MinecartRevolutionClient::jukeboxEntityPlayUpdate);
     event.register(BabelScramblePacket.TYPE, MinecartRevolutionClient::babelScrambleUpdate);
-    event.register(
-        ml.mypals.minecartrevolution.packets.MinecartCollisionPacket.TYPE,
-        MinecartRevolutionClient::minecartCollisionUpdate);
+    event.register(MinecartCollisionPacket.TYPE, MinecartRevolutionClient::minecartCollisionUpdate);
     event.register(EnderPortalShakePacket.TYPE, MinecartRevolutionClient::enderPortalShakeUpdate);
+
   }
 
   @SubscribeEvent // on the mod event bus only on the physical client
@@ -180,7 +181,12 @@ public class MinecartRevolutionClient {
           }
         });
   }
-
+    @SubscribeEvent
+    public static void onConfigReload(ModConfigEvent.Reloading event) {
+        if (event.getConfig().getSpec() == Config.SPEC && Minecraft.getInstance().getConnection() != null) {
+            Minecraft.getInstance().getConnection().send(new ForceCompatRegisterPacket(Config.FORCE_COMPATIBILITY.get()));
+        }
+    }
   private static void babelScrambleUpdate(
       final ml.mypals.minecartrevolution.packets.BabelScramblePacket payload,
       final IPayloadContext context) {

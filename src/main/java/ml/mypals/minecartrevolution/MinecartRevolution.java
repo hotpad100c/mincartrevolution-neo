@@ -7,8 +7,12 @@ import static ml.mypals.minecartrevolution.registeries.MRModCriteria.TRIGGERS;
 import static ml.mypals.minecartrevolution.registeries.MRModItems.*;
 
 import com.mojang.logging.LogUtils;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javazoom.jl.player.Player;
 import ml.mypals.minecartrevolution.config.Config;
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
 import ml.mypals.minecartrevolution.datagen.MRRecipeProvider;
@@ -21,10 +25,7 @@ import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import ml.mypals.minecartrevolution.manager.LinkedContainerManager;
 import ml.mypals.minecartrevolution.manager.MinecartChainManager;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
-import ml.mypals.minecartrevolution.packets.BabelScramblePacket;
-import ml.mypals.minecartrevolution.packets.EnderPortalShakePacket;
-import ml.mypals.minecartrevolution.packets.JukeboxUpdateS2CPacket;
-import ml.mypals.minecartrevolution.packets.MinecartCollisionPacket;
+import ml.mypals.minecartrevolution.packets.*;
 import ml.mypals.minecartrevolution.registeries.MRDataComponents;
 import ml.mypals.minecartrevolution.registeries.MRMinecarts;
 import net.minecraft.data.advancements.AdvancementProvider;
@@ -56,7 +57,7 @@ public class MinecartRevolution {
   public static final String MODID = "minecartrevolution";
   // Directly reference a slf4j logger
   public static final Logger LOGGER = LogUtils.getLogger();
-
+  public static List<UUID> FORCE_COMAPTERS = new ArrayList<>();
   public static Identifier id(String path) {
     return Identifier.fromNamespaceAndPath(MODID, path);
   }
@@ -90,6 +91,13 @@ public class MinecartRevolution {
     registrar.playToClient(BabelScramblePacket.TYPE, BabelScramblePacket.STREAM_CODEC);
     registrar.playToClient(EnderPortalShakePacket.TYPE, EnderPortalShakePacket.STREAM_CODEC);
     registrar.playToClient(MinecartCollisionPacket.TYPE, MinecartCollisionPacket.STREAM_CODEC);
+    registrar.playToServer(ForceCompatRegisterPacket.TYPE, ForceCompatRegisterPacket.STREAM_CODEC,((payload, context) -> {
+      if(payload.active()){
+        FORCE_COMAPTERS.add(context.player().getUUID());
+      }else {
+        FORCE_COMAPTERS.remove(context.player().getUUID());
+      }
+    }));
   }
 
   private void commonSetup(FMLCommonSetupEvent event) {
