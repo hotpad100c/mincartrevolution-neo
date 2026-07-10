@@ -2,7 +2,6 @@ package ml.mypals.minecartrevolution.entity.minecarts;
 
 import java.util.Optional;
 import java.util.function.Consumer;
-
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
@@ -308,7 +307,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   public void tick() {
     super.tick();
-    moveEntitiesAbove((_)->{});
+    moveEntitiesAbove((_) -> {});
     if (this.level().isClientSide()) {
       tickDynamicLight((ClientLevel) this.level());
     }
@@ -337,7 +336,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   protected void moveAlongTrack(@NonNull ServerLevel level) {
     super.moveAlongTrack(level);
-    moveEntitiesAbove((_)->{});
+    moveEntitiesAbove((_) -> {});
   }
 
   public int getLightLevel() {
