@@ -47,6 +47,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import static net.neoforged.neoforge.common.CommonHooks.isEntityInvulnerableTo;
+
 public class VariantBlockMinecartEntity extends AbstractMinecart {
   public boolean activated = false;
   public boolean keepUpdatingLight = false;
@@ -502,7 +504,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
   @Override
   public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
-    if (source.getEntity() instanceof Player player) {
+    if (source.getEntity() instanceof Player player && !isEntityInvulnerableTo(player, source, false)) {
       this.addDeltaMovement(
           player.getLookAngle().multiply(0.1, player.isShiftKeyDown() ? 0.3 : 0, 0.1));
     }
@@ -513,7 +515,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   public boolean hurtClient(DamageSource source) {
     if (source.getEntity() instanceof Player player) {
       this.addDeltaMovement(
-          player.getLookAngle().multiply(1.5, player.isShiftKeyDown() ? 0.3 : 0, 1.5));
+          player.getLookAngle().multiply(0.1, player.isShiftKeyDown() ? 0.3 : 0, 1.5));
     }
     return super.hurtClient(source);
   }
