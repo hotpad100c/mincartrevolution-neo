@@ -317,21 +317,26 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     BlockState block = getDisplayBlockState();
     Level simLevel = simulatedLevel;
 
+    BlockHitResult hit = new BlockHitResult(pos, player.getDirection(), this.blockPosition(), false);
     try {
+
       if (level().isClientSide() && Config.FORCE_COMPATIBILITY.get()){
         LastCartInteractionCache.LAST_INTERACTED = this;
       }
-      return stack.isEmpty()
-          ? block.useWithoutItem(
-              simLevel,
-              player,
-              new BlockHitResult(pos, player.getDirection(), this.blockPosition(), false))
-          : block.useItemOn(
-              stack,
-              simLevel,
-              player,
-              hand,
-              new BlockHitResult(pos, player.getDirection(), this.blockPosition(), false));
+
+      InteractionResult itemUse = block.useItemOn(stack, simLevel, player, hand, hit);
+      if (itemUse.consumesAction()) {
+        return itemUse;
+      }
+
+      if (itemUse instanceof InteractionResult.TryEmptyHandInteraction && hand == InteractionHand.MAIN_HAND) {
+        InteractionResult use = block.useWithoutItem(simLevel, player, hit);
+        if (use.consumesAction()) {
+          return use;
+        }
+      }
+      return itemUse;
+
     } catch (Exception e) {
       return super.interact(player, hand, pos);
     }
