@@ -1,8 +1,9 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import static net.neoforged.neoforge.common.CommonHooks.isEntityInvulnerableTo;
+
 import java.util.Optional;
 import java.util.function.Consumer;
-
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
@@ -46,8 +47,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-
-import static net.neoforged.neoforge.common.CommonHooks.isEntityInvulnerableTo;
 
 public class VariantBlockMinecartEntity extends AbstractMinecart {
   public boolean activated = false;
@@ -310,7 +309,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   public void tick() {
     super.tick();
-    moveEntitiesAbove((_)->{});
+    moveEntitiesAbove((_) -> {});
     if (this.level().isClientSide()) {
       tickDynamicLight((ClientLevel) this.level());
     }
@@ -339,7 +338,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   protected void moveAlongTrack(@NonNull ServerLevel level) {
     super.moveAlongTrack(level);
-    moveEntitiesAbove((_)->{});
+    moveEntitiesAbove((_) -> {});
   }
 
   public int getLightLevel() {
@@ -504,7 +503,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
   @Override
   public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
-    if (source.getEntity() instanceof Player player && !isEntityInvulnerableTo(player, source, false)) {
+    if (source.getEntity() instanceof Player player
+        && !isEntityInvulnerableTo(player, source, false)) {
       this.addDeltaMovement(
           player.getLookAngle().multiply(0.1, player.isShiftKeyDown() ? 0.3 : 0, 0.1));
     }
