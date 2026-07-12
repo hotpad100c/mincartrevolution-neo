@@ -214,6 +214,7 @@ public class SimulatedServerLevel extends ServerLevel {
 
   @Override
   public @Nullable Entity getEntity(int id) {
+    if(id == -Integer.MAX_VALUE) return minecart;
     return wrapped.getEntity(id);
   }
 

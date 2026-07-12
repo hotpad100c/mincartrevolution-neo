@@ -199,6 +199,7 @@ public class SimulatedClientLevel extends ClientLevel {
 
   @Override
   public @Nullable Entity getEntity(int id) {
+    if(id == -Integer.MAX_VALUE) return minecart;
     return wrapped.getEntity(id);
   }
 
