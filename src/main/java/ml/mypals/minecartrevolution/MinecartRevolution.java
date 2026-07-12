@@ -34,6 +34,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -46,6 +47,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
@@ -124,12 +126,8 @@ public class MinecartRevolution {
   }
 
   @SubscribeEvent
-  public void onServerStopping(LevelEvent.Save event) {
-    if (event.getLevel() instanceof ServerLevel serverLevel) {
-      if (serverLevel.dimension() == net.minecraft.world.level.Level.OVERWORLD) {
-        LinkedContainerManager.INSTANCE.save(serverLevel.getServer());
-      }
-    }
+  public void onServerStopping(ServerStoppingEvent event) {
+    LinkedContainerManager.INSTANCE.save(event.getServer());
   }
 
   @SubscribeEvent

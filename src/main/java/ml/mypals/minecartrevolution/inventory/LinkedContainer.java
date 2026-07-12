@@ -38,7 +38,7 @@ public class LinkedContainer extends PlayerEnderChestContainer {
   }
 
   @Override
-  public void clearContent() {}
+  public void clearContent() {activeMinecarts.clear();}
 
   @Override
   public void setChanged() {
