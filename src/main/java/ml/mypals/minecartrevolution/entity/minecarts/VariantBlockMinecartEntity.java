@@ -115,24 +115,22 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
       playerEntity = player;
     }
     boolean shouldDrop =
-        serverLevel.getGameRules().get(GameRules.ENTITY_DROPS)
-            || (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
+        serverLevel.getGameRules().get(GameRules.ENTITY_DROPS) || (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
     if (shouldDrop) {
-      if (playerEntity != null) {
-        if (playerEntity.isSecondaryUseActive()) {
-          ItemStack stack = getPickResult();
-          spawnAtLocation(serverLevel, stack);
-        } else {
-          ItemStack stack = Items.MINECART.getDefaultInstance();
-          spawnAtLocation(serverLevel, stack);
-          BlockState blockState =
-              entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+      if (playerEntity != null && playerEntity.isSecondaryUseActive()) {
+        ItemStack stack = Items.MINECART.getDefaultInstance();
+        spawnAtLocation(serverLevel, stack);
+        BlockState blockState =
+                entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
-          ItemStack stack2 = blockState.getBlock().asItem().getDefaultInstance();
-          Containers.dropItemStack(this.level(), this.getX(), this.getY(), this.getZ(), stack2);
-        }
-        this.remove(Entity.RemovalReason.KILLED);
+        ItemStack stack2 = blockState.getBlock().asItem().getDefaultInstance();
+        Containers.dropItemStack(this.level(), this.getX(), this.getY(), this.getZ(), stack2);
+      } else {
+        ItemStack stack = getPickResult();
+        spawnAtLocation(serverLevel, stack);
       }
+      this.remove(Entity.RemovalReason.KILLED);
+
     }
 
     this.kill(serverLevel);
