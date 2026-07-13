@@ -1,8 +1,9 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import static net.neoforged.neoforge.common.CommonHooks.isEntityInvulnerableTo;
+
 import java.util.Optional;
 import java.util.function.Consumer;
-
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
@@ -46,8 +47,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-
-import static net.neoforged.neoforge.common.CommonHooks.isEntityInvulnerableTo;
 
 public class VariantBlockMinecartEntity extends AbstractMinecart {
   public boolean activated = false;
@@ -115,13 +114,14 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
       playerEntity = player;
     }
     boolean shouldDrop =
-        serverLevel.getGameRules().get(GameRules.ENTITY_DROPS) || (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
+        serverLevel.getGameRules().get(GameRules.ENTITY_DROPS)
+            || (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
     if (shouldDrop) {
       if (playerEntity != null && playerEntity.isSecondaryUseActive()) {
         ItemStack stack = Items.MINECART.getDefaultInstance();
         spawnAtLocation(serverLevel, stack);
         BlockState blockState =
-                entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+            entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
         ItemStack stack2 = blockState.getBlock().asItem().getDefaultInstance();
         Containers.dropItemStack(this.level(), this.getX(), this.getY(), this.getZ(), stack2);
@@ -130,7 +130,6 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         spawnAtLocation(serverLevel, stack);
       }
       this.remove(Entity.RemovalReason.KILLED);
-
     }
 
     this.kill(serverLevel);
@@ -308,7 +307,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   public void tick() {
     super.tick();
-    moveEntitiesAbove((_)->{});
+    moveEntitiesAbove((_) -> {});
     if (this.level().isClientSide()) {
       tickDynamicLight((ClientLevel) this.level());
     }
@@ -337,7 +336,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   protected void moveAlongTrack(@NonNull ServerLevel level) {
     super.moveAlongTrack(level);
-    moveEntitiesAbove((_)->{});
+    moveEntitiesAbove((_) -> {});
   }
 
   public int getLightLevel() {
@@ -502,7 +501,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
   @Override
   public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
-    if (source.getEntity() instanceof Player player && !isEntityInvulnerableTo(player, source, false)) {
+    if (source.getEntity() instanceof Player player
+        && !isEntityInvulnerableTo(player, source, false)) {
       this.addDeltaMovement(
           player.getLookAngle().multiply(0.1, player.isShiftKeyDown() ? 0.3 : 0, 0.1));
     }
