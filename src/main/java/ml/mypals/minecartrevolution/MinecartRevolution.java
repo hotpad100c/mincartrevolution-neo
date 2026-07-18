@@ -18,6 +18,8 @@ import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
 import ml.mypals.minecartrevolution.datagen.MRRecipeProvider;
 import ml.mypals.minecartrevolution.entity.minecarts.fluidcarts.PortalMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.functioning.MobHeadMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneMinecartManager;
 import ml.mypals.minecartrevolution.entity.others.AttackMonsterMinecartGoal;
 import ml.mypals.minecartrevolution.entity.others.FearDragonHeadMinecartGoal;
 import ml.mypals.minecartrevolution.entity.others.FearMonsterMinecartGoal;
@@ -146,15 +148,26 @@ public class MinecartRevolution {
           ((IServerLevelExt) event.getLevel()).mincartrevolution_neo$getPortalMinecartStorage();
       storage.add(portalMinecartEntity);
     }
+    if (event.getLevel() instanceof ServerLevel
+        && event.getEntity() instanceof PowerEmitterMinecartEntity powerEmitter) {
+      RedstoneMinecartManager manager =
+          ((IServerLevelExt) event.getLevel()).mincartrevolution_neo$getRedstoneMinecartManager();
+      manager.add(powerEmitter);
+    }
   }
 
   @SubscribeEvent
   public void onEntityLeave(EntityLeaveLevelEvent event) {
-
     if (event.getEntity() instanceof PortalMinecartEntity portalMinecartEntity) {
       PortalMinecartStorage storage =
           ((IServerLevelExt) event.getLevel()).mincartrevolution_neo$getPortalMinecartStorage();
       storage.remove(portalMinecartEntity);
+    }
+    if (event.getLevel() instanceof ServerLevel
+        && event.getEntity() instanceof PowerEmitterMinecartEntity powerEmitter) {
+      RedstoneMinecartManager manager =
+          ((IServerLevelExt) event.getLevel()).mincartrevolution_neo$getRedstoneMinecartManager();
+      manager.remove(powerEmitter);
     }
   }
 }

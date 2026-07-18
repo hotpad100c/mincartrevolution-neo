@@ -29,6 +29,7 @@ sourceSets.main.resources {
 repositories {
     // Add here additional repositories if required by some of the dependencies below.
     mavenCentral()
+    mavenLocal()
     maven { url = "https://server.cjsah.net:1002/maven/" }
     exclusiveContent {
         forRepositories(
@@ -39,6 +40,16 @@ repositories {
         )
         filter {
             includeGroup "dev.anvilcraft.lib"
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
         }
     }
 }
@@ -149,6 +160,12 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     implementation 'javazoom:jlayer:1.0.1'
 
+    /*
+    implementation(files("libs/tetrachordlib-26.1+1.0.3.jar"))
+    jarJar(files("libs/tetrachordlib-26.1+1.0.3.jar"))
+    */
+    implementation("com.hexagram2021.tetrachordlib:Tetrachord-Lib:26.1+1.0.3")
+    jarJar("com.hexagram2021.tetrachordlib:Tetrachord-Lib:26.1+1.0.3")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

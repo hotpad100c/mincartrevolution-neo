@@ -2,6 +2,10 @@ package ml.mypals.minecartrevolution.mixin.minecart;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneMinecartManager;
+import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -75,14 +79,34 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
     if (!this.level().isClientSide() && reason.shouldDestroy() && this.isLeashed()) {
       this.dropLeash();
     }
-
+/*
+    if (this.level() instanceof ServerLevel serverLevelx) {
+      if (this instanceof PowerEmitterMinecartEntity powerEmitter) {
+        RedstoneMinecartManager manager =
+                ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
+        manager.remove(powerEmitter);
+      }
+    }*/
     super.remove(reason);
   }
+
+  @Unique private @Nullable BlockPos mincartrevolution_neo$lastBlockPos = null;
 
   @Inject(method = "tick", at = @At("TAIL"))
   private void tick(CallbackInfo ci) {
     if (this.level() instanceof ServerLevel serverLevelx) {
       Leashable.tickLeash(serverLevelx, (Entity & Leashable) this);
+
+      if (this instanceof PowerEmitterMinecartEntity powerEmitter) {
+        BlockPos currentPos = this.blockPosition();
+        if (mincartrevolution_neo$lastBlockPos != null &&
+            !currentPos.equals(mincartrevolution_neo$lastBlockPos)) {
+          mincartrevolution_neo$lastBlockPos = currentPos;
+          RedstoneMinecartManager manager =
+              ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
+          manager.onCartMoved(powerEmitter, currentPos);
+        }
+      }
     }
   }
 

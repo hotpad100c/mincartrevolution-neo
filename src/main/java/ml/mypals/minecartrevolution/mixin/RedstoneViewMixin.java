@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
+import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneMinecartManager;
+import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,13 +19,13 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerLevel.class)
 public abstract class RedstoneViewMixin implements LevelAccessor {
-  /*@Override
+  @Override
   public int getSignal(@NotNull BlockPos pos, @NotNull Direction direction) {
     int redstonePowerFromBlock = minecartrevolution_neo$getRedstonePower(pos, direction);
     int redstonePowerFromEntity =
         this.minecartrevolution_neo$getRedstonePowerFromEntity(pos, direction);
     return Math.max(redstonePowerFromBlock, redstonePowerFromEntity);
-  }*/
+  }
 
   @Unique
   private int minecartrevolution_neo$getRedstonePower(BlockPos pos, Direction direction) {
@@ -34,20 +36,34 @@ public abstract class RedstoneViewMixin implements LevelAccessor {
 
   @Unique
   public int minecartrevolution_neo$getRedstonePowerFromEntity(BlockPos pos, Direction direction) {
-    AABB box = new AABB(pos);
-    List<? extends AbstractMinecart> powers =
-        this.getEntitiesOfClass(
-            AbstractMinecart.class, box, entity -> entity instanceof PowerEmitterMinecartEntity);
-    Optional<? extends AbstractMinecart> strongest =
-        powers.stream()
-            .max(
-                Comparator.comparingInt(
-                    cart -> ((PowerEmitterMinecartEntity) cart).getPowerStrength(direction, pos)));
+
+    RedstoneMinecartManager manager = ((IServerLevelExt) this).mincartrevolution_neo$getRedstoneMinecartManager();
+
+    List<PowerEmitterMinecartEntity> powers = manager.queryAt(pos);
+
+    Optional<PowerEmitterMinecartEntity> strongest = powers.stream()
+            .max(Comparator.comparingInt(cart -> cart.getPowerStrength(direction, pos)));
     return strongest
-        .map(
-            redstoneEmitterPowerMinecart ->
-                ((PowerEmitterMinecartEntity) redstoneEmitterPowerMinecart)
-                    .getPowerStrength(direction, pos))
+        .map(cart -> cart.getPowerStrength(direction, pos))
         .orElse(0);
   }
+/*
+  @Unique
+  public int minecartrevolution_neo$getRedstonePowerFromEntity(BlockPos pos, Direction direction) {
+    AABB box = new AABB(pos);
+    List<? extends AbstractMinecart> powers =
+            this.getEntitiesOfClass(
+                    AbstractMinecart.class, box, entity -> entity instanceof PowerEmitterMinecartEntity);
+    Optional<? extends AbstractMinecart> strongest =
+            powers.stream()
+                    .max(
+                            Comparator.comparingInt(
+                                    cart -> ((PowerEmitterMinecartEntity) cart).getPowerStrength(direction, pos)));
+    return strongest
+            .map(
+                    redstoneEmitterPowerMinecart ->
+                            ((PowerEmitterMinecartEntity) redstoneEmitterPowerMinecart)
+                                    .getPowerStrength(direction, pos))
+            .orElse(0);
+  }*/
 }
