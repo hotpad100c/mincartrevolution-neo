@@ -17,13 +17,13 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerLevel.class)
 public abstract class RedstoneViewMixin implements LevelAccessor {
-  @Override
+  /*@Override
   public int getSignal(@NotNull BlockPos pos, @NotNull Direction direction) {
     int redstonePowerFromBlock = minecartrevolution_neo$getRedstonePower(pos, direction);
     int redstonePowerFromEntity =
         this.minecartrevolution_neo$getRedstonePowerFromEntity(pos, direction);
     return Math.max(redstonePowerFromBlock, redstonePowerFromEntity);
-  }
+  }*/
 
   @Unique
   private int minecartrevolution_neo$getRedstonePower(BlockPos pos, Direction direction) {
