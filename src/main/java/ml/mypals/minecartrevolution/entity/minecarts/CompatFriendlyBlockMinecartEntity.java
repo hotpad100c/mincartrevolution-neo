@@ -66,7 +66,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntity
-    implements ICapabilityProvider, ContainerEntity {
+    implements ICapabilityProvider, ContainerEntity, PowerEmitterMinecartEntity {
   public BlockEntity blockEntity;
   public Level simulatedLevel;
   private CompoundTag blockEntityTag;
@@ -488,11 +488,11 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     }
     return baseContainerBlockEntity == null ? null : baseContainerBlockEntity.createMenu(i, inventory, player);
   }
-  /*@Override
+  @Override
   public int getPowerStrength(Direction direction, BlockPos pos) {
     BlockState state = getDisplayBlockState();
     int signal = state.getSignal(simulatedLevel, pos, direction);
     return state.shouldCheckWeakPower(simulatedLevel, pos, direction) ?
             Math.max(signal, 0) : signal;
-  }*/
+  }
 }
