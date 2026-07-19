@@ -7,12 +7,8 @@ import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import ml.mypals.minecartrevolution.manager.PortalMinecartStorage;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.IEventBus;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,5 +39,4 @@ public abstract class ClientLevelMixin implements BlockAndTintGetter, IServerLev
       return original.call(instance, t);
     }
   }
-
 }
