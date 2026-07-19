@@ -211,12 +211,11 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
     Level simLevel = simulatedLevel;
 
-    //refreshBlockEntity();
+    BlockState state = getDisplayBlockState();
     try {
       if (this.blockEntity != null) {
         ((BlockEntityAccessor) this.blockEntity).mr$setWorldPosition(this.blockPosition());
 
-        BlockState state = getDisplayBlockState();
         BlockEntityTicker<BlockEntity> ticker = state.getTicker(simLevel, (BlockEntityType<BlockEntity>) this.blockEntity.getType());
         if (ticker != null) {
           ticker.tick(simLevel, this.blockPosition(), state, this.blockEntity);
@@ -228,7 +227,6 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
         pendingBlockTicks.removeIf(
                 tick -> {
                   if (tick.triggerTick() <= time) {
-                    BlockState state = getDisplayBlockState();
                     if (state.is(tick.type())) {
                       state.tick((ServerLevel) simLevel, this.blockPosition(), this.level().getRandom());
                     }
@@ -239,21 +237,27 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
         pendingFluidTicks.removeIf(
                 tick -> {
                   if (tick.triggerTick() <= time) {
-                    FluidState state = this.simulatedLevel.getFluidState(this.blockPosition());
-                    BlockState blockState = getDisplayBlockState();
-                    if (state.is(tick.type())) {
-                      state.tick((ServerLevel) simLevel, this.blockPosition(), blockState);
+                    FluidState fluidState = this.simulatedLevel.getFluidState(this.blockPosition());
+
+                    if (fluidState.is(tick.type())) {
+                      fluidState.tick((ServerLevel) simLevel, this.blockPosition(), state);
                     }
                     return true;
                   }
                   return false;
                 });
       } else {
-        BlockState blockState = getDisplayBlockState();
-        blockState.getBlock().animateTick(blockState, simLevel, blockPosition(), getRandom());
+        state.getBlock().animateTick(state, simLevel, blockPosition(), getRandom());
       }
 
     }catch (Exception ignored){}
+
+    if (this.getPreviousBlockPos() == null || !this.getPreviousBlockPos().equals(this.blockPosition())) {
+      this.setPreviousBlockPos(this.blockPosition());
+      updateNeighbors(this.level(), previousBlockPos, state.getBlock());
+      updateNeighbors(this.level(), this.blockPosition(), state.getBlock());
+    }
+
     super.tick();
   }
 

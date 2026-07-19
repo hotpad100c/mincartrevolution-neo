@@ -90,7 +90,7 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
     super.remove(reason);
   }
 
-  @Unique private @Nullable BlockPos mincartrevolution_neo$lastBlockPos = null;
+  @Unique private @Nullable BlockPos mincartrevolution_neo$lastBlockPos = BlockPos.ZERO;
 
   @Inject(method = "tick", at = @At("TAIL"))
   private void tick(CallbackInfo ci) {

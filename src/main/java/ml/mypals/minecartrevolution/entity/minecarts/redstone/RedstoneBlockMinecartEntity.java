@@ -39,9 +39,7 @@ public class RedstoneBlockMinecartEntity extends SingleBlockMinecartEntity
   @Override
   public void destroy(@NonNull ServerLevel serverLevel, DamageSource source) {
     super.destroy(serverLevel, source);
-    BlockState blockState =
-        entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-
+    BlockState blockState = getDisplayBlockState();
     updateNeighbors(this.level(), getPreviousBlockPos(), blockState.getBlock());
     updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
   }
@@ -49,19 +47,15 @@ public class RedstoneBlockMinecartEntity extends SingleBlockMinecartEntity
   @Override
   public void tick() {
     super.tick();
-    BlockState blockState =
-        entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
-
+    BlockState blockState = getDisplayBlockState();
     if (!updatedBlocks || !this.isAlive()) {
-      if (getPreviousBlockPos() != null)
-        updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
+      if (getPreviousBlockPos() != null) updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
+
       updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
     }
-    if (this.getPreviousBlockPos() == null
-        || !this.getPreviousBlockPos().equals(this.blockPosition())) {
-      if (this.getPreviousBlockPos() == null) this.setPreviousBlockPos(this.blockPosition());
-      updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
+    if (this.getPreviousBlockPos() == null || !this.getPreviousBlockPos().equals(this.blockPosition())) {
       this.setPreviousBlockPos(this.blockPosition());
+      updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
       updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
     }
   }

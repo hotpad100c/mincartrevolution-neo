@@ -574,7 +574,9 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
   public void collideWithEntities() {
     if (!this.isOnRails()) return;
-    Vec3 movement = this.getDeltaMovement();
+    Vec3 m = this.getDeltaMovement();
+    Vec3 movement = new Vec3(Math.min(10, m.x), Math.min(10, m.y),Math.min(10, m.z));
+
     if (this.level().isClientSide() || movement.length() < 0.5D) return;
     Vec3 pos = this.position();
     for (Entity entity :
@@ -586,10 +588,11 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
       if (movement.dot(entity.position().subtract(pos)) > 0) {
         this.setDeltaMovement(movement.scale(0.89D));
         entity.setDeltaMovement(
-            movement
+                movement
                 .normalize()
                 .scale(getMass() * 1.5D * movement.length())
                 .add(entity.getDeltaMovement()));
+
         if (entity instanceof LivingEntity) {
           entity.hurtServer(
               (ServerLevel) this.level(),

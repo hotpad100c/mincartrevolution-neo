@@ -18,10 +18,17 @@ public interface PowerEmitterMinecartEntity {
   }
 
   default void updateNeighbors(Level world, BlockPos pos, Block block) {
+    if(!isEmittingSignal(pos)){return;}
     world.updateNeighborsAt(pos, block);
     for (Direction direction : Direction.values()) {
       world.updateNeighborsAt(pos.relative(direction), block);
     }
+  }
+  default boolean isEmittingSignal(BlockPos pos){
+    for (Direction direction : Direction.values()){
+      if(getPowerStrength(direction, pos) > 0) return true;
+    }
+    return false;
   }
 
   default int getPowerStrength(Direction direction, BlockPos pos) {
