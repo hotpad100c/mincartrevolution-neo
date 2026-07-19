@@ -23,11 +23,13 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
 import net.minecraft.world.item.BlockItem;
@@ -43,6 +45,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -171,8 +175,13 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   public @NonNull InteractionResult interact(
       @NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
 
+    PlayerInteractEvent.EntityInteract evt = new PlayerInteractEvent.EntityInteract(player, hand, this);
+    NeoForge.EVENT_BUS.post(evt);
     InteractionResult interactionResult = super.interact(player, hand, pos);
+
+    if(evt.isCanceled()) return evt.getCancellationResult();
     if (interactionResult.consumesAction()) return interactionResult;
+
     ItemStack stackInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 
     if (stackInHand.getItem() instanceof WrenchItem wrench) {
@@ -571,39 +580,56 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     this.setFlipped(input.getBooleanOr("FlippedRotation", false));
     this.firstTick = input.getBooleanOr("HasTicked", false);
   }
-
   public void collideWithEntities() {
-    if (!this.isOnRails()) return;
-    Vec3 m = this.getDeltaMovement();
-    Vec3 movement = new Vec3(Math.min(10, m.x), Math.min(10, m.y),Math.min(10, m.z));
+    if (!this.isOnRails() || this.level().isClientSide()) return;
 
-    if (this.level().isClientSide() || movement.length() < 0.5D) return;
+    Vec3 movement = this.getDeltaMovement();
+
+    if (movement.lengthSqr() > 4) {
+      movement = movement.normalize().scale(2);
+    }
+
+    if (movement.lengthSqr() < 0.25D) return;
+
+    Vec3 direction = movement.normalize();
     Vec3 pos = this.position();
-    for (Entity entity :
-        this.level()
-            .getEntities(
-                this,
-                this.getBoundingBox().expandTowards(movement.normalize().scale(0.8D)),
-                e -> e != this.getControllingPassenger())) {
-      if (movement.dot(entity.position().subtract(pos)) > 0) {
-        this.setDeltaMovement(movement.scale(0.89D));
-        entity.setDeltaMovement(
-                movement
-                .normalize()
-                .scale(getMass() * 1.5D * movement.length())
-                .add(entity.getDeltaMovement()));
 
-        if (entity instanceof LivingEntity) {
-          entity.hurtServer(
+    boolean collided = false;
+
+    for (Entity entity : this.level().getEntities(
+            this,
+            this.getBoundingBox().expandTowards(direction.scale(0.8D)),
+            e -> e instanceof LivingEntity
+                    && e.canCollideWith(this)
+                    && e != this.getControllingPassenger()
+                    && e.isAlive())) {
+
+      if (isEntityInvulnerableTo(entity, entity.damageSources().flyIntoWall(), false) || direction.dot(entity.position().subtract(pos)) <= 0) {
+        continue;
+      }
+
+      entity.setDeltaMovement(
+              entity.getDeltaMovement().add(
+                      direction.scale(Math.min(getMass() * 1.5D, 3.5D))
+              )
+      );
+      entity.hurtMarked = true;
+
+      entity.hurtServer(
               (ServerLevel) this.level(),
               entity.damageSources().flyIntoWall(),
-              (float) (getMass() * 4D * movement.length()));
-        }
-      }
+              (float) Math.min(getMass() * 4.0D * movement.length(), 30.0D)
+      );
+
+      collided = true;
+    }
+
+    if (collided) {
+      this.setDeltaMovement(this.getDeltaMovement().scale(0.89D));
     }
   }
 
   public float getMass() {
-    return 0.1f;
+    return 0.5f;
   }
 }
