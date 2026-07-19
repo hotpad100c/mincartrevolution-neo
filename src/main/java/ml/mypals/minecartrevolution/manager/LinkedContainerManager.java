@@ -99,10 +99,9 @@ public class LinkedContainerManager {
 
             data.put(key, nbt.toString());
           } catch (Exception _) {
-          }finally {
-              container.clearContent();
+          } finally {
+            container.clearContent();
           }
-
         });
 
     File file = server.getWorldPath(LevelResource.ROOT).resolve(FILE_NAME).toFile();
@@ -115,8 +114,9 @@ public class LinkedContainerManager {
   public static LinkedContainer get(String key) {
     return INSTANCE.containers.computeIfAbsent(key, LinkedContainer::new);
   }
-  public static void clearAll(){
-      INSTANCE.containers.values().forEach(LinkedContainer::clearContent);
-      INSTANCE.containers.clear();
+
+  public static void clearAll() {
+    INSTANCE.containers.values().forEach(LinkedContainer::clearContent);
+    INSTANCE.containers.clear();
   }
 }
