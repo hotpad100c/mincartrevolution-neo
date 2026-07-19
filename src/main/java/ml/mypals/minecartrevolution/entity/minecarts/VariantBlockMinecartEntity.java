@@ -1,8 +1,9 @@
 package ml.mypals.minecartrevolution.entity.minecarts;
 
+import static net.neoforged.neoforge.common.CommonHooks.isEntityInvulnerableTo;
+
 import java.util.Optional;
 import java.util.function.Consumer;
-
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsSpread;
 import ml.mypals.minecartrevolution.client.light.DynamicLightsStorage;
@@ -23,13 +24,11 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
 import net.minecraft.world.item.BlockItem;
@@ -50,8 +49,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-
-import static net.neoforged.neoforge.common.CommonHooks.isEntityInvulnerableTo;
 
 public class VariantBlockMinecartEntity extends AbstractMinecart {
   public boolean activated = false;
@@ -119,13 +116,14 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
       playerEntity = player;
     }
     boolean shouldDrop =
-        serverLevel.getGameRules().get(GameRules.ENTITY_DROPS) || (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
+        serverLevel.getGameRules().get(GameRules.ENTITY_DROPS)
+            || (sourceIsPlayer && !((Player) source.getEntity()).isCreative());
     if (shouldDrop) {
       if (playerEntity != null && playerEntity.isSecondaryUseActive()) {
         ItemStack stack = Items.MINECART.getDefaultInstance();
         spawnAtLocation(serverLevel, stack);
         BlockState blockState =
-                entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
+            entityData.get(DATA_ID_CUSTOM_DISPLAY_BLOCK).orElse(Blocks.AIR.defaultBlockState());
 
         ItemStack stack2 = blockState.getBlock().asItem().getDefaultInstance();
         Containers.dropItemStack(this.level(), this.getX(), this.getY(), this.getZ(), stack2);
@@ -134,7 +132,6 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         spawnAtLocation(serverLevel, stack);
       }
       this.remove(Entity.RemovalReason.KILLED);
-
     }
 
     this.kill(serverLevel);
@@ -175,11 +172,12 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   public @NonNull InteractionResult interact(
       @NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 pos) {
 
-    PlayerInteractEvent.EntityInteract evt = new PlayerInteractEvent.EntityInteract(player, hand, this);
+    PlayerInteractEvent.EntityInteract evt =
+        new PlayerInteractEvent.EntityInteract(player, hand, this);
     NeoForge.EVENT_BUS.post(evt);
     InteractionResult interactionResult = super.interact(player, hand, pos);
 
-    if(evt.isCanceled()) return evt.getCancellationResult();
+    if (evt.isCanceled()) return evt.getCancellationResult();
     if (interactionResult.consumesAction()) return interactionResult;
 
     ItemStack stackInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
@@ -317,7 +315,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   public void tick() {
     super.tick();
-    moveEntitiesAbove((_)->{});
+    moveEntitiesAbove((_) -> {});
     if (this.level().isClientSide()) {
       tickDynamicLight((ClientLevel) this.level());
     }
@@ -346,7 +344,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
   @Override
   protected void moveAlongTrack(@NonNull ServerLevel level) {
     super.moveAlongTrack(level);
-    moveEntitiesAbove((_)->{});
+    moveEntitiesAbove((_) -> {});
   }
 
   public int getLightLevel() {
@@ -511,7 +509,8 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
   @Override
   public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
-    if (source.getEntity() instanceof Player player && !isEntityInvulnerableTo(player, source, false)) {
+    if (source.getEntity() instanceof Player player
+        && !isEntityInvulnerableTo(player, source, false)) {
       this.addDeltaMovement(
           player.getLookAngle().multiply(0.1, player.isShiftKeyDown() ? 0.3 : 0, 0.1));
     }
@@ -580,6 +579,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
     this.setFlipped(input.getBooleanOr("FlippedRotation", false));
     this.firstTick = input.getBooleanOr("HasTicked", false);
   }
+
   public void collideWithEntities() {
     if (!this.isOnRails() || this.level().isClientSide()) return;
 
@@ -596,30 +596,30 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
     boolean collided = false;
 
-    for (Entity entity : this.level().getEntities(
-            this,
-            this.getBoundingBox().expandTowards(direction.scale(0.8D)),
-            e -> e instanceof LivingEntity
-                    && e.canCollideWith(this)
-                    && e != this.getControllingPassenger()
-                    && e.isAlive())) {
+    for (Entity entity :
+        this.level()
+            .getEntities(
+                this,
+                this.getBoundingBox().expandTowards(direction.scale(0.8D)),
+                e ->
+                    e instanceof LivingEntity
+                        && e.canCollideWith(this)
+                        && e != this.getControllingPassenger()
+                        && e.isAlive())) {
 
-      if (isEntityInvulnerableTo(entity, entity.damageSources().flyIntoWall(), false) || direction.dot(entity.position().subtract(pos)) <= 0) {
+      if (isEntityInvulnerableTo(entity, entity.damageSources().flyIntoWall(), false)
+          || direction.dot(entity.position().subtract(pos)) <= 0) {
         continue;
       }
 
       entity.setDeltaMovement(
-              entity.getDeltaMovement().add(
-                      direction.scale(Math.min(getMass() * 1.5D, 3.5D))
-              )
-      );
+          entity.getDeltaMovement().add(direction.scale(Math.min(getMass() * 1.5D, 3.5D))));
       entity.hurtMarked = true;
 
       entity.hurtServer(
-              (ServerLevel) this.level(),
-              entity.damageSources().flyIntoWall(),
-              (float) Math.min(getMass() * 4.0D * movement.length(), 30.0D)
-      );
+          (ServerLevel) this.level(),
+          entity.damageSources().flyIntoWall(),
+          (float) Math.min(getMass() * 4.0D * movement.length(), 30.0D));
 
       collided = true;
     }
