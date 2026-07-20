@@ -14,12 +14,14 @@ import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.MinecartBehavior;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,6 +36,9 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
   @Shadow
   protected abstract double getMaxSpeed(ServerLevel level);
 
+  @Shadow
+  @Final
+  private MinecartBehavior behavior;
   @Unique private @Nullable LeashData mincartrevolution_neo$leashData;
 
   protected AbstractMinecartMixin(EntityType<?> entityType, Level world) {
@@ -119,7 +124,7 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
 
   @Inject(method = "getMaxSpeed", at = @At("HEAD"), cancellable = true)
   private void getMaxSpeed(ServerLevel level, CallbackInfoReturnable<Double> cir) {
-    cir.setReturnValue(0.3d);
+    cir.setReturnValue(Math.max(0.4d, behavior.getMaxSpeed(level)));
   }
 
   @WrapMethod(method = "comeOffTrack")

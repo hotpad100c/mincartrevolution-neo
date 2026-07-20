@@ -593,7 +593,6 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
     Vec3 direction = movement.normalize();
     Vec3 pos = this.position();
-
     boolean collided = false;
 
     for (Entity entity : this.level().getEntities(
@@ -604,21 +603,27 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
                     && e != this.getControllingPassenger()
                     && e.isAlive())) {
 
-      if (isEntityInvulnerableTo(entity, entity.damageSources().flyIntoWall(), false) || direction.dot(entity.position().subtract(pos)) <= 0) {
+      if (isEntityInvulnerableTo(entity, entity.damageSources().flyIntoWall(), false)
+              || direction.dot(entity.position().subtract(pos)) <= 0) {
         continue;
       }
 
-      entity.setDeltaMovement(
-              entity.getDeltaMovement().add(
-                      direction.scale(Math.min(getMass() * 1.5D, 3.5D))
-              )
-      );
+      double pushForce = Math.min(getMass() * 1.5D, 3.5D);
+      Vec3 newVelocity = entity.getDeltaMovement().add(direction.scale(pushForce));
+
+      double velocityLength = newVelocity.length();
+      if (velocityLength > 1.5D) {
+        newVelocity = newVelocity.scale(1.5D / velocityLength);
+      }
+
+      entity.setDeltaMovement(newVelocity);
       entity.hurtMarked = true;
 
+      double damage = Math.min(getMass() * 4.0D * movement.length(), 30.0D);
       entity.hurtServer(
               (ServerLevel) this.level(),
               entity.damageSources().flyIntoWall(),
-              (float) Math.min(getMass() * 4.0D * movement.length(), 30.0D)
+              (float) damage
       );
 
       collided = true;
