@@ -62,6 +62,8 @@ public class RailMinecartEntity extends VariantBlockMinecartEntity {
   @Override
   public void tick() {
     super.tick();
+
+    if(level().isClientSide()) return;
     if (this.getStackCooldown() > 0) {
       this.setStackCooldown(this.getStackCooldown() - 1);
     }
