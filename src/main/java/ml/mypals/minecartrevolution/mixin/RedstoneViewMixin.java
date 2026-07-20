@@ -9,10 +9,8 @@ import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,17 +35,16 @@ public abstract class RedstoneViewMixin implements LevelAccessor {
   @Unique
   public int minecartrevolution_neo$getRedstonePowerFromEntity(BlockPos pos, Direction direction) {
 
-    RedstoneMinecartManager manager = ((IServerLevelExt) this).mincartrevolution_neo$getRedstoneMinecartManager();
+    RedstoneMinecartManager manager =
+        ((IServerLevelExt) this).mincartrevolution_neo$getRedstoneMinecartManager();
 
     List<PowerEmitterMinecartEntity> powers = manager.queryAt(pos);
 
-    Optional<PowerEmitterMinecartEntity> strongest = powers.stream()
-            .max(Comparator.comparingInt(cart -> cart.getPowerStrength(direction, pos)));
-    return strongest
-        .map(cart -> cart.getPowerStrength(direction, pos))
-        .orElse(0);
+    Optional<PowerEmitterMinecartEntity> strongest =
+        powers.stream().max(Comparator.comparingInt(cart -> cart.getPowerStrength(direction, pos)));
+    return strongest.map(cart -> cart.getPowerStrength(direction, pos)).orElse(0);
   }
-/*
+  /*
   @Unique
   public int minecartrevolution_neo$getRedstonePowerFromEntity(BlockPos pos, Direction direction) {
     AABB box = new AABB(pos);

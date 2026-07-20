@@ -36,9 +36,7 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
   @Shadow
   protected abstract double getMaxSpeed(ServerLevel level);
 
-  @Shadow
-  @Final
-  private MinecartBehavior behavior;
+  @Shadow @Final private MinecartBehavior behavior;
   @Unique private @Nullable LeashData mincartrevolution_neo$leashData;
 
   protected AbstractMinecartMixin(EntityType<?> entityType, Level world) {
@@ -84,7 +82,7 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
     if (!this.level().isClientSide() && reason.shouldDestroy() && this.isLeashed()) {
       this.dropLeash();
     }
-/*
+    /*
     if (this.level() instanceof ServerLevel serverLevelx) {
       if (this instanceof PowerEmitterMinecartEntity powerEmitter) {
         RedstoneMinecartManager manager =
@@ -104,8 +102,8 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
 
       if (this instanceof PowerEmitterMinecartEntity powerEmitter) {
         BlockPos currentPos = this.blockPosition();
-        if (mincartrevolution_neo$lastBlockPos != null &&
-            !currentPos.equals(mincartrevolution_neo$lastBlockPos)) {
+        if (mincartrevolution_neo$lastBlockPos != null
+            && !currentPos.equals(mincartrevolution_neo$lastBlockPos)) {
           mincartrevolution_neo$lastBlockPos = currentPos;
           RedstoneMinecartManager manager =
               ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
