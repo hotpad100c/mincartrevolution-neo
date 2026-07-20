@@ -149,5 +149,4 @@
 
 	"config.yourmod.force_compatibility": "强制兼容模式",
 	"config.yourmod.force_compatibility.tooltip": "为在矿车中交互**全部**模组方块实体提供实验性兼容方案。特殊情况下可能导致踢出游戏或客户端崩溃，风险自负。"
-
 }
