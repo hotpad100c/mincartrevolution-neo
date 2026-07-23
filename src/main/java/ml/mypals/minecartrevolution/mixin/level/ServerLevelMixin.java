@@ -17,7 +17,7 @@ public abstract class ServerLevelMixin implements LevelAccessor, IServerLevelExt
 
   @Unique
   private final RedstoneMinecartManager mincartrevolution_neo$redstoneMinecartManager =
-      new RedstoneMinecartManager();
+      new RedstoneMinecartManager((ServerLevel) (Object) this);
 
   @Override
   public PortalMinecartStorage mincartrevolution_neo$getPortalMinecartStorage() {

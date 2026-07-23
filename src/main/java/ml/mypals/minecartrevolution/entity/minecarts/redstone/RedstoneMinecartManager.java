@@ -1,70 +1,53 @@
 package ml.mypals.minecartrevolution.entity.minecarts.redstone;
 
-import com.hexagram2021.tetrachordlib.core.container.KDTree;
-import com.hexagram2021.tetrachordlib.core.container.impl.IntPosition;
-import com.hexagram2021.tetrachordlib.vanilla.MDUtils;
+import ml.mypals.minecartrevolution.interfaces.ILevelChunkRedstoneExt;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.chunk.LevelChunk;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 
 public final class RedstoneMinecartManager {
 
-    private final KDTree<PowerEmitterMinecartEntity, Integer> tree = KDTree.newLinkedKDTree(3);
+    private final ServerLevel level;
 
-    private final Map<UUID, KDTree.KDNode<PowerEmitterMinecartEntity, Integer>> nodeMap = new HashMap<>();
+    public RedstoneMinecartManager(ServerLevel level) {
+        this.level = level;
+    }
 
     public void add(PowerEmitterMinecartEntity cart) {
-        UUID uuid = ((Entity) cart).getUUID();
-        if (nodeMap.containsKey(uuid)) {
-            return;
-        }
         BlockPos pos = ((Entity) cart).blockPosition();
-        KDTree.KDNode<PowerEmitterMinecartEntity, Integer> node =
-                tree.insert(new KDTree.BuildNode<>(MDUtils.vec3i(pos), cart));
-        nodeMap.put(uuid, node);
+        LevelChunk chunk = level.getChunkAt(pos);
+        if (chunk != null) {
+            ((ILevelChunkRedstoneExt) chunk).mincartrevolution_neo$addRedstoneMinecart(cart, pos);
+        }
     }
-
 
     public void remove(PowerEmitterMinecartEntity cart) {
-        UUID uuid = ((Entity) cart).getUUID();
-        KDTree.KDNode<PowerEmitterMinecartEntity, Integer> node = nodeMap.remove(uuid);
-        if (node != null) {
-            tree.remove(node);
+        BlockPos pos = ((Entity) cart).blockPosition();
+        LevelChunk chunk = level.getChunkAt(pos);
+        if (chunk != null) {
+            ((ILevelChunkRedstoneExt) chunk).mincartrevolution_neo$removeRedstoneMinecart(cart, pos);
         }
     }
 
-    public void onCartMoved(PowerEmitterMinecartEntity cart, BlockPos newPos) {
-        UUID uuid = ((Entity) cart).getUUID();
-        KDTree.KDNode<PowerEmitterMinecartEntity, Integer> oldNode = nodeMap.remove(uuid);
-        if (oldNode != null) {
-            tree.remove(oldNode);
+    public void onCartMoved(PowerEmitterMinecartEntity cart, BlockPos oldPos, BlockPos newPos) {
+        LevelChunk oldChunk = level.getChunkAt(oldPos);
+        if (oldChunk != null) {
+            ((ILevelChunkRedstoneExt) oldChunk).mincartrevolution_neo$removeRedstoneMinecart(cart, oldPos);
         }
-        KDTree.KDNode<PowerEmitterMinecartEntity, Integer> newNode =
-                tree.insert(new KDTree.BuildNode<>(MDUtils.vec3i(newPos), cart));
-        nodeMap.put(uuid, newNode);
+        LevelChunk newChunk = level.getChunkAt(newPos);
+        if (newChunk != null) {
+            ((ILevelChunkRedstoneExt) newChunk).mincartrevolution_neo$addRedstoneMinecart(cart, newPos);
+        }
     }
 
     public List<PowerEmitterMinecartEntity> queryAt(BlockPos pos) {
-        if (tree.isEmpty()) {
-            return List.of();
+        LevelChunk chunk = level.getChunkAt(pos);
+        if (chunk != null) {
+            return ((ILevelChunkRedstoneExt) chunk).mincartrevolution_neo$queryRedstoneMinecarts(pos);
         }
-
-        List<PowerEmitterMinecartEntity> result = new ArrayList<>();
-        IntPosition target = MDUtils.vec3i(pos);
-
-        tree.preDfs((cart, position) -> {
-            if (position.equals(target)) {
-                result.add(cart);
-            }
-        });
-
-        return result;
+        return List.of();
     }
-
 }

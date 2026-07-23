@@ -252,11 +252,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
 
     }catch (Exception ignored){}
 
-    if (this.getPreviousBlockPos() == null || !this.getPreviousBlockPos().equals(this.blockPosition())) {
-      this.setPreviousBlockPos(this.blockPosition());
-      updateNeighbors(this.level(), previousBlockPos, state.getBlock());
-      updateNeighbors(this.level(), this.blockPosition(), state.getBlock());
-    }
+    // Updates handled by AbstractMinecartMixin
 
     super.tick();
   }

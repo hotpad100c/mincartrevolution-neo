@@ -21,6 +21,7 @@
 		"entity.OldMinecartBehaviourMixin",
 		"entity.PiglinMixin",
 		"level.ServerLevelMixin",
+		"level.LevelChunkRedstoneMixin",
 		"light.LevelChunkMixin",
 		"minecart.AbstractMinecartMixin",
 		"minecart.ChestMinecartMixin",

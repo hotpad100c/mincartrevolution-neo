@@ -30,8 +30,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import ml.mypals.minecartrevolution.interfaces.IRedstoneListIndex;
+
 @Mixin(AbstractMinecart.class)
-public abstract class AbstractMinecartMixin extends VehicleEntity implements Leashable {
+public abstract class AbstractMinecartMixin extends VehicleEntity implements Leashable, IRedstoneListIndex {
 
   @Shadow
   protected abstract double getMaxSpeed(ServerLevel level);
@@ -40,6 +42,17 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
   @Final
   private MinecartBehavior behavior;
   @Unique private @Nullable LeashData mincartrevolution_neo$leashData;
+  @Unique private int mincartrevolution_neo$redstoneListIndex = -1;
+
+  @Override
+  public int mincartrevolution_neo$getRedstoneListIndex() {
+    return mincartrevolution_neo$redstoneListIndex;
+  }
+
+  @Override
+  public void mincartrevolution_neo$setRedstoneListIndex(int index) {
+    mincartrevolution_neo$redstoneListIndex = index;
+  }
 
   protected AbstractMinecartMixin(EntityType<?> entityType, Level world) {
     super(entityType, world);
@@ -84,18 +97,22 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
     if (!this.level().isClientSide() && reason.shouldDestroy() && this.isLeashed()) {
       this.dropLeash();
     }
-/*
     if (this.level() instanceof ServerLevel serverLevelx) {
       if (this instanceof PowerEmitterMinecartEntity powerEmitter) {
         RedstoneMinecartManager manager =
                 ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
         manager.remove(powerEmitter);
+        BlockPos currentPos = this.blockPosition();
+        serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
+        for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+            serverLevelx.updateNeighborsAt(currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+        }
       }
-    }*/
+    }
     super.remove(reason);
   }
 
-  @Unique private @Nullable BlockPos mincartrevolution_neo$lastBlockPos = BlockPos.ZERO;
+  @Unique private @Nullable BlockPos mincartrevolution_neo$lastBlockPos = null;
 
   @Inject(method = "tick", at = @At("TAIL"))
   private void tick(CallbackInfo ci) {
@@ -104,12 +121,27 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
 
       if (this instanceof PowerEmitterMinecartEntity powerEmitter) {
         BlockPos currentPos = this.blockPosition();
-        if (mincartrevolution_neo$lastBlockPos != null &&
-            !currentPos.equals(mincartrevolution_neo$lastBlockPos)) {
+        if (mincartrevolution_neo$lastBlockPos == null) {
+          mincartrevolution_neo$lastBlockPos = currentPos;
+          serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
+          for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+              serverLevelx.updateNeighborsAt(currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+          }
+        } else if (!currentPos.equals(mincartrevolution_neo$lastBlockPos)) {
+          BlockPos oldPos = mincartrevolution_neo$lastBlockPos;
           mincartrevolution_neo$lastBlockPos = currentPos;
           RedstoneMinecartManager manager =
               ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
-          manager.onCartMoved(powerEmitter, currentPos);
+          manager.onCartMoved(powerEmitter, oldPos, currentPos);
+          
+          serverLevelx.updateNeighborsAt(oldPos, net.minecraft.world.level.block.Blocks.AIR);
+          for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+              serverLevelx.updateNeighborsAt(oldPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+          }
+          serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
+          for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+              serverLevelx.updateNeighborsAt(currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+          }
         }
       }
     }
