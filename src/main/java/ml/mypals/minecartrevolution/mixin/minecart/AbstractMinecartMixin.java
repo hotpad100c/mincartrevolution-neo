@@ -30,10 +30,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import ml.mypals.minecartrevolution.interfaces.IRedstoneListIndex;
-
 @Mixin(AbstractMinecart.class)
-public abstract class AbstractMinecartMixin extends VehicleEntity implements Leashable, IRedstoneListIndex {
+public abstract class AbstractMinecartMixin extends VehicleEntity implements Leashable {
 
   @Shadow
   protected abstract double getMaxSpeed(ServerLevel level);
@@ -42,17 +40,6 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
   @Final
   private MinecartBehavior behavior;
   @Unique private @Nullable LeashData mincartrevolution_neo$leashData;
-  @Unique private int mincartrevolution_neo$redstoneListIndex = -1;
-
-  @Override
-  public int mincartrevolution_neo$getRedstoneListIndex() {
-    return mincartrevolution_neo$redstoneListIndex;
-  }
-
-  @Override
-  public void mincartrevolution_neo$setRedstoneListIndex(int index) {
-    mincartrevolution_neo$redstoneListIndex = index;
-  }
 
   protected AbstractMinecartMixin(EntityType<?> entityType, Level world) {
     super(entityType, world);
@@ -102,10 +89,12 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
         RedstoneMinecartManager manager =
                 ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
         manager.remove(powerEmitter);
-        BlockPos currentPos = this.blockPosition();
-        serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
-        for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
-            serverLevelx.updateNeighborsAt(currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+        if (reason.shouldDestroy()) {
+            BlockPos currentPos = this.blockPosition();
+            serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
+            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+                serverLevelx.updateNeighborsAt(currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+            }
         }
       }
     }
