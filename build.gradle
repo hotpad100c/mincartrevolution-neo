@@ -161,8 +161,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     implementation 'javazoom:jlayer:1.0.1'
 
-    implementation 'com.github.hotpad100c:Tetrachord-Lib-For-TeaCon:v26.1-1.0.3'
-    jarJar 'com.github.hotpad100c:Tetrachord-Lib-For-TeaCon:v26.1-1.0.3'
+    //implementation 'com.github.hotpad100c:Tetrachord-Lib-For-TeaCon:v26.1-1.0.3'
+    //jarJar 'com.github.hotpad100c:Tetrachord-Lib-For-TeaCon:v26.1-1.0.3'
 
 }
 

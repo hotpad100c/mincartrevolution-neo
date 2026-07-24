@@ -38,32 +38,12 @@ public abstract class RedstoneViewMixin implements LevelAccessor {
   public int minecartrevolution_neo$getRedstonePowerFromEntity(BlockPos pos, Direction direction) {
 
     RedstoneMinecartManager manager = ((IServerLevelExt) this).mincartrevolution_neo$getRedstoneMinecartManager();
-
     List<PowerEmitterMinecartEntity> powers = manager.queryAt(pos);
-
-    Optional<PowerEmitterMinecartEntity> strongest = powers.stream()
-            .max(Comparator.comparingInt(cart -> cart.getPowerStrength(direction, pos)));
-    return strongest
-        .map(cart -> cart.getPowerStrength(direction, pos))
-        .orElse(0);
+    int power = 0;
+    for (int i = 0; i < powers.size(); i++) {
+      final int j = powers.get(i).getPowerStrength(direction, pos);
+      if (power < j) power = j;
+    }
+    return power;
   }
-/*
-  @Unique
-  public int minecartrevolution_neo$getRedstonePowerFromEntity(BlockPos pos, Direction direction) {
-    AABB box = new AABB(pos);
-    List<? extends AbstractMinecart> powers =
-            this.getEntitiesOfClass(
-                    AbstractMinecart.class, box, entity -> entity instanceof PowerEmitterMinecartEntity);
-    Optional<? extends AbstractMinecart> strongest =
-            powers.stream()
-                    .max(
-                            Comparator.comparingInt(
-                                    cart -> ((PowerEmitterMinecartEntity) cart).getPowerStrength(direction, pos)));
-    return strongest
-            .map(
-                    redstoneEmitterPowerMinecart ->
-                            ((PowerEmitterMinecartEntity) redstoneEmitterPowerMinecart)
-                                    .getPowerStrength(direction, pos))
-            .orElse(0);
-  }*/
 }
