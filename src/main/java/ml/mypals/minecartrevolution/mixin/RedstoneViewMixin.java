@@ -1,18 +1,14 @@
 package ml.mypals.minecartrevolution.mixin;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.RedstoneMinecartManager;
 import ml.mypals.minecartrevolution.interfaces.IServerLevelExt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,7 +33,8 @@ public abstract class RedstoneViewMixin implements LevelAccessor {
   @Unique
   public int minecartrevolution_neo$getRedstonePowerFromEntity(BlockPos pos, Direction direction) {
 
-    RedstoneMinecartManager manager = ((IServerLevelExt) this).mincartrevolution_neo$getRedstoneMinecartManager();
+    RedstoneMinecartManager manager =
+        ((IServerLevelExt) this).mincartrevolution_neo$getRedstoneMinecartManager();
     List<PowerEmitterMinecartEntity> powers = manager.queryAt(pos);
     int power = 0;
     for (int i = 0; i < powers.size(); i++) {
