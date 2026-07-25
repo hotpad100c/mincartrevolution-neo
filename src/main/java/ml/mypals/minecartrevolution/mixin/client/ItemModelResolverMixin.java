@@ -70,6 +70,8 @@ public class ItemModelResolverMixin {
       if (!blockInside.isAir()) {
         this.mincartrevolution$renderMinecartWithBlock(
             output, item, displayContext, level, owner, seed, blockInside);
+
+        output.newLayer().argumentForSpecialRendering = "YuushyaModelingCompatTransformCorrectionMarker";
       } else {
         this.mincartrevolution$renderDefault(output, item, displayContext, level, owner, seed);
       }
@@ -114,6 +116,7 @@ public class ItemModelResolverMixin {
             seed);
 
     ItemStackRenderState tempBlockState = new ItemStackRenderState();
+
     tempBlockState.displayContext = displayContext;
 
     if (blockInside.is(BlockTags.SHULKER_BOXES)
@@ -175,6 +178,7 @@ public class ItemModelResolverMixin {
     ItemTransform referenceTransform = reference.itemTransform;
 
     List<BlockStateModelPart> bakedQuads = blockModelRenderState.modelParts;
+    if(bakedQuads == null) return;
     List<BakedQuad> quads =
         bakedQuads.stream()
             .flatMap(
