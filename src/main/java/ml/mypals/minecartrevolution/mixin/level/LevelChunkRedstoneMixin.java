@@ -1,6 +1,9 @@
 package ml.mypals.minecartrevolution.mixin.level;
 
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import ml.mypals.minecartrevolution.entity.minecarts.redstone.PowerEmitterMinecartEntity;
 import ml.mypals.minecartrevolution.interfaces.ILevelChunkRedstoneExt;
 import net.minecraft.core.BlockPos;
@@ -11,112 +14,116 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
 @Mixin(LevelChunk.class)
 public abstract class LevelChunkRedstoneMixin implements ILevelChunkRedstoneExt {
 
-    @Unique
-    private final Int2ReferenceOpenHashMap<List<WeakReference<PowerEmitterMinecartEntity>>>
-            mincartrevolution_neo$redstoneMinecarts = new Int2ReferenceOpenHashMap<>();
+  @Unique
+  private final Int2ReferenceOpenHashMap<List<WeakReference<PowerEmitterMinecartEntity>>>
+      mincartrevolution_neo$redstoneMinecarts = new Int2ReferenceOpenHashMap<>();
 
-    @Unique
-    private int[] mincartrevolution_neo$sectionRedstoneMinecartCounts;
+  @Unique private int[] mincartrevolution_neo$sectionRedstoneMinecartCounts;
 
-    @Inject(method = "<init>*", at = @At("RETURN"))
-    private void mincartrevolution_neo$onInit(CallbackInfo ci) {
-        LevelChunk self = (LevelChunk) (Object) this;
-        mincartrevolution_neo$sectionRedstoneMinecartCounts = new int[self.getSections().length];
+  @Inject(method = "<init>*", at = @At("RETURN"))
+  private void mincartrevolution_neo$onInit(CallbackInfo ci) {
+    LevelChunk self = (LevelChunk) (Object) this;
+    mincartrevolution_neo$sectionRedstoneMinecartCounts = new int[self.getSections().length];
+  }
+
+  @Unique
+  private int mincartrevolution_neo$getLocalCoord(BlockPos pos) {
+    return (pos.getX() & 15) << 24 | (pos.getZ() & 15) << 20 | (pos.getY() & 0xFFFFF);
+  }
+
+  @Override
+  public void mincartrevolution_neo$addRedstoneMinecart(
+      PowerEmitterMinecartEntity cart, BlockPos pos) {
+    int key = mincartrevolution_neo$getLocalCoord(pos);
+    List<WeakReference<PowerEmitterMinecartEntity>> list =
+        mincartrevolution_neo$redstoneMinecarts.computeIfAbsent(key, k -> new ArrayList<>());
+
+    int index = -1;
+    for (int i = 0; i < list.size(); i++) {
+      WeakReference<PowerEmitterMinecartEntity> ref = list.get(i);
+      if (ref != null && ref.get() == cart) {
+        return;
+      }
+      if (index == -1 && (ref == null || ref.get() == null)) {
+        index = i;
+      }
     }
 
-    @Unique
-    private int mincartrevolution_neo$getLocalCoord(BlockPos pos) {
-        return (pos.getX() & 15) << 24 | (pos.getZ() & 15) << 20 | (pos.getY() & 0xFFFFF);
+    LevelChunk self = (LevelChunk) (Object) this;
+    int sectionIndex = self.getSectionIndex(pos.getY());
+    if (sectionIndex >= 0
+        && sectionIndex < mincartrevolution_neo$sectionRedstoneMinecartCounts.length) {
+      mincartrevolution_neo$sectionRedstoneMinecartCounts[sectionIndex]++;
     }
 
-    @Override
-    public void mincartrevolution_neo$addRedstoneMinecart(PowerEmitterMinecartEntity cart, BlockPos pos) {
-        int key = mincartrevolution_neo$getLocalCoord(pos);
-        List<WeakReference<PowerEmitterMinecartEntity>> list = mincartrevolution_neo$redstoneMinecarts
-            .computeIfAbsent(key, k -> new ArrayList<>());
+    if (index == -1) {
+      list.add(new WeakReference<>(cart));
+    } else {
+      list.set(index, new WeakReference<>(cart));
+    }
+  }
 
-        int index = -1;
-        for (int i = 0; i < list.size(); i++) {
-            WeakReference<PowerEmitterMinecartEntity> ref = list.get(i);
-            if (ref != null && ref.get() == cart) {
-                return;
-            }
-            if (index == -1 && (ref == null || ref.get() == null)) {
-                index = i;
-            }
+  @Override
+  public void mincartrevolution_neo$removeRedstoneMinecart(
+      PowerEmitterMinecartEntity cart, BlockPos pos) {
+    int key = mincartrevolution_neo$getLocalCoord(pos);
+    List<WeakReference<PowerEmitterMinecartEntity>> list =
+        mincartrevolution_neo$redstoneMinecarts.get(key);
+    boolean removed = false;
+    if (list != null) {
+      for (int i = 0; i < list.size(); i++) {
+        WeakReference<PowerEmitterMinecartEntity> ref = list.get(i);
+        if (ref != null && ref.get() == cart) {
+          list.set(i, null);
+          removed = true;
+          break;
         }
+      }
+    }
 
-        LevelChunk self = (LevelChunk) (Object) this;
-        int sectionIndex = self.getSectionIndex(pos.getY());
-        if (sectionIndex >= 0 && sectionIndex < mincartrevolution_neo$sectionRedstoneMinecartCounts.length) {
-            mincartrevolution_neo$sectionRedstoneMinecartCounts[sectionIndex]++;
-        }
+    if (removed) {
+      LevelChunk self = (LevelChunk) (Object) this;
+      int sectionIndex = self.getSectionIndex(pos.getY());
+      if (sectionIndex >= 0
+          && sectionIndex < mincartrevolution_neo$sectionRedstoneMinecartCounts.length) {
+        mincartrevolution_neo$sectionRedstoneMinecartCounts[sectionIndex]--;
+      }
+    }
+  }
 
-        if (index == -1) {
-            list.add(new WeakReference<>(cart));
+  @Override
+  public List<PowerEmitterMinecartEntity> mincartrevolution_neo$queryRedstoneMinecarts(
+      BlockPos pos) {
+    LevelChunk self = (LevelChunk) (Object) this;
+    int sectionIndex = self.getSectionIndex(pos.getY());
+    if (sectionIndex < 0
+        || sectionIndex >= mincartrevolution_neo$sectionRedstoneMinecartCounts.length
+        || mincartrevolution_neo$sectionRedstoneMinecartCounts[sectionIndex] <= 0) {
+      return List.of();
+    }
+
+    int key = mincartrevolution_neo$getLocalCoord(pos);
+    List<WeakReference<PowerEmitterMinecartEntity>> list =
+        mincartrevolution_neo$redstoneMinecarts.get(key);
+    if (list == null || list.isEmpty()) {
+      return List.of();
+    }
+
+    List<PowerEmitterMinecartEntity> result = new ArrayList<>();
+    for (int i = 0; i < list.size(); i++) {
+      WeakReference<PowerEmitterMinecartEntity> ref = list.get(i);
+      if (ref != null) {
+        PowerEmitterMinecartEntity entity = ref.get();
+        if (entity != null) {
+          result.add(entity);
         } else {
-            list.set(index, new WeakReference<>(cart));
+          list.set(i, null);
         }
+      }
     }
-
-    @Override
-    public void mincartrevolution_neo$removeRedstoneMinecart(PowerEmitterMinecartEntity cart, BlockPos pos) {
-        int key = mincartrevolution_neo$getLocalCoord(pos);
-        List<WeakReference<PowerEmitterMinecartEntity>> list = mincartrevolution_neo$redstoneMinecarts.get(key);
-        boolean removed = false;
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                WeakReference<PowerEmitterMinecartEntity> ref = list.get(i);
-                if (ref != null && ref.get() == cart) {
-                    list.set(i, null);
-                    removed = true;
-                    break;
-                }
-            }
-        }
-
-        if (removed) {
-            LevelChunk self = (LevelChunk) (Object) this;
-            int sectionIndex = self.getSectionIndex(pos.getY());
-            if (sectionIndex >= 0 && sectionIndex < mincartrevolution_neo$sectionRedstoneMinecartCounts.length) {
-                mincartrevolution_neo$sectionRedstoneMinecartCounts[sectionIndex]--;
-            }
-        }
-    }
-
-    @Override
-    public List<PowerEmitterMinecartEntity> mincartrevolution_neo$queryRedstoneMinecarts(BlockPos pos) {
-        LevelChunk self = (LevelChunk) (Object) this;
-        int sectionIndex = self.getSectionIndex(pos.getY());
-        if (sectionIndex < 0 || sectionIndex >= mincartrevolution_neo$sectionRedstoneMinecartCounts.length || mincartrevolution_neo$sectionRedstoneMinecartCounts[sectionIndex] <= 0) {
-            return List.of();
-        }
-
-        int key = mincartrevolution_neo$getLocalCoord(pos);
-        List<WeakReference<PowerEmitterMinecartEntity>> list = mincartrevolution_neo$redstoneMinecarts.get(key);
-        if (list == null || list.isEmpty()) {
-            return List.of();
-        }
-        
-        List<PowerEmitterMinecartEntity> result = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            WeakReference<PowerEmitterMinecartEntity> ref = list.get(i);
-            if (ref != null) {
-                PowerEmitterMinecartEntity entity = ref.get();
-                if (entity != null) {
-                    result.add(entity);
-                } else {
-                    list.set(i, null);
-                }
-            }
-        }
-        return result;
-    }
+    return result;
+  }
 }

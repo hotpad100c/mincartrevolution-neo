@@ -36,9 +36,7 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
   @Shadow
   protected abstract double getMaxSpeed(ServerLevel level);
 
-  @Shadow
-  @Final
-  private MinecartBehavior behavior;
+  @Shadow @Final private MinecartBehavior behavior;
   @Unique private @Nullable LeashData mincartrevolution_neo$leashData;
 
   protected AbstractMinecartMixin(EntityType<?> entityType, Level world) {
@@ -87,14 +85,15 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
     if (this.level() instanceof ServerLevel serverLevelx) {
       if (this instanceof PowerEmitterMinecartEntity powerEmitter) {
         RedstoneMinecartManager manager =
-                ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
+            ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
         manager.remove(powerEmitter);
         if (reason.shouldDestroy()) {
-            BlockPos currentPos = this.blockPosition();
-            serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
-            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
-                serverLevelx.updateNeighborsAt(currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
-            }
+          BlockPos currentPos = this.blockPosition();
+          serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
+          for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+            serverLevelx.updateNeighborsAt(
+                currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+          }
         }
       }
     }
@@ -114,7 +113,8 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
           mincartrevolution_neo$lastBlockPos = currentPos;
           serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
           for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
-              serverLevelx.updateNeighborsAt(currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+            serverLevelx.updateNeighborsAt(
+                currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
           }
         } else if (!currentPos.equals(mincartrevolution_neo$lastBlockPos)) {
           BlockPos oldPos = mincartrevolution_neo$lastBlockPos;
@@ -122,14 +122,16 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Lea
           RedstoneMinecartManager manager =
               ((IServerLevelExt) serverLevelx).mincartrevolution_neo$getRedstoneMinecartManager();
           manager.onCartMoved(powerEmitter, oldPos, currentPos);
-          
+
           serverLevelx.updateNeighborsAt(oldPos, net.minecraft.world.level.block.Blocks.AIR);
           for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
-              serverLevelx.updateNeighborsAt(oldPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+            serverLevelx.updateNeighborsAt(
+                oldPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
           }
           serverLevelx.updateNeighborsAt(currentPos, net.minecraft.world.level.block.Blocks.AIR);
           for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
-              serverLevelx.updateNeighborsAt(currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
+            serverLevelx.updateNeighborsAt(
+                currentPos.relative(dir), net.minecraft.world.level.block.Blocks.AIR);
           }
         }
       }

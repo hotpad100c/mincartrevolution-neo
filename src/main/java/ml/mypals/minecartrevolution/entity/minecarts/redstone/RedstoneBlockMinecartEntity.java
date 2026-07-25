@@ -49,11 +49,13 @@ public class RedstoneBlockMinecartEntity extends SingleBlockMinecartEntity
     super.tick();
     BlockState blockState = getDisplayBlockState();
     if (!updatedBlocks || !this.isAlive()) {
-      if (getPreviousBlockPos() != null) updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
+      if (getPreviousBlockPos() != null)
+        updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
 
       updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());
     }
-    if (this.getPreviousBlockPos() == null || !this.getPreviousBlockPos().equals(this.blockPosition())) {
+    if (this.getPreviousBlockPos() == null
+        || !this.getPreviousBlockPos().equals(this.blockPosition())) {
       this.setPreviousBlockPos(this.blockPosition());
       updateNeighbors(this.level(), previousBlockPos, blockState.getBlock());
       updateNeighbors(this.level(), this.blockPosition(), blockState.getBlock());

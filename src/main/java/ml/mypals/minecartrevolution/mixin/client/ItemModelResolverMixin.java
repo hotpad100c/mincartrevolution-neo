@@ -71,7 +71,8 @@ public class ItemModelResolverMixin {
         this.mincartrevolution$renderMinecartWithBlock(
             output, item, displayContext, level, owner, seed, blockInside);
 
-        output.newLayer().argumentForSpecialRendering = "YuushyaModelingCompatTransformCorrectionMarker";
+        output.newLayer().argumentForSpecialRendering =
+            "YuushyaModelingCompatTransformCorrectionMarker";
       } else {
         this.mincartrevolution$renderDefault(output, item, displayContext, level, owner, seed);
       }
@@ -178,7 +179,7 @@ public class ItemModelResolverMixin {
     ItemTransform referenceTransform = reference.itemTransform;
 
     List<BlockStateModelPart> bakedQuads = blockModelRenderState.modelParts;
-    if(bakedQuads == null) return;
+    if (bakedQuads == null) return;
     List<BakedQuad> quads =
         bakedQuads.stream()
             .flatMap(
