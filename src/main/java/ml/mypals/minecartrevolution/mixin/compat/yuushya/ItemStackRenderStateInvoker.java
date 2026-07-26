@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ItemStackRenderState.LayerRenderState.class)
 public interface ItemStackRenderStateInvoker {
-@Invoker("applyTransform")
-void mrXyuushya$applyTransform(PoseStack.Pose localPose);
+  @Invoker("applyTransform")
+  void mrXyuushya$applyTransform(PoseStack.Pose localPose);
 }
