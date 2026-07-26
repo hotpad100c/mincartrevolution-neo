@@ -34,6 +34,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import static ml.mypals.minecartrevolution.MinecartRevolutionClient.MODEL_MARKER;
 
 @Mixin(ItemModelResolver.class)
 public class ItemModelResolverMixin {
@@ -71,7 +72,7 @@ public class ItemModelResolverMixin {
         this.mincartrevolution$renderMinecartWithBlock(
             output, item, displayContext, level, owner, seed, blockInside);
 
-        output.newLayer().argumentForSpecialRendering = "YuushyaModelingCompatTransformCorrectionMarker";
+        output.newLayer().argumentForSpecialRendering = MODEL_MARKER;
       } else {
         this.mincartrevolution$renderDefault(output, item, displayContext, level, owner, seed);
       }

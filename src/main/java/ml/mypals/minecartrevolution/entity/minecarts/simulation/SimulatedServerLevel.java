@@ -61,7 +61,7 @@ import net.neoforged.neoforge.entity.PartEntity;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class SimulatedServerLevel extends ServerLevel {
+public class SimulatedServerLevel extends ServerLevel implements SimulatedLevel {
   private final ServerLevel wrapped;
   private final CompatFriendlyBlockMinecartEntity minecart;
 

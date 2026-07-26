@@ -16,6 +16,7 @@
     "blocks.PistonStructureResolverMixin",
     "blocks.ProjectileDispenseBehaviorMixin",
     "blocks.UnrenderableBlocksMixin",
+    "compat.extrapower.MushroomCloudBlockEntityMixin",
     "compat.yuushya.ItemBlockMixin",
     "entity.EntityAccessor",
     "entity.EntityMixin",

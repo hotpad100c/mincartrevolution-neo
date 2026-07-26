@@ -57,7 +57,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class SimulatedClientLevel extends ClientLevel {
+public class SimulatedClientLevel extends ClientLevel implements SimulatedLevel{
   private final ClientLevel wrapped;
   private final CompatFriendlyBlockMinecartEntity minecart;
 

@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 
+import static ml.mypals.minecartrevolution.MinecartRevolutionClient.MODEL_MARKER;
+
 @Pseudo
 @Mixin(targets = "com.yuushya.modelling.client.anvilcraft.rendering.CachedRegion$RebuildTask")
 
@@ -32,11 +34,7 @@ public class ItemBlockMixin {
     ) {
         if(itemRenderState.layers.length > 0){
             ItemStackRenderState.LayerRenderState l1Marker = itemRenderState.layers[itemRenderState.layers.length-1];
-            if(
-                l1Marker.argumentForSpecialRendering != null &&
-                l1Marker.argumentForSpecialRendering
-                .equals("YuushyaModelingCompatTransformCorrectionMarker")
-            ){
+            if(l1Marker.argumentForSpecialRendering == MODEL_MARKER){
                 PoseStack.Pose pose = poseStack2.last().copy();
                 ((ItemStackRenderStateInvoker) layer).mrXyuushya$applyTransform(pose);
                 return pose.pose().transform(vector4f);

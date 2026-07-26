@@ -63,6 +63,7 @@ import org.jspecify.annotations.NonNull;
 // annotated with @SubscribeEvent
 @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class MinecartRevolutionClient {
+    public static final Object MODEL_MARKER = new Object();
     public static HashMap<JukeboxMinecartEntity, SoundInstance> songs = new HashMap<>();
 
     public static final StandaloneModelKey<QuadCollection> SOFA_MODEL_KEY =
