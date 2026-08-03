@@ -226,11 +226,11 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
         }
         return InteractionResult.SUCCESS;
       } else {
-        return InteractionResult.PASS;
+        return InteractionResult.CONSUME;
       }
     } else {
       player.swing(hand);
-      return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
+      return !level().isClientSide() && player.startRiding(this) ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
   }
 
@@ -511,21 +511,13 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
 
   @Override
   public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float damage) {
-    if (source.getEntity() instanceof Player player && !isEntityInvulnerableTo(player, source, false)) {
+    if (source.getEntity() instanceof Player player && !isEntityInvulnerableTo(this, source, false)) {
       this.addDeltaMovement(
           player.getLookAngle().multiply(0.1, player.isShiftKeyDown() ? 0.3 : 0, 0.1));
     }
     return super.hurtServer(level, source, damage);
   }
 
-  @Override
-  public boolean hurtClient(DamageSource source) {
-    if (source.getEntity() instanceof Player player) {
-      this.addDeltaMovement(
-          player.getLookAngle().multiply(0.1, player.isShiftKeyDown() ? 0.3 : 0, 1.5));
-    }
-    return super.hurtClient(source);
-  }
 
   @Override
   public void move(@NonNull MoverType moverType, @NonNull Vec3 delta) {
