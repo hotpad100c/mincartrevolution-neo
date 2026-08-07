@@ -7,12 +7,9 @@ import static ml.mypals.minecartrevolution.registeries.MRModCriteria.TRIGGERS;
 import static ml.mypals.minecartrevolution.registeries.MRModItems.*;
 
 import com.mojang.logging.LogUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javazoom.jl.player.Player;
 import ml.mypals.minecartrevolution.config.Config;
 import ml.mypals.minecartrevolution.datagen.MRAdvancementProvider;
 import ml.mypals.minecartrevolution.datagen.MRRecipeProvider;
@@ -36,7 +33,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.villager.Villager;
-import net.minecraft.world.level.block.SnowLayerBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -47,7 +43,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
-
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -62,6 +57,7 @@ public class MinecartRevolution {
   // Directly reference a slf4j logger
   public static final Logger LOGGER = LogUtils.getLogger();
   public static List<UUID> FORCE_COMAPTERS = new ArrayList<>();
+
   public static Identifier id(String path) {
     return Identifier.fromNamespaceAndPath(MODID, path);
   }
@@ -95,13 +91,16 @@ public class MinecartRevolution {
     registrar.playToClient(BabelScramblePacket.TYPE, BabelScramblePacket.STREAM_CODEC);
     registrar.playToClient(EnderPortalShakePacket.TYPE, EnderPortalShakePacket.STREAM_CODEC);
     registrar.playToClient(MinecartCollisionPacket.TYPE, MinecartCollisionPacket.STREAM_CODEC);
-    registrar.playToServer(ForceCompatRegisterPacket.TYPE, ForceCompatRegisterPacket.STREAM_CODEC,((payload, context) -> {
-      if(payload.active()){
-        FORCE_COMAPTERS.add(context.player().getUUID());
-      }else {
-        FORCE_COMAPTERS.remove(context.player().getUUID());
-      }
-    }));
+    registrar.playToServer(
+        ForceCompatRegisterPacket.TYPE,
+        ForceCompatRegisterPacket.STREAM_CODEC,
+        ((payload, context) -> {
+          if (payload.active()) {
+            FORCE_COMAPTERS.add(context.player().getUUID());
+          } else {
+            FORCE_COMAPTERS.remove(context.player().getUUID());
+          }
+        }));
   }
 
   private void commonSetup(FMLCommonSetupEvent event) {
@@ -170,5 +169,4 @@ public class MinecartRevolution {
       manager.remove(powerEmitter);
     }
   }
-
 }

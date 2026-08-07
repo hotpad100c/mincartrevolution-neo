@@ -1,5 +1,7 @@
 package ml.mypals.minecartrevolution.mixin.client;
 
+import static ml.mypals.minecartrevolution.MinecartRevolutionClient.MODEL_MARKER;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -34,7 +36,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import static ml.mypals.minecartrevolution.MinecartRevolutionClient.MODEL_MARKER;
 
 @Mixin(ItemModelResolver.class)
 public class ItemModelResolverMixin {
@@ -179,7 +180,7 @@ public class ItemModelResolverMixin {
     ItemTransform referenceTransform = reference.itemTransform;
 
     List<BlockStateModelPart> bakedQuads = blockModelRenderState.modelParts;
-    if(bakedQuads == null) return;
+    if (bakedQuads == null) return;
     List<BakedQuad> quads =
         bakedQuads.stream()
             .flatMap(
