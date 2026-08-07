@@ -138,8 +138,8 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
         if (this.blockEntity != null) {
           this.blockEntity.setRemoved();
         }
-        this.blockEntity =
-            ((EntityBlock) state.getBlock()).newBlockEntity(this.blockPosition(), state);
+        this.blockEntity = ((EntityBlock) state.getBlock()).newBlockEntity(this.blockPosition(), state);
+
         if (this.blockEntity != null) {
           Level simLevel = simulatedLevel;
           this.blockEntity.setLevel(simLevel);
@@ -149,9 +149,11 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
                   ProblemReporter.DISCARDING,
                   registryAccess(),
                   this.entityData.get(DATA_ID_BLOCK_ENTITY_NBT)));
+          blockEntity.onLoad();
         }
       }
     } else {
+      if(blockEntity != null) blockEntity.setRemoved();
       this.blockEntity = null;
     }
   }
@@ -357,7 +359,13 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     }
     super.remove(reason);
   }
-
+  @Override
+  public void onClientRemoval() {
+    if (this.blockEntity != null) {
+      blockEntity.setRemoved();
+      blockEntity = null;
+    }
+  }
   @Override
   public void handleActive(ServerLevel level, int x, int y, int z, boolean powered) {
     if (activated != powered) {

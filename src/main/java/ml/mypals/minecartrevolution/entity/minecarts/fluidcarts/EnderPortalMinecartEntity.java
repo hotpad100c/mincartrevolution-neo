@@ -2,6 +2,7 @@ package ml.mypals.minecartrevolution.entity.minecarts.fluidcarts;
 
 import java.util.Optional;
 import ml.mypals.minecartrevolution.packets.EnderPortalShakePacket;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -126,7 +127,7 @@ public class EnderPortalMinecartEntity extends NetherPortalMinecartEntity {
   }
 
   private void placeSnapshot(
-      ServerLevel level, net.minecraft.core.BlockPos pos, BlockSnapshot snap) {
+          ServerLevel level, BlockPos pos, BlockSnapshot snap) {
     level.setBlock(pos, snap.state(), BLOCK_FLAG_SET_TARGET, 0);
     if (snap.beData() != null
         && snap.state().getBlock()
