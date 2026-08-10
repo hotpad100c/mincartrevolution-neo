@@ -149,7 +149,7 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
                   ProblemReporter.DISCARDING,
                   registryAccess(),
                   this.entityData.get(DATA_ID_BLOCK_ENTITY_NBT)));
-          blockEntity.onLoad();
+          //blockEntity.onLoad();
         }
       }
     } else {
