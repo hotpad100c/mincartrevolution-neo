@@ -57,7 +57,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class SimulatedClientLevel extends ClientLevel implements SimulatedLevel{
+public class SimulatedClientLevel extends ClientLevel implements SimulatedLevel {
   private final ClientLevel wrapped;
   private final CompatFriendlyBlockMinecartEntity minecart;
 
@@ -199,7 +199,7 @@ public class SimulatedClientLevel extends ClientLevel implements SimulatedLevel{
 
   @Override
   public @Nullable Entity getEntity(int id) {
-    if(id == -Integer.MAX_VALUE) return minecart;
+    if (id == -Integer.MAX_VALUE) return minecart;
     return wrapped.getEntity(id);
   }
 
