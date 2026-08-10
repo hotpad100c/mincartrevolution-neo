@@ -359,13 +359,13 @@ public class CompatFriendlyBlockMinecartEntity extends VariantBlockMinecartEntit
     }
     super.remove(reason);
   }
-  @Override
+  /*@Override
   public void onClientRemoval() {
     if (this.blockEntity != null) {
       blockEntity.setRemoved();
       blockEntity = null;
     }
-  }
+  }*/
   @Override
   public void handleActive(ServerLevel level, int x, int y, int z, boolean powered) {
     if (activated != powered) {
