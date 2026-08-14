@@ -51,6 +51,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import static ml.mypals.minecartrevolution.events.MinecartInteractionEventHandler.isPlayerAdventure;
 import static net.neoforged.neoforge.common.CommonHooks.isEntityInvulnerableTo;
 
 public class VariantBlockMinecartEntity extends AbstractMinecart {
@@ -188,7 +189,7 @@ public class VariantBlockMinecartEntity extends AbstractMinecart {
       return wrench.useOnMinecart(player, this, hand);
     }
 
-    if (player.isSecondaryUseActive()) {
+    if (player.isSecondaryUseActive() && isPlayerAdventure(player)) {
       if (this.hasCustomDisplay()) {
         BlockState blockState = getDisplayBlockState();
 

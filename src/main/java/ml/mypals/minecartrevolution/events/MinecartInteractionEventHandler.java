@@ -3,6 +3,7 @@ package ml.mypals.minecartrevolution.events;
 import static ml.mypals.minecartrevolution.entity.minecarts.maps.WoolEntityMapper.byColor;
 import static ml.mypals.minecartrevolution.registeries.MRModCriteria.DJANGO_UNCHAINED;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import ml.mypals.minecartrevolution.behaviours.MinecartTransformManager;
@@ -84,27 +85,21 @@ public class MinecartInteractionEventHandler {
     }
   }
 
+  public static boolean isPlayerAdventure(Player player){
+    return player.gameMode() != null && !Objects.requireNonNull(player.gameMode()).isBlockPlacingRestricted();
+  }
   public static void interact(
       Player player, @NotNull InteractionHand hand, AbstractMinecart interacted, Level world) {
 
     ItemStack stackInHand = player.getItemInHand(hand);
 
-    if (player.isSecondaryUseActive()) {
+    if (player.isSecondaryUseActive() && isPlayerAdventure(player)) {
       if (!stackInHand.isEmpty()) {
-        if (stackInHand.getItem() instanceof BlockItem blockItem
-            && interacted.getDisplayBlockState().isAir()) {
-          interacted.setCustomDisplayBlockState(
-              Optional.of(blockItem.getBlock().defaultBlockState()));
+        if (stackInHand.getItem() instanceof BlockItem blockItem && interacted.getDisplayBlockState().isAir()) {
 
+          interacted.setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
           player.swing(hand);
-          interacted.playSound(
-              blockItem
-                  .getBlock()
-                  .defaultBlockState()
-                  .getSoundType(world, interacted.getOnPos(), player)
-                  .getPlaceSound(),
-              1,
-              1);
+          interacted.playSound(blockItem.getBlock().defaultBlockState().getSoundType(world, interacted.getOnPos(), player).getPlaceSound(), 1, 1);
 
           AbstractMinecart finalCart = interacted;
           if (!world.isClientSide()) {
