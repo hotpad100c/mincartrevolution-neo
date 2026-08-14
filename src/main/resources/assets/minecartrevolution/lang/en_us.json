@@ -104,5 +104,4 @@
 	"message.minecartrevolution.chain_already_chained": "One of the minecarts is already chained! Please break the existing chain first.",
 	"config.yourmod.force_compatibility": "Force Compatibility Mode",
 	"config.yourmod.force_compatibility.tooltip": "Enables an experimental compatibility workaround for all modded block entities inside minecarts. This may cause unexpected behavior, server disconnects, or client crashes. Enable only if necessary. Use at your own risk."
-
 }
