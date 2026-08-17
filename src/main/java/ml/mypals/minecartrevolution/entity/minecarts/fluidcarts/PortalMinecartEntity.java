@@ -18,7 +18,7 @@ import org.jspecify.annotations.Nullable;
 
 public abstract class PortalMinecartEntity extends VariantBlockMinecartEntity {
 
-  protected static final int PORTAL_COOLDOWN = 8;
+  protected static final int PORTAL_COOLDOWN = 80;
   protected static final double SEARCH_Y_INFLATE = 0.2;
 
   public PortalMinecartEntity(EntityType<? extends AbstractMinecart> entityType, Level level) {
