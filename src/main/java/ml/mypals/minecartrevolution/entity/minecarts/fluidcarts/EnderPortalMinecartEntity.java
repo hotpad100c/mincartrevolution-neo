@@ -126,8 +126,7 @@ public class EnderPortalMinecartEntity extends NetherPortalMinecartEntity {
     return new BlockSnapshot(data, state);
   }
 
-  private void placeSnapshot(
-          ServerLevel level, BlockPos pos, BlockSnapshot snap) {
+  private void placeSnapshot(ServerLevel level, BlockPos pos, BlockSnapshot snap) {
     level.setBlock(pos, snap.state(), BLOCK_FLAG_SET_TARGET, 0);
     if (snap.beData() != null
         && snap.state().getBlock()
