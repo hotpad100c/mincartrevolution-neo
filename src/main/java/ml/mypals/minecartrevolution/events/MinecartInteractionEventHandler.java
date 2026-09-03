@@ -85,9 +85,11 @@ public class MinecartInteractionEventHandler {
     }
   }
 
-  public static boolean isPlayerAdventure(Player player){
-    return player.gameMode() != null && !Objects.requireNonNull(player.gameMode()).isBlockPlacingRestricted();
+  public static boolean isPlayerAdventure(Player player) {
+    return player.gameMode() != null
+        && !Objects.requireNonNull(player.gameMode()).isBlockPlacingRestricted();
   }
+
   public static void interact(
       Player player, @NotNull InteractionHand hand, AbstractMinecart interacted, Level world) {
 
@@ -95,11 +97,20 @@ public class MinecartInteractionEventHandler {
 
     if (player.isSecondaryUseActive() && isPlayerAdventure(player)) {
       if (!stackInHand.isEmpty()) {
-        if (stackInHand.getItem() instanceof BlockItem blockItem && interacted.getDisplayBlockState().isAir()) {
+        if (stackInHand.getItem() instanceof BlockItem blockItem
+            && interacted.getDisplayBlockState().isAir()) {
 
-          interacted.setCustomDisplayBlockState(Optional.of(blockItem.getBlock().defaultBlockState()));
+          interacted.setCustomDisplayBlockState(
+              Optional.of(blockItem.getBlock().defaultBlockState()));
           player.swing(hand);
-          interacted.playSound(blockItem.getBlock().defaultBlockState().getSoundType(world, interacted.getOnPos(), player).getPlaceSound(), 1, 1);
+          interacted.playSound(
+              blockItem
+                  .getBlock()
+                  .defaultBlockState()
+                  .getSoundType(world, interacted.getOnPos(), player)
+                  .getPlaceSound(),
+              1,
+              1);
 
           AbstractMinecart finalCart = interacted;
           if (!world.isClientSide()) {
