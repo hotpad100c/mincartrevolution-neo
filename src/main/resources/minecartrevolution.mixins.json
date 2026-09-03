@@ -50,6 +50,7 @@
     "client.MinecartRenderStateMixin",
     "client.SoundBufferLibraryMixin",
     "client.SoundManagerMixin",
+    "compat.vanilla.MinecartRendererMixin",
     "compat.yuushya.ItemStackRenderStateInvoker",
     "level.ClientLevelMixin",
     "light.LevelRendererMixin",
